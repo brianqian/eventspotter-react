@@ -1,7 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
 import Head from '../components/head';
-import Nav from '../components/Nav/Nav';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -15,7 +14,6 @@ const Container = styled.div`
 const Home = () => (
   <Container>
     <Head title="Home" />
-    <Nav />
     <div>HELLO WORLD</div>
   </Container>
 );

@@ -2,6 +2,7 @@ import App, { Container } from 'next/app';
 import React from 'react';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
 import theme from '../static/cssTheme';
+import Nav from '../components/Nav/Nav';
 
 const GlobalStyle = createGlobalStyle`
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,900&display=swap");
@@ -35,6 +36,7 @@ export default class MyApp extends App {
         <ThemeProvider theme={theme}>
           <>
             <GlobalStyle />
+            <Nav />
             <Component {...pageProps} />
           </>
         </ThemeProvider>

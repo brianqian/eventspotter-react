@@ -19,6 +19,11 @@ const ssrCache = cacheableResponse({
 app.prepare().then(() => {
   const server = express();
 
+  server.get('/library', (req, res) => {
+    const actualPage = '/libraryPage';
+    app.render(req, res, actualPage);
+  });
+
   server.get('/', (req, res) => ssrCache({ req, res, pagePath: '/' }));
 
   // server.get('/blog/:id', (req, res) => {

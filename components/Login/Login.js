@@ -5,7 +5,8 @@ import styled from 'styled-components';
 const Container = styled.div`
   height: 100vh;
   width: 100vw;
-  background-color: transparent;
+  background-color: rgba(0, 0, 0, 0.4);
+  color: ${props => props.theme.color.white};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -53,9 +54,9 @@ const Login = ({ isShowing, hide }) => {
               </svg>
             </CloseModal>
             <ManualLoginForm>
-              <label htmlFor=""> E-mail</label>
+              <label htmlFor=""> E-mail: </label>
               <input type="text" />
-              <label htmlFor=""> Password</label>
+              <label htmlFor=""> Password: </label>
               <input type="text" />
               <div>Login</div>
             </ManualLoginForm>
