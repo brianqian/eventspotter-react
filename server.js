@@ -1,9 +1,9 @@
-const cacheableResponse = require("cacheable-response");
-const express = require("express");
-const next = require("next");
+const cacheableResponse = require('cacheable-response');
+const express = require('express');
+const next = require('next');
 
 const port = parseInt(process.env.PORT, 10) || 3000;
-const dev = process.env.NODE_ENV !== "production";
+const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 
 const handle = app.getRequestHandler();
@@ -19,7 +19,7 @@ const ssrCache = cacheableResponse({
 app.prepare().then(() => {
   const server = express();
 
-  server.get("/", (req, res) => ssrCache({ req, res, pagePath: "/" }));
+  server.get('/', (req, res) => ssrCache({ req, res, pagePath: '/' }));
 
   // server.get('/blog/:id', (req, res) => {
   //   const queryParams = { id: req.params.id }
@@ -27,7 +27,7 @@ app.prepare().then(() => {
   //   return ssrCache({ req, res, pagePath, queryParams })
   // })
 
-  server.get("*", (req, res) => handle(req, res));
+  server.get('*', (req, res) => handle(req, res));
 
   server.listen(port, err => {
     if (err) throw err;

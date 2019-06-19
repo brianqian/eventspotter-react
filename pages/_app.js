@@ -1,7 +1,7 @@
-import App, { Container } from "next/app";
-import React from "react";
-import { ThemeProvider, createGlobalStyle } from "styled-components";
-import theme from "../data/cssTheme";
+import App, { Container } from 'next/app';
+import React from 'react';
+import { ThemeProvider, createGlobalStyle } from 'styled-components';
+import theme from '../static/cssTheme';
 
 const GlobalStyle = createGlobalStyle`
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,900&display=swap");

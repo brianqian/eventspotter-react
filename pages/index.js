@@ -1,20 +1,23 @@
-import React from "react";
-import Link from "next/link";
-import Head from "../components/head";
-import Nav from "../components/nav";
-import styled from "styled-components";
+import React from 'react';
+import Link from 'next/link';
+import Head from '../components/head';
+import Nav from '../components/Nav/Nav';
+import styled from 'styled-components';
 
-const Test = styled.div`
+const Container = styled.div`
+  background-color: ${props => props.theme.color.background};
+  color: ${props => props.theme.color.white};
   font-family: ${props => props.theme.textFont};
-  background-color: blue;
+  font-size: 18px;
+  min-height: 100vh;
 `;
 
 const Home = () => (
-  <Test>
+  <Container>
     <Head title="Home" />
     <Nav />
-    <Test>HELLOW ROLD</Test>
-  </Test>
+    <div>HELLO WORLD</div>
+  </Container>
 );
 
 export default Home;
