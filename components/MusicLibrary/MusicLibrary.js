@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import fetch from 'isomorphic-unfetch';
 
 const Container = styled.div`
   color: ${props => props.theme.color.white};
@@ -9,7 +10,16 @@ const Container = styled.div`
 `;
 
 function MusicLibrary({ className }) {
-  return <Container className={className}>MUSIC LIBRARY</Container>;
+  return (
+    <Container className={className}>
+      MUSIC LIBRARY
+      {process.env.clientID}
+    </Container>
+  );
 }
+
+MusicLibrary.getInitialProps = async context => {
+  return {};
+};
 
 export default MusicLibrary;

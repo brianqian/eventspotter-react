@@ -1,5 +1,4 @@
 import React from 'react';
-import Link from 'next/link';
 import Head from '../components/head';
 import styled from 'styled-components';
 
@@ -11,11 +10,13 @@ const Container = styled.div`
   min-height: 100vh;
 `;
 
-const Home = () => (
-  <Container>
-    <Head title="Home" />
-    <div>HELLO WORLD</div>
-  </Container>
-);
+const Home = () => {
+  return (
+    <Container>
+      <Head title="Home" />
+      <div>HELLO WORLD</div>
+    </Container>
+  );
+};
 
 export default Home;
