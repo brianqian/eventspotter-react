@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import fetch from 'isomorphic-unfetch';
 import Library from '../components/MusicLibrary/MusicLibrary';
 import Sidebar from '../components/MusicLibrary/MusicSidebar';
 
@@ -18,13 +19,22 @@ const StyledSidebar = styled(Sidebar)`
   border: 1px solid white;
 `;
 
-function libraryPage() {
+function LibraryPage({ context }) {
   return (
     <Container>
+      {context}
+      poop
       <StyledSidebar />
       <StyledLibrary />
     </Container>
   );
 }
 
-export default libraryPage;
+LibraryPage.getInitialProps = async context => {
+  const { store, isServer, query, req } = context;
+
+  return { context };
+  const res = await fetch('');
+};
+
+export default LibraryPage;

@@ -3,6 +3,7 @@ const express = require('express');
 const next = require('next');
 const fetch = require('isomorphic-unfetch');
 const btoa = require('btoa');
+const cookieParser = require('cookie-parser');
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== 'production';
@@ -20,12 +21,9 @@ const ssrCache = cacheableResponse({
 
 app.prepare().then(() => {
   const server = express();
+  server.use(cookieParser());
 
   const redirect_uri = 'http://localhost:3000/callback';
-  server.get('/library', (req, res) => {
-    const actualPage = '/libraryPage';
-    app.render(req, res, actualPage);
-  });
 
   server.get('/login', (req, res) => {
     const scopes = 'user-read-private user-read-email';
@@ -48,6 +46,7 @@ app.prepare().then(() => {
       redirect_uri,
       grant_type: 'authorization_code',
     };
+
     const encodedParams = Object.keys(params)
       .map(key => {
         return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
@@ -55,7 +54,7 @@ app.prepare().then(() => {
       .join('&');
 
     const encodedIDAndSecret = btoa(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`);
-    let tokens = await fetch('https://accounts.spotify.com/api/token', {
+    let resp = await fetch('https://accounts.spotify.com/api/token', {
       method: 'POST',
       headers: {
         Authorization: `Basic ${encodedIDAndSecret}`,
@@ -63,11 +62,16 @@ app.prepare().then(() => {
       },
       body: encodedParams,
     });
-    tokens = await tokens.json();
-    const { access_token, refresh_token } = tokens;
+    resp = await resp.json();
+    const { access_token, refresh_token } = resp;
+    console.log('Auth success: ' + access_token + '/' + refresh_token);
+    //save refresh token to user table
+    res.cookie('accessToken', access_token, { maxAge: 1000 * 60 * 60 });
+    res.redirect('/library');
   });
 
   server.get('/', (req, res) => ssrCache({ req, res, pagePath: '/' }));
+  server.get('/library', (req, res) => ssrCache({ req, res, pagePath: '/libraryPage' }));
 
   // server.get('/blog/:id', (req, res) => {
   //   const queryParams = { id: req.params.id }
