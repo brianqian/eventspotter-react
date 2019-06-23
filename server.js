@@ -4,6 +4,7 @@ const next = require('next');
 const fetch = require('isomorphic-unfetch');
 const btoa = require('btoa');
 const cookieParser = require('cookie-parser');
+const { JSONToURL } = require('./utils/fetch');
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== 'production';
@@ -26,7 +27,7 @@ app.prepare().then(() => {
   const redirect_uri = 'http://localhost:3000/callback';
 
   server.get('/login', (req, res) => {
-    const scopes = 'user-read-private user-read-email';
+    const scopes = 'user-read-private user-read-email user-library-read';
     res.redirect(
       'https://accounts.spotify.com/authorize' +
         '?response_type=code' +
@@ -47,11 +48,7 @@ app.prepare().then(() => {
       grant_type: 'authorization_code',
     };
 
-    const encodedParams = Object.keys(params)
-      .map(key => {
-        return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
-      })
-      .join('&');
+    const encodedParams = JSONToURL(params);
 
     const encodedIDAndSecret = btoa(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`);
     let resp = await fetch('https://accounts.spotify.com/api/token', {

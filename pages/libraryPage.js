@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import fetch from 'isomorphic-unfetch';
+import { spotifyFetch, fetchCookie } from '../utils/fetch';
 import Library from '../components/MusicLibrary/MusicLibrary';
 import Sidebar from '../components/MusicLibrary/MusicSidebar';
 
@@ -19,22 +19,24 @@ const StyledSidebar = styled(Sidebar)`
   border: 1px solid white;
 `;
 
-function LibraryPage({ context }) {
+function LibraryPage({ tracks }) {
   return (
     <Container>
-      {context}
-      poop
       <StyledSidebar />
-      <StyledLibrary />
+      <StyledLibrary tracks={tracks} />
     </Container>
   );
 }
 
-LibraryPage.getInitialProps = async context => {
-  const { store, isServer, query, req } = context;
+LibraryPage.getInitialProps = async ({ req }) => {
+  const accessToken = req ? req.cookies.accessToken : fetchCookie(document.cookie, 'accessToken');
+  // let { accessToken } = (req && req.cookies) || null;
 
-  return { context };
-  const res = await fetch('');
+  !req && console.log(document.cookie);
+  console.log('GETINITIALPROPS', accessToken);
+  const tracks = await spotifyFetch('/me/tracks', accessToken);
+  console.log(tracks);
+  return { tracks: tracks.items };
 };
 
 export default LibraryPage;

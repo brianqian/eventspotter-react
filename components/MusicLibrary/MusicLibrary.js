@@ -9,17 +9,15 @@ const Container = styled.div`
   background-color: ${props => props.theme.color.background};
 `;
 
-function MusicLibrary({ className }) {
+function MusicLibrary({ className, tracks }) {
   return (
     <Container className={className}>
       MUSIC LIBRARY
-      {process.env.clientID}
+      {tracks &&
+        tracks.length &&
+        tracks.map(item => <div key={item.track.id}>{item.track.name}</div>)}
     </Container>
   );
 }
-
-MusicLibrary.getInitialProps = async context => {
-  return {};
-};
 
 export default MusicLibrary;
