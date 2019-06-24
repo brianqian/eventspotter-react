@@ -7,22 +7,20 @@ const Container = styled.div`
   color: ${props => props.theme.color.white};
   height: 100%;
   width: 100%;
-  background-color: ${props => props.theme.color.background};
-  font-family: 'Roboto';
+  background-color: ${props => props.theme.color.library};
+  /* font-family: 'Roboto'; */
+  font-family: 'Source Sans Pro';
 `;
 
 const StyledTitleRow = styled(TitleRow)`
   margin-bottom: 1rem;
 `;
 
-function MusicLibrary({ className, tracks }) {
-  console.log(tracks);
+function MusicLibrary({ className, library, columns }) {
   return (
     <Container className={className}>
-      <StyledTitleRow widths={{}} headers={[]} />
-      {tracks &&
-        tracks.length &&
-        tracks.map(item => <Row key={item.track.id} data={item} widths={{}} />)}
+      <StyledTitleRow widths={{}} columns={columns} />
+      {library && library.map(item => <Row key={item.track.id} data={item} columns={columns} />)}
     </Container>
   );
 }

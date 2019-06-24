@@ -20,32 +20,43 @@ const StyledSidebar = styled(Sidebar)`
   border: 1px solid white;
 `;
 
-function LibraryPage({ tracks, err }) {
+const columns = [
+  { name: 'Title', width: 2, spotifyRef: 'title' },
+  { name: 'Artist', width: 2, spotifyRef: 'artists' },
+  { name: 'Date Added', width: 1, spotifyRef: 'added_at' },
+];
+
+function LibraryPage({ data }) {
   return (
     <Container>
       <StyledSidebar />
-      <StyledLibrary tracks={tracks} />
+      <StyledLibrary library={data || []} columns={columns} />
     </Container>
   );
 }
 
 LibraryPage.getInitialProps = async ({ res, req, err }) => {
-  const accessToken = req ? req.cookies.accessToken : fetchCookie(document.cookie, 'accessToken');
-  console.log('LIBRARY, getInitialProps', accessToken);
-  const SONGS_TO_QUERY = 50;
-  const tracks = await spotifyFetch(`/me/tracks?limit=${SONGS_TO_QUERY}`, accessToken);
-  console.log(tracks);
-  if (tracks.status === 401) {
-    if (res) {
-      res.writeHead(401, {
-        Location: '/login',
-      });
-      res.end();
+  err && console.log('server error', err);
+  try {
+    const accessToken = req ? req.cookies.accessToken : fetchCookie(document.cookie, 'accessToken');
+    console.log('LIBRARY, getInitialProps', accessToken);
+    const SONGS_TO_QUERY = 50;
+    const data = await spotifyFetch(`/me/tracks?limit=${SONGS_TO_QUERY}`, accessToken);
+    console.log(data);
+    if (data.error) {
+      console.log(`spotify error detected: ${data.error}`);
+      if (res) {
+        res.redirect('/login');
+        res.end();
+      } else {
+        console.log('error detected, pushing to login');
+        Router.push('/login');
+      }
     } else {
-      Router.push('/login');
+      return { data: data.items };
     }
-  } else {
-    return { err, tracks: tracks.items };
+  } catch (e) {
+    throw e;
   }
 };
 

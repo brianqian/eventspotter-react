@@ -9,14 +9,18 @@ const JSONToURL = object => {
 };
 
 const spotifyFetch = async (endpoint, authToken) => {
-  let resp = await fetch(`https://api.spotify.com/v1${endpoint}`, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-  resp = await resp.json();
-  return resp;
+  try {
+    let resp = await fetch(`https://api.spotify.com/v1${endpoint}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    resp = await resp.json();
+    return resp;
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 const fetchCookie = (cookie, cookieName) => {

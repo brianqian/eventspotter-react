@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import Nav from '../components/Nav/Nav';
 
 const Container = styled.div`
   background-color: ${props => props.theme.color.background};

@@ -1,30 +1,31 @@
 import React from 'react';
 import styled from 'styled-components';
+import { format } from 'date-fns';
 
 const Container = styled.div`
   display: flex;
   width: 100%;
+  padding: 0.5rem 0;
 `;
 
 const Column = styled.div`
   flex: ${props => props.width};
 `;
 
-function MusicLibraryRow({ data, widths, extraColumns }) {
-  console.log(data.added_at);
+function MusicLibraryRow({ data, data: { track }, columns }) {
   return (
     <Container>
       {data && (
         <>
-          <Column width={widths.name || 3}>{data.track.name}</Column>
-          <Column width={widths.title || 2}>
-            {data.track.artists.map(({ name }) => name).join(', ')}
+          <Column width={columns[0].width || 2}>{track.name}</Column>
+          <Column width={columns[1].width || 2}>
+            {track.artists.map(({ name }) => name).join(', ')}
           </Column>
-          <Column width={widths.title || 1}>{data.added_at}</Column>
-          {extraColumns &&
-            Object.keys(extraColumns).map(({ column }) => (
-              <Column width={column.width}>{column.value}</Column>
-            ))}
+          <Column width={columns[2].width || 1}>{format(data.added_at, 'YYYY-MM-DD')}</Column>
+          {/* {columns &&
+            columns.map(column => (
+              <Column width={column.width}>{data.track[column.spotifyRef]}</Column>
+            ))} */}
         </>
       )}
     </Container>

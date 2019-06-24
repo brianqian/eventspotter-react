@@ -10,14 +10,13 @@ const Section = styled.div`
   flex: ${props => props.width};
 `;
 
-function MusicLibraryTitle({ headers, widths, className }) {
+function MusicLibraryTitle({ columns, className }) {
   return (
     <Container className={className}>
-      <Section width={widths.name || 2}>Title</Section>
-      <Section width={widths.artist || 2}>Artist</Section>
-      <Section width={widths.dateAdded || 1}>Date Added</Section>
-      {headers.map(title => (
-        <Section width={title.width || 1}>{headers.title}</Section>
+      {columns.map((column, idx) => (
+        <Section key={idx} width={column.width || 1}>
+          {column.name}
+        </Section>
       ))}
     </Container>
   );
