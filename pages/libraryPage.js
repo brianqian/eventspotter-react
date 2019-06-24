@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import Router from 'next/router';
 import { spotifyFetch, fetchCookie } from '../utils/fetch';
 import Library from '../components/MusicLibrary/MusicLibrary';
 import Sidebar from '../components/MusicLibrary/MusicSidebar';
@@ -19,7 +20,7 @@ const StyledSidebar = styled(Sidebar)`
   border: 1px solid white;
 `;
 
-function LibraryPage({ tracks }) {
+function LibraryPage({ tracks, err }) {
   return (
     <Container>
       <StyledSidebar />
@@ -28,15 +29,24 @@ function LibraryPage({ tracks }) {
   );
 }
 
-LibraryPage.getInitialProps = async ({ req }) => {
+LibraryPage.getInitialProps = async ({ res, req, err }) => {
   const accessToken = req ? req.cookies.accessToken : fetchCookie(document.cookie, 'accessToken');
-  // let { accessToken } = (req && req.cookies) || null;
-
-  !req && console.log(document.cookie);
-  console.log('GETINITIALPROPS', accessToken);
-  const tracks = await spotifyFetch('/me/tracks', accessToken);
+  console.log('LIBRARY, getInitialProps', accessToken);
+  const SONGS_TO_QUERY = 50;
+  const tracks = await spotifyFetch(`/me/tracks?limit=${SONGS_TO_QUERY}`, accessToken);
   console.log(tracks);
-  return { tracks: tracks.items };
+  if (tracks.status === 401) {
+    if (res) {
+      res.writeHead(401, {
+        Location: '/login',
+      });
+      res.end();
+    } else {
+      Router.push('/login');
+    }
+  } else {
+    return { err, tracks: tracks.items };
+  }
 };
 
 export default LibraryPage;

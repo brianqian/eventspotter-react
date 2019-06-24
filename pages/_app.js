@@ -5,7 +5,7 @@ import theme from '../static/cssTheme';
 import Nav from '../components/Nav/Nav';
 
 const GlobalStyle = createGlobalStyle`
-@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,900&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Roboto:400,700|Source+Sans+Pro:400,900&display=swap");
 body, html{
   font-family: ${props => props.theme.textFont};
   max-width: 100vw;
