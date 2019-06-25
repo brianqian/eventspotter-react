@@ -26,40 +26,39 @@ const columns = [
   { name: 'Date Added', width: 1, spotifyRef: 'added_at' },
 ];
 
-function LibraryPage({ data }) {
+function LibraryPage({ data, err }) {
   return (
     <Container>
       <StyledSidebar />
-      <StyledLibrary library={data || []} columns={columns} />
+      <StyledLibrary library={data || []} columns={columns} onError={err} />
     </Container>
   );
 }
 
 LibraryPage.getInitialProps = async ({ res, req, err }) => {
   err && console.log('server error', err);
-  try {
-    const accessToken = req ? req.cookies.accessToken : fetchCookie(document.cookie, 'accessToken');
-    console.log('LIBRARY, getInitialProps', accessToken);
-    const SONGS_TO_QUERY = 50;
-    const data = await spotifyFetch(`/me/tracks?limit=${SONGS_TO_QUERY}`, accessToken);
-    console.log(data);
-    if (data.error) {
-      //REFRESH TOKEN
-      console.log(`spotify error detected: ${data.error}`);
-      if (res) {
-        res.writeHead(data.error.status, {
-          Location: '/login',
-        });
-        res.end();
-      } else {
-        console.log('error detected, pushing to login');
-        Router.push('/login');
-      }
+  console.log(req);
+  const accessToken = req ? req.cookies.accessToken : fetchCookie(document.cookie, 'accessToken');
+  console.log('LIBRARY, getInitialProps token', accessToken);
+  req && console.log('LIBRARY, getInitialProps cookies', req, req.cookies);
+  if (!accessToken) return { data: [], err: 'Access Token incorrect' };
+  const SONGS_TO_QUERY = 50;
+  const data = await spotifyFetch(`/me/tracks?limit=${SONGS_TO_QUERY}`, accessToken);
+  console.log(data);
+  if (data.error) {
+    //REFRESH TOKEN
+    console.log(`spotify error detected: ${data.error}`);
+    if (res) {
+      res.writeHead(data.error.status, {
+        Location: '/login',
+      });
+      res.end();
     } else {
-      return { data: data.items };
+      console.log('error detected, pushing to login');
+      Router.push('/login');
     }
-  } catch (e) {
-    throw e;
+  } else {
+    return { data: data.items };
   }
 };
 

@@ -40,7 +40,9 @@ This project uses Next.js to handle routing and server-side rendering (SSR) and 
 # Todo
 
 - Place frontend in its own folder, set up monorepo
-- Write a global server file that concurrently launches front and backend.
+- Edit package.json to concurrently run server in dev mode.
 - Consider caching music library in database (is this faster than Spotify with prefetch on startup?)
 - Consider using AWS for backend deployment
 - Create a class for the song object ?
+- After user auth is set up, check if user has a refresh token saved (ie. has a previously synced Spotify account). If they do then login should link to refresh_token.
+- Set up server to conditionally render cached vs non-cached routes.

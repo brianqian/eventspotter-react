@@ -1,7 +1,6 @@
 DROP DATABASE IF EXISTS eventspotter_db;
 CREATE DATABASE eventspotter_db;
 USE eventspotter_db;
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
 
 
 CREATE TABLE userInfo (
@@ -18,6 +17,4 @@ CREATE TABLE userSettings(
   zipcode INTEGER (5),
   searchRadius INTEGER (5),
   PRIMARY KEY (id)
-);
-
 );

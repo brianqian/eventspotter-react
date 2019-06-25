@@ -70,9 +70,14 @@ app.prepare().then(() => {
     res.cookie('accessToken', access_token, { maxAge: 1000 * 60 * 60 });
     res.redirect(`/${location}`);
   });
-
+  server.get('/library', (req, res) => {
+    console.log('IN SERVER, library route', req.cookies);
+    console.log('IN SERVER, library route', req);
+    const actualPage = '/libraryPage';
+    // ssrCache({ req, res, pagePath: '/libraryPage' });
+    app.render(req, res, actualPage);
+  });
   server.get('/', (req, res) => ssrCache({ req, res, pagePath: '/' }));
-  server.get('/library', (req, res) => ssrCache({ req, res, pagePath: '/libraryPage' }));
 
   // server.get('/blog/:id', (req, res) => {
   //   const queryParams = { id: req.params.id }
