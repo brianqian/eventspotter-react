@@ -1,4 +1,5 @@
 const fetch = require('isomorphic-unfetch');
+const btoa = require('btoa');
 
 const JSONToURL = object => {
   return Object.keys(object)
@@ -23,6 +24,21 @@ const spotifyFetch = async (endpoint, authToken) => {
   }
 };
 
+const getTokens = async params => {
+  const encodedIDAndSecret = btoa(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`);
+  let resp = await fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: {
+      Authorization: `Basic ${encodedIDAndSecret}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: params,
+  });
+  resp = await resp.json();
+  console.log('IN GET TOKENS', resp);
+  return resp;
+};
+
 const fetchCookie = (cookie, cookieName) => {
   if (!cookie.includes(cookieName)) return null;
   const startIndex = cookie.indexOf(cookieName);
@@ -36,4 +52,5 @@ module.exports = {
   JSONToURL,
   spotifyFetch,
   fetchCookie,
+  getTokens,
 };

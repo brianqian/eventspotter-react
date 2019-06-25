@@ -1,10 +1,8 @@
 const cacheableResponse = require('cacheable-response');
 const express = require('express');
 const next = require('next');
-const fetch = require('isomorphic-unfetch');
-const btoa = require('btoa');
 const cookieParser = require('cookie-parser');
-const { JSONToURL } = require('./utils/fetch');
+const { JSONToURL, getTokens } = require('./utils/fetch');
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== 'production';
@@ -19,6 +17,8 @@ const ssrCache = cacheableResponse({
   }),
   send: ({ data, res }) => res.send(data),
 });
+
+const tempDatabase = {};
 
 app.prepare().then(() => {
   const server = express();
@@ -41,30 +41,34 @@ app.prepare().then(() => {
 
   server.get('/callback', async (req, res) => {
     const code = req.query.code || null;
-    const state = req.query.state || null;
-    const params = {
+    // const state = req.query.state || null;
+
+    const params = JSONToURL({
       code,
       redirect_uri,
       grant_type: 'authorization_code',
-    };
-
-    const encodedParams = JSONToURL(params);
-
-    const encodedIDAndSecret = btoa(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`);
-    let resp = await fetch('https://accounts.spotify.com/api/token', {
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${encodedIDAndSecret}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: encodedParams,
     });
-    resp = await resp.json();
-    const { access_token, refresh_token } = resp;
+
+    const { access_token, refresh_token } = await getTokens(params);
     console.log('Auth success: ' + access_token + '/' + refresh_token);
-    //save refresh token to user table
+    tempDatabase.refreshToken = refresh_token;
     res.cookie('accessToken', access_token, { maxAge: 1000 * 60 * 60 });
     res.redirect('/library');
+  });
+
+  server.get('/refresh_token/:location', async (req, res) => {
+    console.log(req.params.location);
+    console.log(tempDatabase);
+    const { location } = req.params;
+    const params = JSONToURL({
+      grant_type: 'refresh_token',
+      refresh_token: tempDatabase.refreshToken,
+    });
+
+    const { access_token, refresh_token } = await getTokens(params);
+    console.log('REFRESH success: ' + access_token + '/' + refresh_token);
+    res.cookie('accessToken', access_token, { maxAge: 1000 * 60 * 60 });
+    res.redirect(`/${location}`);
   });
 
   server.get('/', (req, res) => ssrCache({ req, res, pagePath: '/' }));

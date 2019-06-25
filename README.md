@@ -36,3 +36,11 @@ This project uses Next.js to handle routing and server-side rendering (SSR) and 
 - userID
 - Location
 - Search Radius
+
+# Todo
+
+- Place frontend in its own folder, set up monorepo
+- Write a global server file that concurrently launches front and backend.
+- Consider caching music library in database (is this faster than Spotify with prefetch on startup?)
+- Consider using AWS for backend deployment
+- Create a class for the song object ?

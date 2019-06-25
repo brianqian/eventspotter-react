@@ -44,9 +44,12 @@ LibraryPage.getInitialProps = async ({ res, req, err }) => {
     const data = await spotifyFetch(`/me/tracks?limit=${SONGS_TO_QUERY}`, accessToken);
     console.log(data);
     if (data.error) {
+      //REFRESH TOKEN
       console.log(`spotify error detected: ${data.error}`);
       if (res) {
-        res.redirect('/login');
+        res.writeHead(data.error.status, {
+          Location: '/login',
+        });
         res.end();
       } else {
         console.log('error detected, pushing to login');
