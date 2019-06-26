@@ -2,7 +2,8 @@ const cacheableResponse = require('cacheable-response');
 const express = require('express');
 const next = require('next');
 const cookieParser = require('cookie-parser');
-const { JSONToURL, getTokens } = require('./utils/fetch');
+const fetch = require('isomorphic-unfetch');
+const { JSONToURL, getTokens, spotifyFetch } = require('./utils/fetch');
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== 'production';
@@ -21,10 +22,10 @@ const ssrCache = cacheableResponse({
 const tempDatabase = {};
 
 app.prepare().then(() => {
+  const redirect_uri = 'http://localhost:3000/callback';
+
   const server = express();
   server.use(cookieParser());
-
-  const redirect_uri = 'http://localhost:3000/callback';
 
   server.get('/login', (req, res) => {
     const scopes = 'user-read-private user-read-email user-library-read';
@@ -53,6 +54,8 @@ app.prepare().then(() => {
     console.log('Auth success: ' + access_token + '/' + refresh_token);
     tempDatabase.refreshToken = refresh_token;
     res.cookie('accessToken', access_token, { maxAge: 1000 * 60 * 60 });
+    const profile = await spotifyFetch('/me', access_token);
+    console.log(profile);
     res.redirect('/library');
   });
 
@@ -77,7 +80,10 @@ app.prepare().then(() => {
     // ssrCache({ req, res, pagePath: '/libraryPage' });
     app.render(req, res, actualPage);
   });
-  server.get('/', (req, res) => ssrCache({ req, res, pagePath: '/' }));
+  server.get('/', (req, res) => {
+    app.render(req, res, '/');
+    // return ssrCache({ req, res, pagePath: '/' })
+  });
 
   // server.get('/blog/:id', (req, res) => {
   //   const queryParams = { id: req.params.id }

@@ -14,6 +14,7 @@ const Home = () => {
   return (
     <Container>
       <Head title="Home" />
+
       <div>HELLO WORLD</div>
     </Container>
   );

@@ -37,6 +37,8 @@ This project uses Next.js to handle routing and server-side rendering (SSR) and 
 - Location
 - Search Radius
 
+### Library
+
 # Todo
 
 - Place frontend in its own folder, set up monorepo
@@ -46,3 +48,11 @@ This project uses Next.js to handle routing and server-side rendering (SSR) and 
 - Create a class for the song object ?
 - After user auth is set up, check if user has a refresh token saved (ie. has a previously synced Spotify account). If they do then login should link to refresh_token.
 - Set up server to conditionally render cached vs non-cached routes.
+
+## Authentication
+
+- User logs in to Spotify and receives an access token. This token is then saved via cookie/bearer token.
+- On first login a user ID is created, encrypted, and saved to localStorage via JWT and their refresh token is saved with their ID in the database.
+- User is always logged in while they have a userID JWT on the client side.
+- When the access token expires, the userID is used to look up the refresh token for that ID and a new access token is provided to the user.
+- On logout, the userID is removed from the client side.

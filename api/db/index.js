@@ -1,11 +1,14 @@
 const mysql = require('mysql');
+require('dotenv').config();
+
+const isProduction = process.env.NODE_ENV === 'production' ? 'RDS' : 'LOCAL';
 
 const connection = mysql.createConnection({
-  host: process.env.RDS_HOSTNAME || process.env.LOCAL_HOSTNAME,
-  port: process.env.RDS_PORT || process.env.LOCAL_PORT,
-  user: process.env.RDS_USERNAME || process.env.LOCAL_USERNAME,
-  password: process.env.RDS_PASSWORD || process.env.LOCAL_PASSWORD,
-  database: process.env.RDS_DB_NAME || process.env.LOCAL_DB_NAME,
+  host: process.env[`${isProduction}_HOSTNAME`],
+  port: process.env[`${isProduction}_PORT`],
+  user: process.env[`${isProduction}_USERNAME`],
+  password: process.env[`${isProduction}_PASSWORD`],
+  database: process.env[`${isProduction}_DB_NAME`],
 });
 
 connection.connect(err => {
