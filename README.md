@@ -36,8 +36,16 @@ This project uses Next.js to handle routing and server-side rendering (SSR) and 
 - userID
 - Location
 - Search Radius
+- Widths/Sort settings on columns
 
 ### Library
+
+- Title
+- SongID
+- userID
+- Artist
+- DateAdded
+-
 
 # Todo
 

@@ -42,9 +42,7 @@ const SignIn = styled.div`
   }
 `;
 
-const Nav = () => {
-  const [isShowing, toggle] = useModal();
-  // console.log(document.cookie);
+const Nav = ({ loggedIn }) => {
   return (
     <StyledNav>
       <Link prefetch href="/">

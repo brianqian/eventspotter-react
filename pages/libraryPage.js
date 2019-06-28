@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Router from 'next/router';
+import jwt from 'jsonwebtoken';
 import { spotifyFetch, fetchCookie } from '../utils/fetch';
 import Library from '../components/MusicLibrary/MusicLibrary';
 import Sidebar from '../components/MusicLibrary/MusicSidebar';
@@ -35,31 +36,33 @@ function LibraryPage({ data, err }) {
   );
 }
 
-LibraryPage.getInitialProps = async ({ res, req, err }) => {
+LibraryPage.getInitialProps = async ({ res, req, err, query }) => {
+  // console.log('IN LIBRARY PAGE', req ? req.query : 'client rendered');
+  console.log('IN LIBRARY PAGE', query);
+  // const token = jwt.verify(query.jwt, process.env.JWT_SECRET_KEY);
+  // console.log(token);
   err && console.log('server error', err);
-  console.log(req);
-  const accessToken = req ? req.cookies.accessToken : fetchCookie(document.cookie, 'accessToken');
-  console.log('LIBRARY, getInitialProps token', accessToken);
-  req && console.log('LIBRARY, getInitialProps cookies', req, req.cookies);
-  if (!accessToken) return { data: [], err: 'Access Token incorrect' };
-  const SONGS_TO_QUERY = 50;
-  const data = await spotifyFetch(`/me/tracks?limit=${SONGS_TO_QUERY}`, accessToken);
-  console.log(data);
-  if (data.error) {
-    //REFRESH TOKEN
-    console.log(`spotify error detected: ${data.error}`);
-    if (res) {
-      res.writeHead(data.error.status, {
-        Location: '/login',
-      });
-      res.end();
-    } else {
-      console.log('error detected, pushing to login');
-      Router.push('/login');
-    }
-  } else {
-    return { data: data.items };
-  }
+  // const accessToken = req ? req.cookies.accessToken : fetchCookie(document.cookie, 'accessToken');
+  // console.log('LIBRARY, getInitialProps token', accessToken);
+  // if (!accessToken) return { data: [], err: 'Access Token incorrect' };
+  const SONGS_TO_QUERY = 50; //default: 20; max: 50;
+  // const data = await spotifyFetch(`/me/tracks?limit=${SONGS_TO_QUERY}`, accessToken);
+  // if (data.error) {
+  //   //REFRESH TOKEN
+  //   console.log(`spotify error detected: ${data.error}`);
+  //   if (res) {
+  //     res.writeHead(data.error.status, {
+  //       Location: '/login',
+  //     });
+  //     res.end();
+  //   } else {
+  //     console.log('error detected, pushing to login');
+  //     Router.push('/login');
+  //   }
+  // } else {
+  //   return { data: data.items };
+  // }
+  return { data: [] };
 };
 
 export default LibraryPage;
