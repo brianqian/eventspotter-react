@@ -37,7 +37,6 @@ function LibraryPage({ data, err }) {
 }
 
 LibraryPage.getInitialProps = async ({ res, req, err, query }) => {
-  // console.log('IN LIBRARY PAGE', req ? req.query : 'client rendered');
   console.log('IN LIBRARY PAGE', query);
   // const token = jwt.verify(query.jwt, process.env.JWT_SECRET_KEY);
   // console.log(token);

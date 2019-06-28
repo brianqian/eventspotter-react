@@ -25,6 +25,7 @@ const spotifyFetch = async (endpoint, authToken) => {
 };
 
 const getTokens = async params => {
+  params = JSONToURL(params);
   const encodedIDAndSecret = btoa(
     `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
   );

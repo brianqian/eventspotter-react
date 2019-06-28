@@ -1,18 +1,19 @@
 const router = require('express').Router();
+const jwt = require('jsonwebtoken');
 const apiRoutes = require('./libraryRoutes');
 const authRoutes = require('./authRoutes');
-const userRoutes = require('./userRoutes');
-const spotifyRoutes = require('./spotifyRoutes');
 
+router.use((req, res, next) => {
+  const encodedToken = req.cookie && req.cookie.userInfo;
+  jwt.verify(encodedToken, process.env.JWT_SECRET_KEY, (err, decoded) => {
+    if (err || !decoded) {
+      console.log(`JWT error: ${err}. Decoded: ${decoded}`);
+    } else {
+      next();
+    }
+  });
+});
 router.use('/library', apiRoutes);
 router.use('/auth', authRoutes);
-router.use('/user', userRoutes);
-router.use('/spotify', spotifyRoutes);
-
-router.get('/test', (req, res) => {
-  console.log('test route hit');
-  // res.redirect('/');
-  res.json({ test: 'hello' });
-});
 
 module.exports = router;
