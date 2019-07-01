@@ -7,8 +7,8 @@ CREATE TABLE userInfo (
   id INT NOT NULL AUTO_INCREMENT,
   spotifyID VARCHAR(100),
   displayName VARCHAR(30),
-  imgURL VARCHAR(200),
-  refreshToken CHAR(100),
+  imgURL VARCHAR(500),
+  refreshToken CHAR(200),
   accessTokenExpiration VARCHAR(20),
   PRIMARY KEY (id)
 );

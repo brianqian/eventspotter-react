@@ -21,25 +21,24 @@ body, html{
 
 export default class MyApp extends App {
   static async getInitialProps({ Component, ctx, ctx: { req, res } }) {
-    // console.log(req ? req.cookies : document.cookie);
-    const accessToken = req ? req.cookies.accessToken : document.cookie;
+    const userInfo = req ? req.cookies.userInfo : fetchCookie(document.cookie, userInfo);
     // check localStorage for JWT userID
     let pageProps = {};
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);
     }
 
-    return { pageProps };
+    return { ...pageProps, userInfo };
   }
 
   render() {
-    const { Component, pageProps } = this.props;
+    const { Component, pageProps, userInfo } = this.props;
     return (
       <Container>
         <ThemeProvider theme={theme}>
           <>
             <GlobalStyle />
-            <Nav />
+            <Nav jwt={userInfo || ''} />
             <Component {...pageProps} />
           </>
         </ThemeProvider>

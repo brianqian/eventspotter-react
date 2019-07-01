@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
-import Login from '../Login/Login';
-import useModal from '../hooks/useModal';
+import { fetchCookie } from '../../utils/fetch';
 
 const links = [
   { href: '/libraryPage', label: 'My Library', as: '/library' },
@@ -42,7 +41,7 @@ const SignIn = styled.div`
   }
 `;
 
-const Nav = ({ loggedIn }) => {
+const Nav = ({ loggedIn, jwt }) => {
   return (
     <StyledNav>
       <Link prefetch href="/">
@@ -54,7 +53,11 @@ const Nav = ({ loggedIn }) => {
         </Link>
       ))}
       <SignIn>
-        <a href="http://localhost:3000/login" target="_blank">
+        <a
+          href={`http://localhost:3001/auth/${loggedIn ? 'logout' : 'login'}${jwt &&
+            '?jwt=' + jwt}`}
+          target="_blank"
+        >
           Login with Spotify
         </a>
       </SignIn>
