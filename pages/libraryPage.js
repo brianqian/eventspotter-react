@@ -38,9 +38,12 @@ function LibraryPage({ data, err }) {
 
 LibraryPage.getInitialProps = async ({ res, req, err, query }) => {
   console.log('IN LIBRARY PAGE', query);
-  // const token = jwt.verify(query.jwt, process.env.JWT_SECRET_KEY);
-  // console.log(token);
   err && console.log('server error', err);
+  const token = req ? req.cookies.userInfo : fetchCookie(document.cookie, 'userInfo');
+  const { spotifyID } = jwt.verify(token, process.env.JWT_SECRET_TOKEN);
+  let library = await fetch(`http://localhost:3000/library/all?id=${spotifyID}`);
+  library = await library.json();
+
   // const accessToken = req ? req.cookies.accessToken : fetchCookie(document.cookie, 'accessToken');
   // console.log('LIBRARY, getInitialProps token', accessToken);
   // if (!accessToken) return { data: [], err: 'Access Token incorrect' };

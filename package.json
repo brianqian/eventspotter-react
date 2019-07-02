@@ -1,7 +1,7 @@
 {
   "name": "create-next-example-app",
   "scripts": {
-    "dev": "concurrently \"node server.js\" \"npm run server\"",
+    "dev": "node server.js",
     "server": "cd api && npm run start",
     "build": "next build",
     "start": "NODE_ENV=production node server.js"
@@ -20,6 +20,7 @@
     "isomorphic-unfetch": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
     "lru-cache": "^5.1.1",
+    "mysql": "^2.17.1",
     "next": "^8.1.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",

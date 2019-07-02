@@ -3,7 +3,7 @@ const libraryController = require('../controllers/libraryController');
 const authController = require('../controllers/authController');
 const fetch = require('isomorphic-unfetch');
 const jwt = require('jsonwebtoken');
-const cache = require('../cache');
+const cache = require('../../cache');
 const { spotifyFetch } = require('../../utils/fetch');
 
 router.route('/all').get((req, res) => {

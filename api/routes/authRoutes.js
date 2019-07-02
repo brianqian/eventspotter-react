@@ -3,12 +3,12 @@ const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const { spotifyFetch, getTokens } = require('../../utils');
 const authController = require('../controllers/authController');
-const cache = require('../cache');
+const cache = require('../../cache');
 
 router
   .route('/login')
   .get((req, res) => {
-    const redirect_uri = encodeURIComponent('http://localhost:3001/auth/spotifyLogin');
+    const redirect_uri = encodeURIComponent('http://localhost:3000/auth/spotifyLogin');
     const scopes = encodeURIComponent('user-read-private user-read-email user-library-read');
     res.redirect(
       `https://accounts.spotify.com/authorize?response_type=code&client_id=${
@@ -39,7 +39,7 @@ router.route('/spotifyLogin').get(async (req, res) => {
    **********************************
    */
   console.log('***************NOW IN /spotifyLogin ROUTE');
-  const redirect_uri = 'http://localhost:3001/auth/spotifyLogin';
+  const redirect_uri = 'http://localhost:3000/auth/spotifyLogin';
   const code = req.query.code || null;
   const params = {
     code,
