@@ -8,11 +8,11 @@ const Container = styled.div`
   color: ${props => props.theme.color.white};
   font-family: ${props => props.theme.textFont};
   font-size: 18px;
-  min-height: 100vh;
+  min-height: calc(100vh - 50px);
 `;
 
 const fetchFn = async () => {
-  let resp = await fetch('http://localhost:3000/library/all');
+  let resp = await fetch('http://localhost:3000/api/library/all');
   resp = await resp.json();
   console.log(resp);
 };

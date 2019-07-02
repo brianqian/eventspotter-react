@@ -1,20 +1,32 @@
 const router = require('express').Router();
-const libraryController = require('../controllers/libraryController');
-const authController = require('../controllers/authController');
 const fetch = require('isomorphic-unfetch');
 const jwt = require('jsonwebtoken');
+const querystring = require('querystring');
 const cache = require('../../cache');
-const { spotifyFetch } = require('../../utils/fetch');
+const { spotifyFetch, fetchCookie } = require('../../utils/fetch');
+const authController = require('../controllers/authController');
+const libraryController = require('../controllers/libraryController');
+// require('dotenv').config();
 
-router.route('/all').get((req, res) => {
-  const spotifyID = req.query.id;
-  const { library: cachedUserLibrary } = cache.get(spotifyID);
-  if (!cachedUserLibrary) {
-    //retrieve user library from database
+router.route('/all').get(async (req, res) => {
+  const offset = req.query.offset || 0;
+  const limit = req.query.limit || 50;
+  const query = querystring.stringify({ offset, limit });
+  const encodedCookie = fetchCookie(req.headers.cookie, 'userInfo');
+  const {
+    userInfo,
+    userInfo: { accessToken },
+  } = await jwt.verify(encodedCookie, process.env.JWT_SECRET_KEY);
 
-    //and/or retrieve library from spotify API
-    let library = spotifyFetch();
-  }
+  const library = await spotifyFetch(`/me/tracks?${query}`, accessToken);
+  res.json(library);
+
+  // if (!cachedUserLibrary) {
+  //   //retrieve user library from database
+
+  //   //and/or retrieve library from spotify API
+  //   let library = spotifyFetch();
+  // }
 });
 
 router.route('/top').get((req, res) => {

@@ -23,7 +23,7 @@ app.prepare().then(() => {
   const server = express();
   server.use(cookieParser());
   server.use(cors());
-  server.use(routes);
+  server.use('/api', routes);
 
   server.get('/library', (req, res) => {
     const actualPage = '/libraryPage';

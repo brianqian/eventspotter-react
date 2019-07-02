@@ -2,21 +2,16 @@ const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const apiRoutes = require('./libraryRoutes');
 const authRoutes = require('./authRoutes');
+const cache = require('../../cache');
 
-// router.use((req, res, next) => {
-//   const encodedToken = req.query && req.query.jwt;
-//   if (encodedToken) {
-//     jwt.verify(encodedToken, process.env.JWT_SECRET_KEY, (err, decoded) => {
-//       if (err || !decoded) {
-//         console.log(`JWT error: ${err}. Decoded: ${decoded}`);
-//       } else {
-//         next();
-//       }
-//     });
-//   } else {
-//     next();
-//   }
-// });
+router.use(async (req, res, next) => {
+  console.log('COOKIES MIDDLEWARE', req.cookies);
+  const { userInfo } = await jwt.verify(req.cookies.userInfo, process.env.JWT_SECRET_KEY);
+  console.log(req.path);
+  console.log(userInfo);
+  console.log(cache.get(userInfo.spotifyID));
+  next();
+});
 router.use('/auth', authRoutes);
 router.use('/library', apiRoutes);
 

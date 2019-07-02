@@ -1,14 +1,14 @@
 const fetch = require('isomorphic-unfetch');
 const router = require('express').Router();
 const jwt = require('jsonwebtoken');
-const { spotifyFetch, getTokens } = require('../../utils');
+const { spotifyFetch, getTokens } = require('../../utils/fetch');
 const authController = require('../controllers/authController');
 const cache = require('../../cache');
 
 router
   .route('/login')
   .get((req, res) => {
-    const redirect_uri = encodeURIComponent('http://localhost:3000/auth/spotifyLogin');
+    const redirect_uri = encodeURIComponent('http://localhost:3000/api/auth/spotifyLogin');
     const scopes = encodeURIComponent('user-read-private user-read-email user-library-read');
     res.redirect(
       `https://accounts.spotify.com/authorize?response_type=code&client_id=${
@@ -39,7 +39,7 @@ router.route('/spotifyLogin').get(async (req, res) => {
    **********************************
    */
   console.log('***************NOW IN /spotifyLogin ROUTE');
-  const redirect_uri = 'http://localhost:3000/auth/spotifyLogin';
+  const redirect_uri = 'http://localhost:3000/api/auth/spotifyLogin';
   const code = req.query.code || null;
   const params = {
     code,
@@ -72,6 +72,7 @@ router.route('/spotifyLogin').get(async (req, res) => {
     spotifyID: profile.id,
     displayName: profile.display_name,
     imgURL: profile.images[0].url,
+    accessToken: access_token,
   };
 
   const encodedToken = await jwt.sign({ userInfo }, process.env.JWT_SECRET_KEY, {
@@ -99,7 +100,7 @@ router.route('/spotifyLogin').get(async (req, res) => {
 
   //UPDATE CACHE WITH USER INFO
   console.log('UPDATING CACHE...');
-  cache.set(profile.id, { ...userInfo, refreshToken: refresh_token });
+  cache.set(profile.id, { ...userInfo, refreshToken: refresh_token, accessToken: access_token });
   const test1 = cache.get(profile.id);
   console.log(test1);
 

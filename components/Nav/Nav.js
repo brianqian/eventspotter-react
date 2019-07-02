@@ -54,7 +54,7 @@ const Nav = ({ loggedIn, jwt }) => {
       ))}
       <SignIn>
         <a
-          href={`http://localhost:3000/auth/${loggedIn ? 'logout' : 'login'}${jwt &&
+          href={`http://localhost:3000/api/auth/${loggedIn ? 'logout' : 'login'}${jwt &&
             '?jwt=' + jwt}`}
         >
           Login with Spotify
