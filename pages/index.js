@@ -12,7 +12,7 @@ const Container = styled.div`
 `;
 
 const fetchFn = async () => {
-  let resp = await fetch('http://localhost:3001/test');
+  let resp = await fetch('http://localhost:3001/library/all');
   resp = await resp.json();
   console.log(resp);
 };

@@ -56,7 +56,6 @@ const Nav = ({ loggedIn, jwt }) => {
         <a
           href={`http://localhost:3001/auth/${loggedIn ? 'logout' : 'login'}${jwt &&
             '?jwt=' + jwt}`}
-          target="_blank"
         >
           Login with Spotify
         </a>

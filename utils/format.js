@@ -1,12 +1,12 @@
 const cache = require('../cache');
 
-const formatDataAndCache = function(spotifyProfile) {
+const formatDataAndCache = spotifyProfile => {
   const formattedObject = {
     spotifyID: spotifyProfile.id,
     displayName: spotifyProfile.display_name,
     imgURL: spotifyProfile.images[0].url,
   };
-  cache[spotifyProfile.id] = formattedObject;
+  cache.set(spotifyProfile.id, formattedObject);
   return formattedObject;
 };
 

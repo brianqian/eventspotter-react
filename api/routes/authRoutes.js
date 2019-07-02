@@ -1,7 +1,7 @@
 const fetch = require('isomorphic-unfetch');
 const router = require('express').Router();
 const jwt = require('jsonwebtoken');
-const { spotifyFetch, getTokens } = require('../utils/fetch');
+const { spotifyFetch, getTokens } = require('../../utils');
 const authController = require('../controllers/authController');
 const cache = require('../cache');
 
@@ -28,7 +28,7 @@ router
     if (cache.get(spotifyID)) res.json(cache.get(spotifyID));
     const userData = await authController.getUser(spotifyID);
     //UPDATE CACHE WITH INFO;
-    console.log('IN AUTH ROUTE, getting user Info:', userInfo);
+    console.log('IN AUTH ROUTE, getting user Info:', userData);
 
     res.json(userData);
   });
@@ -44,7 +44,6 @@ router.route('/spotifyLogin').get(async (req, res) => {
   const params = {
     code,
     redirect_uri,
-    // state,
     grant_type: 'authorization_code',
   };
   console.log('***************PARAMS: ', params);
@@ -74,6 +73,7 @@ router.route('/spotifyLogin').get(async (req, res) => {
     displayName: profile.display_name,
     imgURL: profile.images[0].url,
   };
+
   const encodedToken = await jwt.sign({ userInfo }, process.env.JWT_SECRET_KEY, {
     expiresIn: '999d',
   });
@@ -83,22 +83,25 @@ router.route('/spotifyLogin').get(async (req, res) => {
   userInfo.accessTokenExpiration = Date.now() + 1000 * 60 * 45;
 
   //CREATE NEW USER OR UPDATE EXISTING USER
-
-  const user = await authController.getUser(profile.id);
-  console.log('**** BACK IN AUTH ROUTES-- GET USER:', user);
-  if (!user) {
-    console.log('Creating new user: ' + JSON.stringify(userInfo));
-    authController.createUser(userInfo);
-  } else if (user.usersFound == 1) {
-    authController.editUserInfo(userInfo);
-  } else {
+  try {
+    const user = await authController.getUser(profile.id);
+    console.log('**** BACK IN AUTH ROUTES-- GET USER:', user);
+    if (!user) {
+      console.log('Creating new user: ' + JSON.stringify(userInfo));
+      authController.createUser(userInfo);
+    } else if (user.usersFound == 1) {
+      authController.editUserInfo(userInfo);
+    }
+  } catch (err) {
+    console.log(err);
     console.log(user.error);
-    res.json(user.error);
   }
+
   //UPDATE CACHE WITH USER INFO
   console.log('UPDATING CACHE...');
   cache.set(profile.id, { ...userInfo, refreshToken: refresh_token });
-  console.log(cache.get(profile.id));
+  const test1 = cache.get(profile.id);
+  console.log(test1);
 
   // save encoded token to cookie or localstorage?
   res.cookie('userInfo', encodedToken, { maxAge: 1000 * 60 * 60 * 24 * 365 });
@@ -106,22 +109,9 @@ router.route('/spotifyLogin').get(async (req, res) => {
 });
 
 router.route('/logout').get((req, res) => {});
-
-router.route('/test').get(async (req, res) => {
-  const user = await authController.getUser('122716131');
-  // user.then(data => {
-  //   console.log(data);
-  // });
-  console.log('**** BACK IN AUTH ROUTES-- GET USER:', user);
-  // if (!user) {
-  //   console.log('Creating new user:');
-  //   // authController.createUser(userInfo);
-  // } else if (user.usersFound == 1) {
-  //   console.log('editing user');
-  //   // authController.editUserInfo(userInfo);
-  // } else {
-  //   console.log('else');
-  // }
+router.route('/refresh_token').get((req, res) => {
+  const refreshToken = cache.get();
 });
+router.route('/test').get(async (req, res) => {});
 
 module.exports = router;

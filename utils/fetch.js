@@ -10,6 +10,7 @@ const JSONToURL = object => {
 };
 
 const spotifyFetch = async (endpoint, authToken) => {
+  console.log(endpoint, authToken);
   try {
     let resp = await fetch(`https://api.spotify.com/v1${endpoint}`, {
       method: 'GET',
@@ -18,6 +19,7 @@ const spotifyFetch = async (endpoint, authToken) => {
       },
     });
     resp = await resp.json();
+    console.log('IN SPOTIFY FETCH: resp:', resp);
     return resp;
   } catch (err) {
     console.log(err);
@@ -25,6 +27,8 @@ const spotifyFetch = async (endpoint, authToken) => {
 };
 
 const getTokens = async params => {
+  params = JSONToURL(params);
+  console.log('***IN GET TOKENS -- encoded params', params);
   const encodedIDAndSecret = btoa(
     `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
   );

@@ -8,9 +8,11 @@ Users will also have the ability to customize search parameters according to top
 
 # More Info
 
-## Built with
+## Built with...
 
-This project uses Next.js to handle routing and server-side rendering (SSR) and styled-components for CSS. In order to speed up SSR with React the server caches pages for less server overhead.
+This project uses Next.js to handle routing and server-side rendering (SSR) and styled-components for CSS. ~~In order to speed up SSR with React the server caches pages for less server overhead.~~ (to be added).
+
+The server uses an LRU cache to maintain recent users and cut down on database queries.
 
 ## User Stories
 
@@ -45,22 +47,31 @@ This project uses Next.js to handle routing and server-side rendering (SSR) and 
 - userID
 - Artist
 - DateAdded
--
 
 # Todo
 
-- Place frontend in its own folder, set up monorepo
-- Edit package.json to concurrently run server in dev mode.
+- ~~Place frontend in its own folder, set up monorepo~~
+- ~~Edit package.json to concurrently run server in dev mode.~~
 - Consider caching music library in database (is this faster than Spotify with prefetch on startup?)
-- Consider using AWS for backend deployment
+- ~~Consider using AWS for backend deployment~~
 - Create a class for the song object ?
 - After user auth is set up, check if user has a refresh token saved (ie. has a previously synced Spotify account). If they do then login should link to refresh_token.
 - Set up server to conditionally render cached vs non-cached routes.
 
 ## Authentication
 
-- User logs in to Spotify and receives an access token. This token is then saved via cookie/bearer token.
+- User logs in to Spotify and receives an access token. This token is then saved via cookie.
 - On first login a user ID is created, encrypted, and saved to localStorage via JWT and their refresh token is saved with their ID in the database.
 - User is always logged in while they have a userID JWT on the client side.
+- Each route that is accessed sends a post request to the server that validates their JWT.
+- If their JWT is validated, each page will reflect that with a logged in state stored in a signed session cookie.
+- If a signed session cookie is found
 - When the access token expires, the userID is used to look up the refresh token for that ID and a new access token is provided to the user.
 - On logout, the userID is removed from the client side.
+
+## User Caching
+
+- User's info and library are saved in an LRU cache limited to the last 50 users.
+- On first login the user is either retrieved or added to the LRU cache and their library is loaded from the cache.
+- On later logins if the user is not
+- In the background the server will make an API request checking the user's library against the cache. If new songs are added, the cache is rebuilt and

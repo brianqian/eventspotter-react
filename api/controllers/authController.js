@@ -18,7 +18,6 @@ module.exports = {
             usersFound: data.length,
           });
         data.map(item => (item.usersFound = data.length));
-
         [data] = data;
         console.log('GET USER returned data', data);
         resolve(data);
@@ -26,10 +25,9 @@ module.exports = {
     });
   },
   editUserInfo: ({ spotifyID, displayName, imgURL, refreshToken, accessTokenExpiration }) => {
-    const userInfo = [displayName, imgURL, refreshToken, accessTokenExpiration, spotifyID];
     connection.query(
       'UPDATE userInfo SET displayName = ?, imgURL = ?, refreshToken = ?, accessTokenExpiration = ? WHERE spotifyID = ?',
-      [userInfo],
+      [displayName, imgURL, refreshToken, accessTokenExpiration, spotifyID],
       (err, data) => {
         if (err) throw err;
         console.log('EDIT USER INFO DATA:', data);

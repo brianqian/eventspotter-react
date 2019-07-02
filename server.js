@@ -2,6 +2,8 @@ const cacheableResponse = require('cacheable-response');
 const express = require('express');
 const next = require('next');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
+const routes = require('./api/routes');
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== 'production';
@@ -17,11 +19,11 @@ const ssrCache = cacheableResponse({
   send: ({ data, res }) => res.send(data),
 });
 
-const tempDatabase = {};
-
 app.prepare().then(() => {
   const server = express();
   server.use(cookieParser());
+  server.use(cors());
+  server.use(routes);
 
   server.get('/library', (req, res) => {
     const actualPage = '/libraryPage';
