@@ -26,7 +26,6 @@ export default class MyApp extends App {
     let pageProps = {};
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);
-      console.log(pageProps);
     }
 
     return { pageProps: { ...pageProps }, userInfo };
@@ -34,7 +33,6 @@ export default class MyApp extends App {
 
   render() {
     const { Component, pageProps, userInfo } = this.props;
-    console.log(pageProps);
     return (
       <Container>
         <ThemeProvider theme={theme}>

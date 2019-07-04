@@ -1,5 +1,6 @@
 const fetch = require('isomorphic-unfetch');
 const btoa = require('btoa');
+const jwt = require('jsonwebtoken');
 
 const JSONToURL = object => {
   return Object.keys(object)
@@ -12,7 +13,7 @@ const JSONToURL = object => {
 const spotifyFetch = async (endpoint, authToken) => {
   console.log(endpoint, authToken);
   try {
-    let resp = await fetch(`https://api.spotify.com/v1${endpoint}`, {
+    let resp = await fetch(endpoint, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${authToken}`,
@@ -46,7 +47,7 @@ const getTokens = async params => {
 };
 
 const fetchCookie = (cookie, cookieName) => {
-  if (!cookie.includes(cookieName)) return null;
+  if (!cookie || !cookie.includes(cookieName)) return null;
   const startIndex = cookie.indexOf(cookieName);
   const endIndex = cookie.indexOf(';', startIndex);
   let result = cookie.substring(startIndex, endIndex >= 0 ? endIndex : cookie.length + 1);
@@ -54,9 +55,17 @@ const fetchCookie = (cookie, cookieName) => {
   return result;
 };
 
+const decodeCookie = async cookie => {
+  if (!cookie) return null;
+  const encodedToken = fetchCookie(cookie, 'userInfo');
+  const { userInfo } = await jwt.verify(encodedToken, process.env.JWT_SECRET_KEY);
+  return userInfo;
+};
+
 module.exports = {
   JSONToURL,
   spotifyFetch,
   fetchCookie,
   getTokens,
+  decodeCookie,
 };

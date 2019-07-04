@@ -1,7 +1,7 @@
 const fetch = require('isomorphic-unfetch');
 const router = require('express').Router();
 const jwt = require('jsonwebtoken');
-const { spotifyFetch, getTokens } = require('../../utils/fetch');
+const { spotifyFetch, getTokens, decodeCookie } = require('../../utils/fetch');
 const authController = require('../controllers/authController');
 const cache = require('../../cache');
 
@@ -54,7 +54,7 @@ router.route('/spotifyLogin').get(async (req, res) => {
       console.log('Authorization code expired, refreshing token...');
       const { refreshToken } = await authController.getToken();
       res.send({ error: 'Authorization code expired, refreshing token...' });
-      res.redirect(`/refresh_token/${refreshToken}`);
+      res.redirect(`/login`);
     } else if (resp.error_description === 'Invalid authorization code') {
       console.log('INVALID AUTH CODE');
     }
@@ -65,7 +65,7 @@ router.route('/spotifyLogin').get(async (req, res) => {
    *********************************
    */
   const { refresh_token, access_token } = resp;
-  const profile = await spotifyFetch('/me', access_token);
+  const profile = await spotifyFetch('https://api.spotify.com/v1/me', access_token);
 
   //FORMATTING DATA FOR USER TOKEN
   const userInfo = {
@@ -73,6 +73,7 @@ router.route('/spotifyLogin').get(async (req, res) => {
     displayName: profile.display_name,
     imgURL: profile.images[0].url,
     accessToken: access_token,
+    accessTokenExpiration: Date.now() + 1000 * 60 * 45,
   };
 
   const encodedToken = await jwt.sign({ userInfo }, process.env.JWT_SECRET_KEY, {
@@ -81,12 +82,10 @@ router.route('/spotifyLogin').get(async (req, res) => {
 
   //FORMATTING DATA FOR DB ENTRY
   userInfo.refreshToken = refresh_token;
-  userInfo.accessTokenExpiration = Date.now() + 1000 * 60 * 45;
 
   //CREATE NEW USER OR UPDATE EXISTING USER
   try {
     const user = await authController.getUser(profile.id);
-    console.log('**** BACK IN AUTH ROUTES-- GET USER:', user);
     if (!user) {
       console.log('Creating new user: ' + JSON.stringify(userInfo));
       authController.createUser(userInfo);
@@ -101,18 +100,24 @@ router.route('/spotifyLogin').get(async (req, res) => {
   //UPDATE CACHE WITH USER INFO
   console.log('UPDATING CACHE...');
   cache.set(profile.id, { ...userInfo, refreshToken: refresh_token, accessToken: access_token });
-  const test1 = cache.get(profile.id);
-  console.log(test1);
 
   // save encoded token to cookie or localstorage?
   res.cookie('userInfo', encodedToken, { maxAge: 1000 * 60 * 60 * 24 * 365 });
+  console.log('REDIRECTING FROM AUTH TO LIBRARY');
   res.redirect('http://localhost:3000/library');
 });
 
 router.route('/logout').get((req, res) => {});
-router.route('/refresh_token').get((req, res) => {
-  const refreshToken = cache.get();
+
+router.route('/refresh_token/:redirect').get((req, res) => {
+  const { spotifyID } = decodeCookie(req.cookies.userInfo);
+  res.redirect(`http://localhost:3000${req.params.redirect}`);
+  const { refreshToken } = cache.get(spotifyID);
 });
-router.route('/test').get(async (req, res) => {});
+router.route('/test').get(async (req, res) => {
+  console.log('test hit');
+  console.log(req.cookies);
+  res.redirect('/api/auth/login');
+});
 
 module.exports = router;

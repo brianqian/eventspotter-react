@@ -47,6 +47,12 @@ The server uses an LRU cache to maintain recent users and cut down on database q
 - userID
 - Artist
 - DateAdded
+- acousticness
+- danceability
+- energy
+- instrumentalness
+- loudness
+- valence
 
 # Todo
 

@@ -21,3 +21,19 @@ CREATE TABLE userSettings(
   searchRadius INTEGER (5),
   PRIMARY KEY (id)
 );
+
+CREATE TABLE library(
+	id INT NOT NULL AUTO_INCREMENT,
+    songID VARCHAR(15),
+    artist VARCHAR(30),
+    dateAdded VARCHAR(15),
+    acousticness FLOAT(7),
+    danceability FLOAT(7),
+    energy FLOAT(7),
+    instrumentalness FLOAT(7),
+    loudness FLOAT(7),
+    tempo FLOAT(7),
+    valence FLOAT(7)
+    
+    
+);
