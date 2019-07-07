@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Library from '../components/MusicLibrary/MusicLibrary';
 import Sidebar from '../components/MusicLibrary/MusicSidebar';
@@ -27,7 +27,9 @@ const columns = [
   { name: 'Date Added', width: 1, spotifyRef: 'added_at' },
 ];
 
-function LibraryPage({ library, err }) {
+function LibraryPage({ data, err }) {
+  const [library, setLibrary] = useState(data);
+
   return (
     <Container>
       <StyledSidebar />
@@ -38,14 +40,15 @@ function LibraryPage({ library, err }) {
 
 LibraryPage.getInitialProps = async ({ res, req, err, query }) => {
   err && console.log('server error', err);
+
   const cookie = (req && req.headers.cookie) || document.cookie;
-  let library = await fetch('http://localhost:3000/api/library/all', {
+  const library = await fetch('http://localhost:3000/api/library/all', {
     credentials: 'include',
     headers: { cookie },
   });
-  library = await library.json();
+  const { data } = await library.json();
   console.log('CLIENT SIDE LIB', library, '*********END');
-  return { library: library.data };
+  return { data };
 };
 
 export default LibraryPage;

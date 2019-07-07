@@ -24,20 +24,34 @@ module.exports = {
       });
     });
   },
-  editUserInfo: ({ spotifyID, displayName, imgURL, refreshToken, accessTokenExpiration }) => {
+  editUserInfo: ({
+    spotifyID,
+    displayName,
+    imgURL,
+    refreshToken,
+    accessToken,
+    accessTokenExpiration,
+  }) => {
     connection.query(
-      'UPDATE userInfo SET displayName = ?, imgURL = ?, refreshToken = ?, accessTokenExpiration = ? WHERE spotifyID = ?',
-      [displayName, imgURL, refreshToken, accessTokenExpiration, spotifyID],
+      'UPDATE userInfo SET displayName = ?, imgURL = ?, refreshToken = ?, accessToken =?, accessTokenExpiration = ? WHERE spotifyID = ?',
+      [displayName, imgURL, refreshToken, accessToken, accessTokenExpiration, spotifyID],
       (err, data) => {
         if (err) throw err;
         console.log('EDIT USER INFO DATA:', data);
       }
     );
   },
-  createUser: ({ spotifyID, displayName, imgURL, refreshToken, accessTokenExpiration }) => {
+  createUser: ({
+    spotifyID,
+    displayName,
+    imgURL,
+    refreshToken,
+    accessToken,
+    accessTokenExpiration,
+  }) => {
     connection.query(
-      'INSERT INTO userInfo (spotifyID, displayName, imgURL, refreshToken, accessTokenExpiration) VALUES (?,?,?,?,?)',
-      [spotifyID, displayName, imgURL, refreshToken, accessTokenExpiration],
+      'INSERT INTO userInfo (spotifyID, displayName, imgURL, refreshToken, accessToken, accessTokenExpiration) VALUES (?,?,?,?,?)',
+      [spotifyID, displayName, imgURL, refreshToken, accessToken, accessTokenExpiration],
       (err, data) => {
         if (err) throw err;
         console.log('CREATE USER INFO DATA:', data);

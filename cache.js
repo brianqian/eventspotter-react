@@ -36,6 +36,7 @@ class LRUCache {
     }
     this.cache[key] = this.head;
     this.size += 1;
+    return this.head;
   }
 
   get(key) {
@@ -70,6 +71,7 @@ class LRUCache {
       this.delete(key);
     }
   }
+
   forEach(fn) {
     let node = this.head;
     let counter = 0;

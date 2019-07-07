@@ -57,8 +57,13 @@ const fetchCookie = (cookie, cookieName) => {
 
 const decodeCookie = async cookie => {
   if (!cookie) return null;
-  const encodedToken = fetchCookie(cookie, 'userInfo');
+
+  console.log('IN DECODE COOKIE************');
+  const encodedToken =
+    typeof cookie === 'string' ? fetchCookie(cookie, 'userInfo') : cookie.userInfo;
+
   const { userInfo } = await jwt.verify(encodedToken, process.env.JWT_SECRET_KEY);
+  console.log(userInfo);
   return userInfo;
 };
 

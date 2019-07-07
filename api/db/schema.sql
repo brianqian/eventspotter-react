@@ -9,6 +9,7 @@ CREATE TABLE userInfo (
   displayName VARCHAR(30),
   imgURL VARCHAR(500),
   refreshToken CHAR(200),
+  accessToken CHAR(200),
   accessTokenExpiration VARCHAR(20),
   PRIMARY KEY (id)
 );

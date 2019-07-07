@@ -72,16 +72,16 @@ router.route('/spotifyLogin').get(async (req, res) => {
     spotifyID: profile.id,
     displayName: profile.display_name,
     imgURL: profile.images[0].url,
-    accessToken: access_token,
-    accessTokenExpiration: Date.now() + 1000 * 60 * 45,
   };
 
   const encodedToken = await jwt.sign({ userInfo }, process.env.JWT_SECRET_KEY, {
     expiresIn: '999d',
   });
 
-  //FORMATTING DATA FOR DB ENTRY
+  //FORMATTING DATA FOR DB ENTRY/CACHE
   userInfo.refreshToken = refresh_token;
+  userInfo.accessTokenExpiration = Date.now() + 1000 * 60 * 55;
+  userInfo.accessToken = access_token;
 
   //CREATE NEW USER OR UPDATE EXISTING USER
   try {
