@@ -5,33 +5,15 @@ const { spotifyFetch, getTokens, decodeCookie } = require('../../utils/fetch');
 const authController = require('../controllers/authController');
 const cache = require('../../cache');
 
-router
-  .route('/login')
-  .get((req, res) => {
-    const redirect_uri = encodeURIComponent('http://localhost:3000/api/auth/spotifyLogin');
-    const scopes = encodeURIComponent('user-read-private user-read-email user-library-read');
-    res.redirect(
-      `https://accounts.spotify.com/authorize?response_type=code&client_id=${
-        process.env.SPOTIFY_CLIENT_ID
-      }&scope=${scopes}&redirect_uri=${redirect_uri}`
-    );
-  })
-  .post(async (req, res) => {
-    /*******************
-     * HANDLE JWT LOGIN
-     *******************
-     */
-    const encodedToken = req.cookies && req.cookies.userInfo;
-    const decodedToken = jwt.verify(encodedToken, process.env.JWT_SECRET_KEY);
-    const { spotifyID } = decodedToken;
-
-    if (cache.get(spotifyID)) res.json(cache.get(spotifyID));
-    const userData = await authController.getUser(spotifyID);
-    //UPDATE CACHE WITH INFO;
-    console.log('IN AUTH ROUTE, getting user Info:', userData);
-
-    res.json(userData);
-  });
+router.route('/login').get((req, res) => {
+  const redirect_uri = encodeURIComponent('http://localhost:3000/api/auth/spotifyLogin');
+  const scopes = encodeURIComponent('user-read-private user-read-email user-library-read');
+  res.redirect(
+    `https://accounts.spotify.com/authorize?response_type=code&client_id=${
+      process.env.SPOTIFY_CLIENT_ID
+    }&scope=${scopes}&redirect_uri=${redirect_uri}`
+  );
+});
 
 router.route('/spotifyLogin').get(async (req, res) => {
   /***********************************
@@ -86,7 +68,8 @@ router.route('/spotifyLogin').get(async (req, res) => {
   //CREATE NEW USER OR UPDATE EXISTING USER
   try {
     const user = await authController.getUser(profile.id);
-    if (!user) {
+    console.log('USER RETURNED FROM GETUSER:' + JSON.stringify(user), typeof user.usersFound);
+    if (!user || user.usersFound === 0) {
       console.log('Creating new user: ' + JSON.stringify(userInfo));
       authController.createUser(userInfo);
     } else if (user.usersFound == 1) {

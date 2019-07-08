@@ -38,12 +38,16 @@ app.prepare().then(() => {
       //IF VALID JWT, CHECK FOR USER IN CACHE
       let cachedUser = cache.get(spotifyID);
       if (!cachedUser) {
-        cachedUser = cache.set(spotifyID, await authController.getUser(spotifyID));
+        try {
+          const userFromDatabase = await authController.getUser(spotifyID);
+          cachedUser = cache.set(spotifyID, userFromDatabase);
+        } catch (err) {
+          throw err;
+        }
         //IF USER IS NOT IN CACHE, RETRIEVE USER FROM DB AND UPDATE CACHE
       }
 
       console.log(`********CACHED USER: ${JSON.stringify(cachedUser)}`);
-      // CHECK FOR USER SETTING FOR AUTO UPDATE LIBRARY. IF AUTO UPDATE SELECTED, CONTINUE
       //CHECK EXPIRATION ON ACCESS TOKEN.
       const tokenExpired = Date.now() > cachedUser.accessTokenExpiration;
       console.log('TOKEN EXPIRED: ' + tokenExpired);
@@ -63,6 +67,7 @@ app.prepare().then(() => {
         authController.editUserInfo(updatedCachedUser);
       }
 
+      // CHECK FOR USER SETTING FOR AUTO UPDATE LIBRARY. IF AUTO UPDATE SELECTED, CONTINUE
       //FETCH FIRST 50 SONGS FROM SPOTIFY API.
 
       console.log('PATH:', req.path);
@@ -76,6 +81,7 @@ app.prepare().then(() => {
     //COMPARE DATE ADDED OF ITEMS IN CACHE VS SPOTIFY API DATA
     // Will also need to consider items that have been deleted from spotify and exist in cache*
   });
+
   server.use('/api', routes);
 
   server.get('/library', (req, res) => {

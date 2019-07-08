@@ -9,7 +9,7 @@ const libraryController = require('../controllers/libraryController');
 // require('dotenv').config();
 
 router.route('/all').get(async (req, res) => {
-  console.log(`**********ROUTING TO /ALL FROM ${req.path}**********`);
+  console.log(`**********ROUTING TO /ALL**********`);
   const offset = req.query.offset || 0;
   const limit = req.query.limit || 50;
   const query = querystring.stringify({ offset, limit });
@@ -17,17 +17,19 @@ router.route('/all').get(async (req, res) => {
   console.log(`************SPOTIFY ID: ${spotifyID}`);
   const { accessToken } = cache.get(spotifyID);
   console.log(`************ACCESS TOKEN: ${accessToken}`);
-  // let library = cache.get(spotifyID).library;
-  // if (library) {
-  //   res.json({ data: library });
-  // } else {
-  // }
+  const cachedUser = cache.get(spotifyID);
+  const { library: cachedLibrary } = cachedUser;
+  if (cachedLibrary) res.json({ data: cachedLibrary });
 
-  let library = await spotifyFetch(`https://api.spotify.com/v1/me/tracks?${query}`, accessToken);
-  let data = [...library.items];
+  const spotifyLibrary = await spotifyFetch(
+    `https://api.spotify.com/v1/me/tracks?${query}`,
+    accessToken
+  );
+  console.log(spotifyLibrary);
+  let data = [...spotifyLibrary.items];
   for (let i = 0; i < 2; i++) {
-    library = await spotifyFetch(library.next, accessToken);
-    data.push(...library.items);
+    spotifyLibrary = await spotifyFetch(spotifyLibrary.next, accessToken);
+    data.push(...spotifyLibrary.items);
   }
 
   console.log('***********EXITING LIBRARY WITH DATA LENGTH: ' + data.length);

@@ -63,17 +63,17 @@ The server uses an LRU cache to maintain recent users and cut down on database q
 - Create a class for the song object ?
 - After user auth is set up, check if user has a refresh token saved (ie. has a previously synced Spotify account). If they do then login should link to refresh_token.
 - Set up server to conditionally render cached vs non-cached routes.
+- Two tab scenario // refresh Token
 
 ## Authentication
 
 - User logs in to Spotify and receives an access token. This token is then saved via cookie.
-- On first login a user ID is created, encrypted, and saved to localStorage via JWT and their refresh token is saved with their ID in the database.
+- On first login a user ID is created, encrypted, and saved to cookies via JWT and their refresh token is saved with their ID in the database.
 - User is always logged in while they have a userID JWT on the client side.
-- Each route that is accessed sends a post request to the server that validates their JWT.
+- Every time a user is routed a middleware function will validate the JWT and check and update the cache from the database.
 - If their JWT is validated, each page will reflect that with a logged in state stored in a signed session cookie.
-- If a signed session cookie is found
-- When the access token expires, the userID is used to look up the refresh token for that ID and a new access token is provided to the user.
-- On logout, the userID is removed from the client side.
+- When the access token expires, the userID is used to look up the refresh token for that ID and a new access token is provided to the user behind the scenes.
+- On logout, the JWT cookie is removed.
 
 ## User Caching
 

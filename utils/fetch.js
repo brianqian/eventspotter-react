@@ -19,6 +19,7 @@ const spotifyFetch = async (endpoint, authToken) => {
         Authorization: `Bearer ${authToken}`,
       },
     });
+    console.log('IN SPOTIFY FETCH: status:', resp.status, resp.statusText);
     resp = await resp.json();
     console.log('IN SPOTIFY FETCH: resp:', resp);
     return resp;
@@ -42,7 +43,7 @@ const getTokens = async params => {
     body: params,
   });
   resp = await resp.json();
-  console.log('IN GET TOKENS', resp);
+  console.log('GET TOKENS// RESPONSE: ', resp);
   return resp;
 };
 

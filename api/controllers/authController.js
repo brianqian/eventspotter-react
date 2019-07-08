@@ -33,7 +33,7 @@ module.exports = {
     accessTokenExpiration,
   }) => {
     connection.query(
-      'UPDATE userInfo SET displayName = ?, imgURL = ?, refreshToken = ?, accessToken =?, accessTokenExpiration = ? WHERE spotifyID = ?',
+      'UPDATE userInfo SET displayName = ?, imgURL = ?, refreshToken = ?, accessToken = ?, accessTokenExpiration = ? WHERE spotifyID = ?',
       [displayName, imgURL, refreshToken, accessToken, accessTokenExpiration, spotifyID],
       (err, data) => {
         if (err) throw err;
@@ -50,7 +50,7 @@ module.exports = {
     accessTokenExpiration,
   }) => {
     connection.query(
-      'INSERT INTO userInfo (spotifyID, displayName, imgURL, refreshToken, accessToken, accessTokenExpiration) VALUES (?,?,?,?,?)',
+      'INSERT INTO userInfo (spotifyID, displayName, imgURL, refreshToken, accessToken, accessTokenExpiration) VALUES (?,?,?,?,?,?)',
       [spotifyID, displayName, imgURL, refreshToken, accessToken, accessTokenExpiration],
       (err, data) => {
         if (err) throw err;
