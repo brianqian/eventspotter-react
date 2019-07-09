@@ -41,13 +41,18 @@ function LibraryPage({ data, err }) {
 LibraryPage.getInitialProps = async ({ res, req, err, query }) => {
   if (err) console.log('server error', err);
   const cookie = (req && req.headers.cookie) || document.cookie;
-  const library = await fetch('http://localhost:3000/api/library/all', {
-    credentials: 'include',
-    headers: { cookie },
-  });
-  const { data } = await library.json();
-  // console.log('CLIENT SIDE LIB', library, '*********END');
-  return { data };
+  try {
+    const library = await fetch('http://localhost:3000/api/library/all', {
+      credentials: 'include',
+      headers: { cookie },
+    });
+    const { data } = await library.json();
+    // console.log('CLIENT SIDE LIB', library, '*********END');
+    return { data };
+  } catch (err) {
+    console.error(err);
+    return { err };
+  }
 };
 
 export default LibraryPage;

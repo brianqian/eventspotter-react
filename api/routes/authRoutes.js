@@ -73,6 +73,7 @@ router.route('/spotifyLogin').get(async (req, res) => {
       console.log('Creating new user: ' + JSON.stringify(userInfo));
       authController.createUser(userInfo);
     } else if (user.usersFound == 1) {
+      console.log('EDITING EXISTINg user', userInfo);
       authController.editUserInfo(userInfo);
     }
   } catch (err) {
@@ -90,7 +91,10 @@ router.route('/spotifyLogin').get(async (req, res) => {
   res.redirect('http://localhost:3000/library');
 });
 
-router.route('/logout').get((req, res) => {});
+router.route('/logout').get((req, res) => {
+  res.clearCookie('userInfo');
+  res.redirect('/');
+});
 
 router.route('/refresh_token/:redirect').get((req, res) => {
   const { spotifyID } = decodeCookie(req.cookies.userInfo);

@@ -1,5 +1,6 @@
 import App, { Container } from 'next/app';
 import React from 'react';
+import jwt from 'jsonwebtoken';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
 import theme from '../static/cssTheme';
 import Nav from '../components/Nav/Nav';
@@ -21,25 +22,30 @@ body, html{
 
 export default class MyApp extends App {
   static async getInitialProps({ Component, ctx, ctx: { req, res } }) {
-    const userInfo = req ? req.cookies.userInfo : fetchCookie(document.cookie, userInfo);
-    // check localStorage for JWT userID
+    let isLoggedIn;
+    const cookie = fetchCookie(req ? req.cookies.userInfo : document.cookie);
+    jwt.verify(cookie, process.env.JWT_SECRET_KEY, (err, verified) => {
+      isLoggedIn = verified ? true : false;
+    });
+
     let pageProps = {};
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);
     }
 
-    return { pageProps: { ...pageProps }, userInfo };
+    return { pageProps: { ...pageProps }, isLoggedIn };
   }
 
   render() {
-    const { Component, pageProps, userInfo } = this.props;
+    const { Component, pageProps, isLoggedIn } = this.props;
+
     return (
       <Container>
         <ThemeProvider theme={theme}>
           <>
             <GlobalStyle />
-            <Nav jwt={userInfo || ''} />
-            <Component {...pageProps} />
+            <Nav loggedIn={isLoggedIn} />
+            <Component {...pageProps} loggedIn={isLoggedIn} />
           </>
         </ThemeProvider>
       </Container>

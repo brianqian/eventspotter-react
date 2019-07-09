@@ -22,7 +22,7 @@ function MusicLibrary({ className, library, columns, onError }) {
       <StyledTitleRow widths={{}} columns={columns} />
       {onError && (
         <div>
-          <p>{onError}</p>
+          <p>{onError.message}</p>
           <p>
             Click{' '}
             <Link href="/login">

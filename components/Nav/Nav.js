@@ -41,7 +41,7 @@ const SignIn = styled.div`
   }
 `;
 
-const Nav = ({ loggedIn, jwt }) => {
+const Nav = ({ loggedIn }) => {
   return (
     <StyledNav>
       <Link prefetch href="/">
@@ -53,10 +53,7 @@ const Nav = ({ loggedIn, jwt }) => {
         </Link>
       ))}
       <SignIn>
-        <a
-          href={`http://localhost:3000/api/auth/${loggedIn ? 'logout' : 'login'}${jwt &&
-            '?jwt=' + jwt}`}
-        >
+        <a href={`http://localhost:3000/api/auth/${loggedIn ? 'logout' : 'login'}`}>
           Login with Spotify
         </a>
       </SignIn>
