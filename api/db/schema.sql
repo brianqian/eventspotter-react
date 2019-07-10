@@ -4,34 +4,34 @@ USE eventspotter_db;
 
 
 CREATE TABLE userInfo (
-  id INT NOT NULL AUTO_INCREMENT,
   spotifyID VARCHAR(100),
   displayName VARCHAR(30),
   imgURL VARCHAR(500),
   refreshToken CHAR(200),
   accessToken CHAR(200),
   accessTokenExpiration VARCHAR(20),
-  PRIMARY KEY (id)
+  PRIMARY KEY (spotifyID)
 );
 
 
 CREATE TABLE userSettings(
   id INT NOT NULL AUTO_INCREMENT,
-  userId INTEGER (100),
+  userID VARCHAR (100),
   zipcode INTEGER (5),
   searchRadius INTEGER (5),
-  acousticness BOOLEAN,
-  danceability BOOLEAN,
-  energy BOOLEAN,
-  instrumentalness BOOLEAN,
-  loudness BOOLEAN,
-  tempo BOOLEAN,
-  valence BOOLEAN, 
-  PRIMARY KEY (id)
+  showAcousticness BOOLEAN,
+  showDanceability BOOLEAN,
+  showEnergy BOOLEAN,
+  showInstrumentalness BOOLEAN,
+  showLoudness BOOLEAN,
+  showTempo BOOLEAN,
+  showValence BOOLEAN,
+  PRIMARY KEY (id),
+  FOREIGN KEY (userID) REFERENCES userInfo(spotifyID)
 );
 
 CREATE TABLE library(
-  songID VARCHAR(15),
+  spotifyID VARCHAR(15),
   artist VARCHAR(30),
   dateAdded VARCHAR(15),
   acousticness FLOAT(7),
@@ -41,8 +41,15 @@ CREATE TABLE library(
   loudness FLOAT(7),
   tempo FLOAT(7),
   valence FLOAT(7), 
-  PRIMARY KEY(songID)
+  PRIMARY KEY (spotifyID)
   
   );
 
-  CREATE TABLE 
+  CREATE TABLE LibraryUser(
+    id INT NOT NULL AUTO_INCREMENT,
+    userID VARCHAR(100),
+    songID VARCHAR(100),
+    PRIMARY KEY (id),
+    CONSTRAINT FK_LibraryUser FOREIGN KEY (userID) REFERENCES userInfo(spotifyID),
+    CONSTRAINT FK_UserLibrary FOREIGN KEY (songID) REFERENCES library(spotifyID)
+  )

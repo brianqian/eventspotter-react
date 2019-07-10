@@ -1,34 +1,24 @@
-const fetch = require('isomorphic-unfetch');
+const { spotifyFetch } = require('../../utils/fetch');
 
 module.exports = {
   getAllSongs: async accessToken => {
     const limit = 50;
+    const totalRequests = 3;
+    // const totalRequests = resp.total / limit;
     try {
-      let resp = await fetch(`https://api.spotify.com/v1/me/tracks?offset=0&limit=${limit}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      const totalRequests = resp.total / limit;
-      const fetchPromisesArr = [];
+      const promiseArr = [];
       for (let i = 0; i < totalRequests; i++) {
-        fetchPromisesArr.push(
-          new Promise((reject, resolve) => {
-            const offset = 50 * i + 50;
-            const result = fetch(
-              `https://api.spotify.com/v1/me/tracks?offset=${offset}&limit=${limit}`,
-              {
-                headers: { Authorization: `Bearer ${accessToken}` },
-              }
-            );
-            resolve(result);
-          })
+        const offset = 50 * i;
+        promiseArr.push(
+          spotifyFetch(
+            `https://api.spotify.com/v1/me/tracks?offset=${offset}&limit=${limit}`,
+            accessToken
+          )
         );
       }
-      Promise.all(fetchPromisesArr).then(results => {});
-
-      console.log('IN SPOTIFY FETCH: status:', resp.status, resp.statusText);
-      resp = await resp.json();
-      console.log('IN SPOTIFY FETCH: resp:', resp);
-      return resp;
+      console.log('PROM ARR LENGTH', promiseArr.length);
+      const userLibrary = await Promise.all(promiseArr);
+      console.log(userLibrary);
     } catch (err) {
       console.log(err);
     }
