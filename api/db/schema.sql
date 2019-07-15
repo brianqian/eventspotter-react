@@ -4,12 +4,12 @@ USE eventspotter_db;
 
 
 CREATE TABLE userInfo (
-  spotifyID VARCHAR(100),
-  displayName VARCHAR(30),
+  spotifyID VARCHAR(100) NOT NULL,
+  displayName VARCHAR(30) NOT NULL,
   imgURL VARCHAR(500),
-  refreshToken CHAR(200),
-  accessToken CHAR(200),
-  accessTokenExpiration VARCHAR(20),
+  refreshToken CHAR(200) NOT NULL,
+  accessToken CHAR(200) NOT NULL,
+  accessTokenExpiration VARCHAR(20) NOT NULL,
   PRIMARY KEY (spotifyID)
 );
 

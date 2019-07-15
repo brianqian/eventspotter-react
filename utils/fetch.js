@@ -43,7 +43,7 @@ const getTokens = async params => {
     body: params,
   });
   resp = await resp.json();
-  console.log('GET TOKENS// RESPONSE: ', resp);
+  // console.log('GET TOKENS// RESPONSE: ', resp);
   return resp;
 };
 

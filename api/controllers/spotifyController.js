@@ -2,6 +2,7 @@ const { spotifyFetch } = require('../../utils/fetch');
 
 module.exports = {
   getAllSongs: async accessToken => {
+    console.log('IN SPOT CONTROLLER GET ALL SONGS');
     const limit = 50;
     const totalRequests = 3;
     // const totalRequests = resp.total / limit;
@@ -17,8 +18,16 @@ module.exports = {
         );
       }
       console.log('PROM ARR LENGTH', promiseArr.length);
-      const userLibrary = await Promise.all(promiseArr);
-      console.log(userLibrary);
+      // const userLibrary = await Promise.all(promiseArr);
+      Promise.all(promiseArr)
+        .then(userLibrary => {
+          console.log('IN THEN', userLibrary);
+          const reduced = userLibrary.reduce((library, spotifyResp) => {
+            return library.push(...spotifyResp.items);
+          }, []);
+          console.log('REDUCED', reduced);
+        })
+        .catch(err => []);
     } catch (err) {
       console.log(err);
     }

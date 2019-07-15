@@ -30,18 +30,6 @@ router.route('/spotifyLogin').get(async (req, res) => {
   };
   console.log('***************PARAMS: ', params);
   const resp = await getTokens(params);
-
-  if (resp.error) {
-    if (resp.error_description === 'Authorization code expired') {
-      console.log('Authorization code expired, refreshing token...');
-      const { refreshToken } = await authController.getToken();
-      res.send({ error: 'Authorization code expired, refreshing token...' });
-      res.redirect(`/login`);
-    } else if (resp.error_description === 'Invalid authorization code') {
-      console.log('INVALID AUTH CODE');
-    }
-    res.send({ error: res.error_description });
-  }
   /********************************
    * GET PROFILE DATA FROM SPOTIFY
    *********************************
@@ -64,15 +52,14 @@ router.route('/spotifyLogin').get(async (req, res) => {
   userInfo.refreshToken = refresh_token;
   userInfo.accessTokenExpiration = Date.now() + 1000 * 60 * 55;
   userInfo.accessToken = access_token;
-
   //CREATE NEW USER OR UPDATE EXISTING USER
   try {
     const user = await authController.getUser(profile.id);
-    console.log('USER RETURNED FROM GETUSER:' + JSON.stringify(user), typeof user.usersFound);
+    console.log('USER RETURNED FROM GETUSER:', user);
     if (!user || user.usersFound === 0) {
-      console.log('Creating new user: ' + JSON.stringify(userInfo));
+      console.log('Creating new user: ', userInfo);
       authController.createUser(userInfo);
-    } else if (user.usersFound == 1) {
+    } else if (user.usersFound === 1) {
       console.log('EDITING EXISTINg user', userInfo);
       authController.editUserInfo(userInfo);
     }
@@ -96,11 +83,6 @@ router.route('/logout').get((req, res) => {
   res.redirect('/');
 });
 
-router.route('/refresh_token/:redirect').get((req, res) => {
-  const { spotifyID } = decodeCookie(req.cookies.userInfo);
-  res.redirect(`http://localhost:3000${req.params.redirect}`);
-  const { refreshToken } = cache.get(spotifyID);
-});
 router.route('/test').get(async (req, res) => {
   console.log('test hit');
   console.log(req.cookies);
