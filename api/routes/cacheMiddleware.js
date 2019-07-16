@@ -1,11 +1,20 @@
 const router = require('express').Router();
 const authController = require('../controllers/authController');
 const cache = require('../../cache');
-const { decodeCookie } = require('../../utils/fetch');
+const { decodeCookie, getTokens } = require('../../utils/fetch');
 
 router.use('/', async (req, res, next) => {
+  /******************************************************
+   * MIDDLEWARE RESPONSIBILITIES
+   * - Bring update user recency in cache.
+   * - If user not in cache, bring into cache from database
+   * - Update access token if expired
+   *
+   * **************************************************
+   */
+  //CHECK IF USER HAS A COOKIE
   if (!req.cookies || !req.cookies.userInfo) return next();
-  //CHECK FOR JWT IN COOKIES
+
   console.log('************MAIN MIDDLEWARE HIT');
   try {
     const { spotifyID } = await decodeCookie(req.cookies);
@@ -13,14 +22,15 @@ router.use('/', async (req, res, next) => {
     //IF VALID JWT, CHECK FOR USER IN CACHE
     let cachedUser = cache.get(spotifyID);
     if (!cachedUser) {
+      //IF USER IS NOT IN CACHE, RETRIEVE USER FROM DB AND UPDATE CACHE
       try {
         const userFromDatabase = await authController.getUser(spotifyID);
         cache.set(spotifyID, userFromDatabase);
         cachedUser = cache.get(spotifyID);
       } catch (err) {
+        console.error('MIDDLEWARE-getuser', err);
         throw err;
       }
-      //IF USER IS NOT IN CACHE, RETRIEVE USER FROM DB AND UPDATE CACHE
     }
 
     console.log('********CACHED USER:', cachedUser);
@@ -33,11 +43,11 @@ router.use('/', async (req, res, next) => {
         grant_type: 'refresh_token',
         refresh_token: cachedUser.refreshToken,
       };
-      const tokens = await getTokens(params);
+      const { access_token } = await getTokens(params);
       const updatedCachedUser = {
         ...cachedUser,
         accessTokenExpiration: Date.now() + 1000 * 60 * 55,
-        accessToken: tokens.access_token,
+        accessToken: access_token,
         refreshToken: cachedUser.refreshToken,
       };
       cache.set(spotifyID, updatedCachedUser);

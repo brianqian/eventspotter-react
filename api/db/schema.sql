@@ -17,8 +17,8 @@ CREATE TABLE userInfo (
 CREATE TABLE userSettings(
   id INT NOT NULL AUTO_INCREMENT,
   userID VARCHAR (100),
-  zipcode INTEGER (5),
-  searchRadius INTEGER (5),
+  zipcode INTEGER (10),
+  searchRadius INTEGER (10),
   showAcousticness BOOLEAN,
   showDanceability BOOLEAN,
   showEnergy BOOLEAN,
@@ -31,9 +31,10 @@ CREATE TABLE userSettings(
 );
 
 CREATE TABLE library(
-  spotifyID VARCHAR(15),
-  artist VARCHAR(30),
-  dateAdded VARCHAR(15),
+  spotifyID VARCHAR(100),
+  trackTitle VARCHAR(100),
+  artist VARCHAR(200),
+  dateAdded VARCHAR(30),
   acousticness FLOAT(7),
   danceability FLOAT(7),
   energy FLOAT(7),

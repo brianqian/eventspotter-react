@@ -1,4 +1,3 @@
-const fetch = require('isomorphic-unfetch');
 const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const { spotifyFetch, getTokens, decodeCookie } = require('../../utils/fetch');
@@ -28,13 +27,12 @@ router.route('/spotifyLogin').get(async (req, res) => {
     redirect_uri,
     grant_type: 'authorization_code',
   };
-  console.log('***************PARAMS: ', params);
-  const resp = await getTokens(params);
+  const userTokens = await getTokens(params);
   /********************************
    * GET PROFILE DATA FROM SPOTIFY
    *********************************
    */
-  const { refresh_token, access_token } = resp;
+  const { refresh_token, access_token } = userTokens;
   const profile = await spotifyFetch('https://api.spotify.com/v1/me', access_token);
 
   //FORMATTING DATA FOR USER TOKEN
@@ -74,7 +72,7 @@ router.route('/spotifyLogin').get(async (req, res) => {
 
   // save encoded token to cookie or localstorage?
   res.cookie('userInfo', encodedToken, { maxAge: 1000 * 60 * 60 * 24 * 365 });
-  console.log('REDIRECTING FROM AUTH TO LIBRARY');
+  console.log('REDIRECTING TO LIBRARY FROM AUTH');
   res.redirect('http://localhost:3000/library');
 });
 
@@ -83,10 +81,6 @@ router.route('/logout').get((req, res) => {
   res.redirect('/');
 });
 
-router.route('/test').get(async (req, res) => {
-  console.log('test hit');
-  console.log(req.cookies);
-  res.redirect('/api/auth/login');
-});
+router.route('/test').get(async (req, res) => {});
 
 module.exports = router;

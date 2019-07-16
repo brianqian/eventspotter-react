@@ -1,14 +1,20 @@
 const { spotifyFetch } = require('../../utils/fetch');
 
 module.exports = {
-  getAllSongs: async accessToken => {
+  getAllSongs: async (accessToken, pages) => {
     console.log('IN SPOT CONTROLLER GET ALL SONGS');
     const limit = 50;
-    const totalRequests = 3;
     // const totalRequests = resp.total / limit;
+    const { total } = await spotifyFetch(
+      `https://api.spotify.com/v1/me/tracks?offset=0&limit=50`,
+      accessToken
+    );
+
+    if (!pages) pages = total / limit;
+
     try {
       const promiseArr = [];
-      for (let i = 0; i < totalRequests; i++) {
+      for (let i = 0; i < pages; i++) {
         const offset = 50 * i;
         promiseArr.push(
           spotifyFetch(
@@ -17,17 +23,11 @@ module.exports = {
           )
         );
       }
-      console.log('PROM ARR LENGTH', promiseArr.length);
-      // const userLibrary = await Promise.all(promiseArr);
-      Promise.all(promiseArr)
-        .then(userLibrary => {
-          console.log('IN THEN', userLibrary);
-          const reduced = userLibrary.reduce((library, spotifyResp) => {
-            return library.push(...spotifyResp.items);
-          }, []);
-          console.log('REDUCED', reduced);
-        })
-        .catch(err => []);
+      const result = await Promise.all(promiseArr);
+      const userLibrary = result.reduce((acc, resp) => {
+        return [...acc, ...resp.items];
+      }, []);
+      return userLibrary;
     } catch (err) {
       console.log(err);
     }

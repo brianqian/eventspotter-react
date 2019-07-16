@@ -58,12 +58,14 @@ The server uses an LRU cache to maintain recent users and cut down on database q
 
 - ~~Place frontend in its own folder, set up monorepo~~
 - ~~Edit package.json to concurrently run server in dev mode.~~
-- Consider caching music library in database (is this faster than Spotify with prefetch on startup?)
+- ~~Consider caching music library in database (is this faster than Spotify with prefetch on startup?)~~
 - ~~Consider using AWS for backend deployment~~
 - Create a class for the song object ?
-- After user auth is set up, check if user has a refresh token saved (ie. has a previously synced Spotify account). If they do then login should link to refresh_token.
+- ~~Add refresh token code to middleware~~
+- Decide where user library should be checked against the Spotify library.
 - Set up server to conditionally render cached vs non-cached routes.
 - Two tab scenario // refresh Token
+- 
 
 ## Authentication
 
