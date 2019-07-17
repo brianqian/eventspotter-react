@@ -27,13 +27,13 @@ const columns = [
   { name: 'Date Added', width: 1, spotifyRef: 'added_at' },
 ];
 
-function LibraryPage({ data, err }) {
+function LibraryPage({ data, error }) {
   const [library, setLibrary] = useState(data);
 
   return (
     <Container>
       <StyledSidebar />
-      <StyledLibrary library={library || []} columns={columns} onError={err} />
+      <StyledLibrary library={library || []} columns={columns} onError={error} />
     </Container>
   );
 }
@@ -46,9 +46,9 @@ LibraryPage.getInitialProps = async ({ res, req, err, query }) => {
       credentials: 'include',
       headers: { cookie },
     });
-    const { data } = await library.json();
+    const { data, error } = await library.json();
     // console.log('CLIENT SIDE LIB', library, '*********END');
-    return { data };
+    return { data, error };
   } catch (err) {
     console.error(err);
     return { err };

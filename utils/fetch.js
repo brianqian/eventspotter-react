@@ -1,14 +1,7 @@
 const fetch = require('isomorphic-unfetch');
 const btoa = require('btoa');
 const jwt = require('jsonwebtoken');
-
-const JSONToURL = object => {
-  return Object.keys(object)
-    .map(key => {
-      return encodeURIComponent(key) + '=' + encodeURIComponent(object[key]);
-    })
-    .join('&');
-};
+const { JSONToURL } = require('./format');
 
 const spotifyFetch = async (endpoint, authToken) => {
   console.log(endpoint, authToken);
@@ -70,7 +63,6 @@ const decodeCookie = async cookie => {
 };
 
 module.exports = {
-  JSONToURL,
   spotifyFetch,
   fetchCookie,
   getTokens,

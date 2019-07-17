@@ -25,7 +25,7 @@ function MusicLibrary({ className, library, columns, onError }) {
           <p>{onError.message}</p>
           <p>
             Click{' '}
-            <Link href="/login">
+            <Link href="/api/auth/login">
               <a>Here</a>
             </Link>
             to resync your Spotify account.

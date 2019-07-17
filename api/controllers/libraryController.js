@@ -22,7 +22,7 @@ module.exports = {
     });
     console.log('IN UPDATE LIBRARY: ', insertArray);
     connection.query(
-      'INSERT INTO library (spotify_id, track_title, artist) VALUES ?',
+      'INSERT IGNORE INTO library (spotify_id, track_title, artist) VALUES ?',
       [insertArray],
       (err, data) => {
         if (err) throw err;
@@ -52,6 +52,25 @@ module.exports = {
     );
   },
   getUserLibrary: spotifyID => {
-    connection.query('SELECT * FROM library WHERE IN (SELECT song_id FROM LibraryUser WHERE user');
+    connection.query(
+      'SELECT * FROM library WHERE IN (SELECT song_id FROM LibraryUser WHERE user_id = ?)',
+      [spotifyID],
+      (err, data) => {
+        if (err) throw err;
+        console.log('USER LIBRARY: ', data);
+        return data;
+      }
+    );
+  },
+  setUserLibrary: (spotifyID, library) => {
+    const insertArray = library.map(song => [spotifyID, song.track.id, song.added_at]);
+    connection.query(
+      'INSERT IGNORE INTO LibraryUser (user_id, song_id, date_added) VALUES ?',
+      [insertArray],
+      (err, data) => {
+        if (err) throw err;
+        console.log('INSERT LIB:', data);
+      }
+    );
   },
 };

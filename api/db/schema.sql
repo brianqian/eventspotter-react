@@ -27,7 +27,7 @@ CREATE TABLE user_settings(
   show_tempo BOOLEAN,
   show_valence BOOLEAN,
   PRIMARY KEY (id),
-  FOREIGN KEY (user_id) REFERENCES userInfo(spotifyID)
+  FOREIGN KEY (user_id) REFERENCES user_info(user_id)
 );
 
 CREATE TABLE library(
@@ -50,5 +50,5 @@ CREATE TABLE library(
     song_id VARCHAR(100),
     date_added VARCHAR(100),
     PRIMARY KEY (user_id, song_id),
-    CONSTRAINT FK_LibraryUser FOREIGN KEY (user_id) REFERENCES userInfo(spotifyID)
+	FOREIGN KEY (user_id) REFERENCES user_info(user_id)
   )

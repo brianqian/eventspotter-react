@@ -1,13 +1,25 @@
-const cache = require('../cache');
-
-const formatDataAndCache = spotifyProfile => {
-  const formattedObject = {
-    spotifyID: spotifyProfile.id,
-    displayName: spotifyProfile.display_name,
-    imgURL: spotifyProfile.images[0].url,
-  };
-  cache.set(spotifyProfile.id, formattedObject);
-  return formattedObject;
+const JSONToURL = object => {
+  return Object.keys(object)
+    .map(key => {
+      return encodeURIComponent(key) + '=' + encodeURIComponent(object[key]);
+    })
+    .join('&');
 };
 
-module.exports = formatDataAndCache;
+const dbToCacheObject = (dbObject, library) => {
+  const result = {
+    spotifyID: dbObject.user_id,
+    displayName: dbObject.display_name,
+    imgURL: dbObject.img_URL,
+    refreshToken: dbObject.refresh_token,
+    accessToken: dbObject.access_token,
+    accessTokenExpiration: dbObject.access_token_expiration,
+  };
+  if (library) result.library = library;
+  return result;
+};
+
+module.exports = {
+  JSONToURL,
+  dbToCacheObject,
+};

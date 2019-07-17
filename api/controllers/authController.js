@@ -42,7 +42,7 @@ module.exports = {
       spotifyID
     );
     connection.query(
-      'UPDATE userInfo SET display_name = ?, img_URL = ?, refresh_token = ?, access_token = ?, access_token_expiration = ? WHERE spotifyID = ?',
+      'UPDATE user_info SET display_name = ?, img_URL = ?, refresh_token = ?, access_token = ?, access_token_expiration = ? WHERE user_id = ?',
       [displayName, imgURL, refreshToken, accessToken, accessTokenExpiration, spotifyID],
       (err, data) => {
         if (err) throw err;
@@ -59,7 +59,7 @@ module.exports = {
     accessTokenExpiration,
   }) => {
     connection.query(
-      'INSERT INTO userInfo (user_id, display_name, img_URL, refresh_token, access_token, access_token_expiration) VALUES (?,?,?,?,?,?)',
+      'INSERT INTO user_info (user_id, display_name, img_URL, refresh_token, access_token, access_token_expiration) VALUES (?,?,?,?,?,?)',
       [spotifyID, displayName, imgURL, refreshToken, accessToken, accessTokenExpiration],
       (err, data) => {
         if (err) throw err;
@@ -68,15 +68,15 @@ module.exports = {
     );
   },
   deleteUser: spotifyID => {
-    connection.query('DELETE FROM userInfo WHERE user_id = ?', [spotifyID], (err, data) => {
+    connection.query('DELETE FROM user_info WHERE user_id = ?', [spotifyID], (err, data) => {
       if (err) throw err;
       console.log('IN DELETE USER,', data);
     });
   },
   editUserSongTotal: (spotifyID, newTotal) => {
     connection.query(
-      'UPDATE library SET total_songs = ? WHERE user_id = ?',
-      [newtotal, spotifyID],
+      'UPDATE user_info SET total_songs = ? WHERE user_id = ?',
+      [newTotal, spotifyID],
       (err, data) => {
         if (err) throw err;
         console.log('in edit user song total', newTotal, data);
