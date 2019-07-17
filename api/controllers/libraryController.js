@@ -16,18 +16,42 @@ module.exports = {
     });
   },
   updateLibraryBasic: library => {
-    const insertArray = library.map(({ added_at, track: { artists, name, id } }) => {
+    const insertArray = library.map(({ track: { artists, name, id } }) => {
       const artist = artists.map(artist => artist.name).join(', ');
-      return [id, name, artist, added_at];
+      return [id, name, artist];
     });
     console.log('IN UPDATE LIBRARY: ', insertArray);
     connection.query(
-      'INSERT INTO library (spotifyID, trackTitle, artist, dateAdded) VALUES ?',
+      'INSERT INTO library (spotify_id, track_title, artist) VALUES ?',
       [insertArray],
       (err, data) => {
         if (err) throw err;
         return data;
       }
     );
+  },
+  updateLibraryAdvanced: library => {
+    const insertArray = library.map(
+      ({ acousticness, danceability, energy, instrumentalness, loudness, tempo, valence }) => [
+        acousticness,
+        danceability,
+        energy,
+        instrumentalness,
+        loudness,
+        tempo,
+        valence,
+      ]
+    );
+    connection.query(
+      'INSERT INTO library (acousticness, danceability, energy, instrumentalness, loudness, tempo, valence) VALUES ?',
+      [insertArray],
+      (err, data) => {
+        if (err) throw err;
+        return data;
+      }
+    );
+  },
+  getUserLibrary: spotifyID => {
+    connection.query('SELECT * FROM library WHERE IN (SELECT song_id FROM LibraryUser WHERE user');
   },
 };

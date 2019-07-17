@@ -3,38 +3,37 @@ CREATE DATABASE eventspotter_db;
 USE eventspotter_db;
 
 
-CREATE TABLE userInfo (
-  spotifyID VARCHAR(100) NOT NULL,
-  displayName VARCHAR(30) NOT NULL,
-  imgURL VARCHAR(500),
-  refreshToken CHAR(200) NOT NULL,
-  accessToken CHAR(200) NOT NULL,
-  accessTokenExpiration VARCHAR(20) NOT NULL,
-  PRIMARY KEY (spotifyID)
+CREATE TABLE user_info (
+  user_id VARCHAR(100),
+  display_name VARCHAR(30) NOT NULL,
+  img_URL VARCHAR(500),
+  refresh_token CHAR(200) NOT NULL,
+  access_token CHAR(200) NOT NULL,
+  access_token_expiration VARCHAR(20) NOT NULL,
+  PRIMARY KEY (user_id)
 );
 
 
-CREATE TABLE userSettings(
-  id INT NOT NULL AUTO_INCREMENT,
-  userID VARCHAR (100),
+CREATE TABLE user_settings(
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  user_id VARCHAR (100),
   zipcode INTEGER (10),
-  searchRadius INTEGER (10),
-  showAcousticness BOOLEAN,
-  showDanceability BOOLEAN,
-  showEnergy BOOLEAN,
-  showInstrumentalness BOOLEAN,
-  showLoudness BOOLEAN,
-  showTempo BOOLEAN,
-  showValence BOOLEAN,
+  search_radius INTEGER (10),
+  show_acousticness BOOLEAN,
+  show_danceability BOOLEAN,
+  show_energy BOOLEAN,
+  show_instrumentalness BOOLEAN,
+  show_loudness BOOLEAN,
+  show_tempo BOOLEAN,
+  show_valence BOOLEAN,
   PRIMARY KEY (id),
-  FOREIGN KEY (userID) REFERENCES userInfo(spotifyID)
+  FOREIGN KEY (user_id) REFERENCES userInfo(spotifyID)
 );
 
 CREATE TABLE library(
-  spotifyID VARCHAR(100),
-  trackTitle VARCHAR(100),
+  spotify_id VARCHAR(100),
+  track_title VARCHAR(100),
   artist VARCHAR(200),
-  dateAdded VARCHAR(30),
   acousticness FLOAT(7),
   danceability FLOAT(7),
   energy FLOAT(7),
@@ -42,15 +41,14 @@ CREATE TABLE library(
   loudness FLOAT(7),
   tempo FLOAT(7),
   valence FLOAT(7), 
-  PRIMARY KEY (spotifyID)
+  PRIMARY KEY (spotify_id)
   
   );
 
   CREATE TABLE LibraryUser(
-    id INT NOT NULL AUTO_INCREMENT,
-    userID VARCHAR(100),
-    songID VARCHAR(100),
-    PRIMARY KEY (id),
-    CONSTRAINT FK_LibraryUser FOREIGN KEY (userID) REFERENCES userInfo(spotifyID),
-    CONSTRAINT FK_UserLibrary FOREIGN KEY (songID) REFERENCES library(spotifyID)
+    user_id VARCHAR(100),
+    song_id VARCHAR(100),
+    date_added VARCHAR(100),
+    PRIMARY KEY (user_id, song_id),
+    CONSTRAINT FK_LibraryUser FOREIGN KEY (user_id) REFERENCES userInfo(spotifyID)
   )

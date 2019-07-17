@@ -8,6 +8,8 @@ router.use('/', async (req, res, next) => {
    * MIDDLEWARE RESPONSIBILITIES
    * - Bring update user recency in cache.
    * - If user not in cache, bring into cache from database
+   *  -Get user info from authController
+   *  -Get user library from libraryController
    * - Update access token if expired
    *
    * **************************************************
@@ -16,6 +18,10 @@ router.use('/', async (req, res, next) => {
   if (!req.cookies || !req.cookies.userInfo) return next();
 
   console.log('************MAIN MIDDLEWARE HIT');
+
+  /***********************************************
+   * UPDATE CACHE FROM DATABASE IF USER NOT IN CACHE
+   *************************************************/
   try {
     const { spotifyID } = await decodeCookie(req.cookies);
     console.log('SPOTIFY ID: ' + spotifyID);
@@ -34,11 +40,13 @@ router.use('/', async (req, res, next) => {
     }
 
     console.log('********CACHED USER:', cachedUser);
-    //CHECK EXPIRATION ON ACCESS TOKEN.
+    /******************************
+     * CHECK AND UPDATE ACCESS TOKEN
+     ******************************/
+
     const tokenExpired = Date.now() > cachedUser.accessTokenExpiration;
     console.log('TOKEN EXPIRED: ' + tokenExpired);
     if (tokenExpired) {
-      //REFRESH ACCESS TOKEN
       const params = {
         grant_type: 'refresh_token',
         refresh_token: cachedUser.refreshToken,
@@ -54,9 +62,6 @@ router.use('/', async (req, res, next) => {
       authController.editUserInfo(updatedCachedUser);
     }
 
-    // CHECK FOR USER SETTING FOR AUTO UPDATE LIBRARY. IF AUTO UPDATE SELECTED, CONTINUE
-    //FETCH FIRST 50 SONGS FROM SPOTIFY API.
-
     console.log('PATH:', req.path);
     console.log('******************MAIN MIDDLEWARE ENDING');
     return next();
@@ -64,9 +69,6 @@ router.use('/', async (req, res, next) => {
     console.log('error!', err);
     return next();
   }
-
-  //COMPARE DATE ADDED OF ITEMS IN CACHE VS SPOTIFY API DATA
-  // Will also need to consider items that have been deleted from spotify and exist in cache*
 });
 
 module.exports = router;
