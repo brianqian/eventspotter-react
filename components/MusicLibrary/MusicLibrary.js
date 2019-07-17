@@ -32,7 +32,7 @@ function MusicLibrary({ className, library, columns, onError }) {
           </p>
         </div>
       )}
-      {library && library.map(item => <Row key={item.track.id} data={item} columns={columns} />)}
+      {library && library.map(song => <Row key={song.id} data={song} columns={columns} />)}
     </Container>
   );
 }

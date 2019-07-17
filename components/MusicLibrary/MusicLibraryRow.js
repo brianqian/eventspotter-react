@@ -12,16 +12,14 @@ const Column = styled.div`
   flex: ${props => props.width};
 `;
 
-function MusicLibraryRow({ data, data: { track }, columns }) {
+function MusicLibraryRow({ data, columns }) {
   return (
     <Container>
       {data && (
         <>
-          <Column width={columns[0].width || 2}>{track.name}</Column>
-          <Column width={columns[1].width || 2}>
-            {track.artists.map(({ name }) => name).join(', ')}
-          </Column>
-          <Column width={columns[2].width || 1}>{format(data.added_at, 'YYYY-MM-DD')}</Column>
+          <Column width={columns[0].width || 2}>{data.title}</Column>
+          <Column width={columns[1].width || 2}>{data.artist}</Column>
+          <Column width={columns[2].width || 1}>{format(data.dateAdded, 'YYYY-MM-DD')}</Column>
           {/* {columns &&
             columns.map(column => (
               <Column width={column.width}>{data.track[column.spotifyRef]}</Column>

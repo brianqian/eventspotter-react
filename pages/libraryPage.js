@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Library from '../components/MusicLibrary/MusicLibrary';
 import Sidebar from '../components/MusicLibrary/MusicSidebar';
+import useLibrary from '../utils/hooks/useLibrary';
 
 const Container = styled.div`
   display: grid;
@@ -28,8 +29,7 @@ const columns = [
 ];
 
 function LibraryPage({ data, error }) {
-  const [library, setLibrary] = useState(data);
-
+  const [library, fetchSongs] = useLibrary(data);
   return (
     <Container>
       <StyledSidebar />
@@ -47,7 +47,6 @@ LibraryPage.getInitialProps = async ({ res, req, err, query }) => {
       headers: { cookie },
     });
     const { data, error } = await library.json();
-    // console.log('CLIENT SIDE LIB', library, '*********END');
     return { data, error };
   } catch (err) {
     console.error(err);

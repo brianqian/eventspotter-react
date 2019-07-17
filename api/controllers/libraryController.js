@@ -7,7 +7,7 @@ module.exports = {
   //   })
   // },
   getSong: songID => {
-    return new Promise((reject, resolve) => {
+    return new Promise((resolve, reject) => {
       connection.query('SELECT * FROM library WHERE songID = ?', [songID], (err, data) => {
         if (err) throw err;
         console.log(data);
@@ -52,15 +52,21 @@ module.exports = {
     );
   },
   getUserLibrary: spotifyID => {
-    connection.query(
-      'SELECT * FROM library WHERE IN (SELECT song_id FROM LibraryUser WHERE user_id = ?)',
-      [spotifyID],
-      (err, data) => {
-        if (err) throw err;
-        console.log('USER LIBRARY: ', data);
-        return data;
-      }
-    );
+    return new Promise((resolve, reject) => {
+      connection.query(
+        'SELECT * FROM library JOIN LibraryUser ON spotify_id = song_id WHERE spotify_id IN (SELECT song_id FROM LibraryUser WHERE user_id = ?) ORDER BY date_added DESC;',
+        [spotifyID],
+        (err, data) => {
+          if (err) throw err;
+          data.forEach(item => {
+            delete item.song_id;
+            delete item.user_id;
+          });
+          console.log(data[0], data.length);
+          resolve(data);
+        }
+      );
+    });
   },
   setUserLibrary: (spotifyID, library) => {
     const insertArray = library.map(song => [spotifyID, song.track.id, song.added_at]);
@@ -69,7 +75,7 @@ module.exports = {
       [insertArray],
       (err, data) => {
         if (err) throw err;
-        console.log('INSERT LIB:', data);
+        // console.log('INSERT LIB:', data);
       }
     );
   },

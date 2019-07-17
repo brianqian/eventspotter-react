@@ -23,42 +23,52 @@ router.route('/all').get(async (req, res) => {
    * ***********
    */
   console.log(`**********ROUTING TO /ALL**********`);
+  console.log(req.headers.cookie);
   const { spotifyID } = await decodeCookie(req.headers.cookie);
   console.log('SPOTIFY ID FOUND: ', spotifyID);
   const { accessToken, totalSongs } = cache.get(spotifyID);
   if (!accessToken) return handleError(res, 401);
   const cachedUser = cache.get(spotifyID);
-  let { library } = cachedUser;
   const spotifyResp = await spotifyFetch(`https://api.spotify.com/v1/me/tracks`, accessToken);
-  //check for new songs
-  const needToUpdateSongs =
-    !library ||
-    (totalSongs !== spotifyResp.total && spotifyResp.items[0].date_added !== library[0].dateAdded);
-  if (needToUpdateSongs) {
+  //IF LIBRARY DOESNT EXIST, CHECK DATABASE
+  const userLibrary = await libraryController.getUserLibrary(spotifyID);
+  console.log('LIBRARY****', userLibrary.length || 'NONE FOUND');
+  cache.setLibrary(spotifyID, userLibrary);
+  // update library in database
+  console.log('RETURNING LIBRARY TO FRONT END');
+  res.json({ data: cachedUser.library });
+  // IF USER EXISTS IN DATABASE AND DONT NEED TO UPDATE, RETURN CACHE
+  const needToFullUpdateSongs =
+    !userLibrary ||
+    (totalSongs !== spotifyResp.total &&
+      spotifyResp.items[0].added_at !== userLibrary[0].date_added);
+
+  if (needToFullUpdateSongs) {
+    console.log('DOING FULL UPDATE**********');
     // advanced: if the discrepency is smaller than 50 songs and can find the most recently added songs, add those particular songs.
-    library = await spotifyController.getAllSongs(accessToken, 2);
-    // if theres a discrepency, get all songs and rebuild library
-    cache.set(spotifyID, { ...cachedUser, library, totalSongs: spotifyResp.total });
+    const newLibrary = await spotifyController.getAllSongs(accessToken, 2);
+    cache.set(spotifyID, { ...cachedUser, totalSongs: spotifyResp.total });
+    cache.setLibrary(spotifyID, newLibrary);
     authController.editUserSongTotal(spotifyID, spotifyResp.total);
-    libraryController.updateLibraryBasic(library);
+    libraryController.updateLibraryBasic(newLibrary);
     libraryController.setUserLibrary(spotifyID, library);
   }
-  // update library in database
-
-  const result = cache.get(spotifyID);
-
-  console.log('***********EXITING LIBRARY WITH DATA LENGTH: ' + result.library.length);
-
-  res.json({ data: cachedUser.library });
+  console.log('END OF /ALL******************');
 });
 
-router.route('/test').get(async (req, res) => {
+router.route('/test/cache').get(async (req, res) => {
   console.log('************ IN TEST');
   const { spotifyID } = await decodeCookie(req.headers.cookie);
   console.log(`************SPOTIFY ID: ${spotifyID}`);
   const { accessToken } = cache.get(spotifyID);
   console.log(`************ACCESS TOKEN: ${accessToken}`);
   const result = cache.get(spotifyID);
+  console.log(result);
+});
+
+router.route('/test').get(async (req, res) => {
+  const { spotifyID } = await decodeCookie(req.headers.cookie);
+  const result = await libraryController.getUserLibrary(123);
   console.log(result);
 });
 

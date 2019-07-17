@@ -38,6 +38,39 @@ class LRUCache {
     this.size += 1;
     return this.head;
   }
+  setLibrary(spotifyID, library) {
+    const cachedUser = this.get(spotifyID);
+    const libraryArray = library.map(song => {
+      const { track } = song;
+      const songID = track ? track.id : song.spotify_id;
+      return {
+        id: songID,
+        dateAdded: song.added_at || song.date_added,
+        title: song.track_title || track.name,
+        artist: song.artist || track.artists,
+      };
+    });
+    cachedUser.library = libraryArray;
+    this.set(spotifyID, cachedUser);
+  }
+  setLibraryFeatures(spotifyID, library) {
+    const cachedUser = this.get(spotifyID);
+    library.forEach(song => {
+      const songObject = cachedUser.library[song.id];
+      const updatedObject = {
+        ...songObject,
+        acousticness: song.acousticness,
+        danceability: song.danceability,
+        energy: song.energy,
+        instrumentalness: song.instrumentalness,
+        loudness: song.loudness,
+        tempo: song.tempo,
+        valence: song.valence,
+      };
+      songObject = updatedObject;
+    });
+    this.set(spotifyID, cachedUser);
+  }
 
   get(key) {
     if (!this.cache[key]) return null;

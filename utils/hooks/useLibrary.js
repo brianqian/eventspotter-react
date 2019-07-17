@@ -1,13 +1,15 @@
-// import { useState } from 'react';
+import { useState } from 'react';
+import fetch from 'isomorphic-unfetch';
 
-// const useLibrary = () => {
-//   const [isShowing, setIsShowing] = useState(false);
+const useLibrary = data => {
+  const [library, setLibrary] = useState(data);
 
-//   function toggle() {
-//     setIsShowing(!isShowing);
-//   }
+  async function fetchSongs(offset) {
+    const resp = await fetch(`/api/library/next_songs?offset=${offset}`);
+    setLibrary([...library, ...resp.items]);
+  }
 
-//   return [isShowing, toggle];
-// };
+  return [library, fetchSongs];
+};
 
-// export default useLibrary;
+export default useLibrary;

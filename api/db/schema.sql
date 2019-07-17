@@ -34,13 +34,13 @@ CREATE TABLE library(
   spotify_id VARCHAR(100),
   track_title VARCHAR(100),
   artist VARCHAR(200),
-  acousticness FLOAT(7),
-  danceability FLOAT(7),
-  energy FLOAT(7),
-  instrumentalness FLOAT(7),
-  loudness FLOAT(7),
-  tempo FLOAT(7),
-  valence FLOAT(7), 
+  acousticness FLOAT(7) DEFAULT NULL,
+  danceability FLOAT(7) DEFAULT NULL,
+  energy FLOAT(7) DEFAULT NULL,
+  instrumentalness FLOAT(7) DEFAULT NULL,
+  loudness FLOAT(7) DEFAULT NULL,
+  tempo FLOAT(7) DEFAULT NULL,
+  valence FLOAT(7) DEFAULT NULL,
   PRIMARY KEY (spotify_id)
   
   );

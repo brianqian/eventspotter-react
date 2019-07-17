@@ -40,7 +40,6 @@ router.use('/', async (req, res, next) => {
       }
     }
 
-    console.log('********CACHED USER:', cachedUser);
     /******************************
      * CHECK AND UPDATE ACCESS TOKEN
      ******************************/
