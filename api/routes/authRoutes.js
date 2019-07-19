@@ -28,14 +28,14 @@ router.route('/spotifyLogin').get(async (req, res) => {
     grant_type: 'authorization_code',
   };
   const userTokens = await getTokens(params);
-  /********************************
-   * GET PROFILE DATA FROM SPOTIFY
-   *********************************
-   */
+
+  //* TODO: total songs info needs to be retrieved from database
+  //FETCH TOKENS AND PROFILE DATA FROM SPOTIFY************
+
   const { refresh_token, access_token } = userTokens;
   const profile = await spotifyFetch('https://api.spotify.com/v1/me', access_token);
 
-  //FORMATTING DATA FOR USER TOKEN
+  //FORMATTING DATA FOR USER TOKEN*****************
   const userInfo = {
     spotifyID: profile.id,
     displayName: profile.display_name,
@@ -46,13 +46,13 @@ router.route('/spotifyLogin').get(async (req, res) => {
     expiresIn: '999d',
   });
 
-  //FORMATTING DATA FOR DB ENTRY/CACHE
+  //FORMATTING DATA FOR DB ENTRY/CACHE***********
   userInfo.refreshToken = refresh_token;
   userInfo.accessTokenExpiration = Date.now() + 1000 * 60 * 55;
   userInfo.accessToken = access_token;
-  //CREATE NEW USER OR UPDATE EXISTING USER
+  //CREATE NEW USER OR UPDATE EXISTING USER********
   try {
-    const user = await authController.getUser(profile.id);
+    const user = await authController.getUserByID(profile.id);
     console.log('USER RETURNED FROM GETUSER:', user);
     if (!user || user.usersFound === 0) {
       console.log('Creating new user: ', userInfo);
@@ -66,11 +66,11 @@ router.route('/spotifyLogin').get(async (req, res) => {
     console.log(user.error);
   }
 
-  //UPDATE CACHE WITH USER INFO
+  //UPDATE CACHE WITH USER INFO************
   console.log('UPDATING CACHE...');
   cache.set(profile.id, { ...userInfo, refreshToken: refresh_token, accessToken: access_token });
 
-  // save encoded token to cookie or localstorage?
+  // SAVE ENCODED TOKEN TO COOKIE ***********
   res.cookie('userInfo', encodedToken, { maxAge: 1000 * 60 * 60 * 24 * 365 });
   console.log('REDIRECTING TO LIBRARY FROM AUTH');
   res.redirect('http://localhost:3000/library');

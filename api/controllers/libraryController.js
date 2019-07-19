@@ -1,11 +1,6 @@
 const connection = require('../db');
 
 module.exports = {
-  // getAll = ()=>{
-  //   return new Promise((reject,resolve)=>{
-  //     connection.query('SELECT * FROM library ')
-  //   })
-  // },
   getSong: songID => {
     return new Promise((resolve, reject) => {
       connection.query('SELECT * FROM library WHERE songID = ?', [songID], (err, data) => {
@@ -20,12 +15,13 @@ module.exports = {
       const artist = artists.map(artist => artist.name).join(', ');
       return [id, name, artist];
     });
-    console.log('IN UPDATE LIBRARY: ', insertArray);
+    console.log('IN UPDATE LIBRARY');
     connection.query(
-      'INSERT IGNORE INTO library (spotify_id, track_title, artist) VALUES ?',
+      'INSERT IGNORE INTO library (spotify_id, title, artist) VALUES ?',
       [insertArray],
       (err, data) => {
         if (err) throw err;
+        console.log('RETURNING FROM UPDATE LIBRARY', data);
         return data;
       }
     );
@@ -54,7 +50,7 @@ module.exports = {
   getUserLibrary: spotifyID => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'SELECT * FROM library JOIN LibraryUser ON spotify_id = song_id WHERE spotify_id IN (SELECT song_id FROM LibraryUser WHERE user_id = ?) ORDER BY date_added DESC;',
+        'SELECT * FROM library JOIN UserLibrary ON spotify_id = song_id WHERE spotify_id IN (SELECT song_id FROM UserLibrary WHERE user_id = ?) ORDER BY date_added DESC;',
         [spotifyID],
         (err, data) => {
           if (err) throw err;
@@ -62,7 +58,12 @@ module.exports = {
             delete item.song_id;
             delete item.user_id;
           });
-          console.log(data[0], data.length);
+          console.log('in lib controller, getuserlib', data[0], data.length);
+          data = {
+            ...data,
+            id: data.spotify_id,
+            dateAdded: data.date_added,
+          };
           resolve(data);
         }
       );
@@ -71,7 +72,7 @@ module.exports = {
   setUserLibrary: (spotifyID, library) => {
     const insertArray = library.map(song => [spotifyID, song.track.id, song.added_at]);
     connection.query(
-      'INSERT IGNORE INTO LibraryUser (user_id, song_id, date_added) VALUES ?',
+      'INSERT IGNORE INTO UserLibrary (user_id, song_id, date_added) VALUES ?',
       [insertArray],
       (err, data) => {
         if (err) throw err;

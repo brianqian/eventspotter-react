@@ -14,6 +14,7 @@ const dbToCacheObject = (dbObject, library) => {
     refreshToken: dbObject.refresh_token,
     accessToken: dbObject.access_token,
     accessTokenExpiration: dbObject.access_token_expiration,
+    totalSongs: dbObject.total_songs,
   };
   if (library) result.library = library;
   return result;

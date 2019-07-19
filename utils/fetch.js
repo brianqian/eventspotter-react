@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const { JSONToURL } = require('./format');
 
 const spotifyFetch = async (endpoint, authToken) => {
-  console.log(endpoint, authToken);
+  console.log('SPOTIFY FETCH TO: ', endpoint);
   try {
     let resp = await fetch(endpoint, {
       method: 'GET',
@@ -23,7 +23,7 @@ const spotifyFetch = async (endpoint, authToken) => {
 
 const getTokens = async params => {
   params = JSONToURL(params);
-  console.log('***IN GET TOKENS -- encoded params', params);
+  console.log('***IN GET TOKENS**********');
   const encodedIDAndSecret = btoa(
     `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
   );
@@ -55,11 +55,12 @@ const decodeCookie = async cookie => {
   // console.log('IN DECODE COOKIE************. DECODING', cookie);
   const encodedToken =
     typeof cookie === 'string' ? fetchCookie(cookie, 'userInfo') : cookie.userInfo;
-
-  const { userInfo } = await jwt.verify(encodedToken, process.env.JWT_SECRET_KEY);
+  if (!encodedToken) return null;
+  const result = await jwt.verify(encodedToken, process.env.JWT_SECRET_KEY);
+  if (!result) return null;
   // console.log('***********END DECODE COOKIE: ', userInfo);
 
-  return userInfo;
+  return result.userInfo;
 };
 
 module.exports = {

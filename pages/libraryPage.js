@@ -47,10 +47,11 @@ LibraryPage.getInitialProps = async ({ res, req, err, query }) => {
       headers: { cookie },
     });
     const { data, error } = await library.json();
+    console.log('front end*************', data && data.length, data && data[0]);
     return { data, error };
   } catch (err) {
-    console.error(err);
-    return { err };
+    console.error(error);
+    return { error };
   }
 };
 

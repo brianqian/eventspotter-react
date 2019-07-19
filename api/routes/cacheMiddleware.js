@@ -2,7 +2,6 @@ const router = require('express').Router();
 const authController = require('../controllers/authController');
 const cache = require('../../cache');
 const { decodeCookie, getTokens } = require('../../utils/fetch');
-const { dbToCacheObject } = require('../../utils/format');
 
 router.use('/', async (req, res, next) => {
   /******************************************************
@@ -31,8 +30,8 @@ router.use('/', async (req, res, next) => {
     if (!cachedUser) {
       //IF USER IS NOT IN CACHE, RETRIEVE USER FROM DB AND UPDATE CACHE
       try {
-        const userFromDatabase = await authController.getUser(spotifyID);
-        cache.set(spotifyID, dbToCacheObject(userFromDatabase));
+        const userFromDatabase = await authController.getUserByID(spotifyID);
+        cache.set(spotifyID, userFromDatabase);
         cachedUser = cache.get(spotifyID);
       } catch (err) {
         console.error('MIDDLEWARE-getuser', err);

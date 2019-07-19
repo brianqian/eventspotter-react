@@ -1,25 +1,34 @@
 const connection = require('../db');
 
 module.exports = {
-  getUser: spotifyID => {
+  getUserByID: spotifyID => {
     return new Promise((resolve, reject) => {
       connection.query('SELECT * FROM user_info WHERE user_id = ?', [spotifyID], (err, data) => {
         console.log('*******GETTING USER:', spotifyID);
         if (err) throw err;
         console.log('GET USER RAW DATA', data);
         if (!data.length)
-          resolve({
+          return resolve({
             error: 'Spotify ID not found in database, please try logging in again.',
             usersFound: 0,
           });
         if (data.length > 1)
-          resolve({
+          return resolve({
             error: 'Database error (more than 1 user found). Please contact webmaster.',
             usersFound: data.length,
           });
         data.map(item => (item.usersFound = data.length));
         [data] = data;
         console.log('GET USER returned data', data);
+        data = {
+          spotifyID: data.user_id,
+          displayName: data.display_name,
+          imgURL: data.img_URL,
+          refreshToken: data.refresh_token,
+          accessToken: data.access_token,
+          accessTokenExpiration: data.access_token_expiration,
+          totalSongs: data.total_songs,
+        };
         resolve(data);
       });
     });

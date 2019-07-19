@@ -46,8 +46,8 @@ class LRUCache {
       return {
         id: songID,
         dateAdded: song.added_at || song.date_added,
-        title: song.track_title || track.name,
-        artist: song.artist || track.artists,
+        title: song.title || track.name,
+        artist: song.artist || track.artists.map(artist => artist.name).join(', '),
       };
     });
     cachedUser.library = libraryArray;
@@ -71,6 +71,11 @@ class LRUCache {
     });
     this.set(spotifyID, cachedUser);
   }
+  setKey(spotifyID, key, value) {
+    const cachedUser = this.get(spotifyID);
+    const updatedUser = { ...cachedUser, [key]: value };
+    this.set(spotifyID, updatedUser);
+  }
 
   get(key) {
     if (!this.cache[key]) return null;
@@ -79,6 +84,10 @@ class LRUCache {
     this.delete(key);
     this.set(key, value);
     return value;
+  }
+  getKey(spotifyID, key) {
+    const cachedUser = this.get(spotifyID);
+    return cachedUser[key];
   }
 
   delete(key) {
