@@ -3,7 +3,7 @@ module.exports = {
   getUserLibrary: spotifyID => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'SELECT * FROM library JOIN UserLibrary ON spotify_id = song_id WHERE spotify_id IN (SELECT song_id FROM UserLibrary WHERE user_id = ?) ORDER BY date_added DESC;',
+        'SELECT * FROM library JOIN UserLibrary ON library.song_id = UserLibrary.song_id WHERE library.song_id IN (SELECT song_id FROM UserLibrary WHERE user_id = ?) ORDER BY date_added DESC;',
         [spotifyID],
         (err, data) => {
           if (err) throw err;
@@ -17,8 +17,8 @@ module.exports = {
       );
     });
   },
-  setUserLibrary: (spotifyID, library) => {
-    const insertArray = library.map(song => [spotifyID, song.track.id, song.added_at]);
+  setUserLibrary: (spotifyID, spotifyLib) => {
+    const insertArray = spotifyLib.map(song => [spotifyID, song.track.id, song.added_at]);
     connection.query(
       'INSERT IGNORE INTO UserLibrary (user_id, song_id, date_added) VALUES ?',
       [insertArray],

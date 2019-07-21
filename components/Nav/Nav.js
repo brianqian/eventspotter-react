@@ -54,7 +54,7 @@ const Nav = ({ loggedIn }) => {
       ))}
       <SignIn>
         <a href={`http://localhost:3000/api/auth/${loggedIn ? 'logout' : 'login'}`}>
-          Login with Spotify
+          {loggedIn ? 'Logout' : 'Login with Spotify'}
         </a>
       </SignIn>
       {/* <div>

@@ -1,4 +1,5 @@
 const connection = require('../db');
+const format = require('../../utils/format');
 
 module.exports = {
   getSong: songID => {
@@ -10,23 +11,34 @@ module.exports = {
       });
     });
   },
-  updateLibraryBasic: library => {
-    const insertArray = library.map(({ track: { artists, name, id } }) => {
-      const artist = artists.map(artist => artist.name).join(', ');
-      return [id, name, artist];
+  setLibraryBasic: library => {
+    /**
+     * library is an array of 50 or less songs from Spotify.
+     * library = spotifyResp.items
+     */
+    const cacheLibrary = [];
+    const insertArray = library.map(({ added_at, track: { artists, name, id } }) => {
+      artists = artists.reduce((acc, artist) => [...acc, artist.name], []).join(', ');
+      cacheLibrary.push({
+        id,
+        dateAdded: added_at,
+        artist: artists,
+        title: name,
+      });
+      return [id, name, artists.name];
     });
-    console.log('IN UPDATE LIBRARY');
+    console.log('IN SET LIBRARY CONTROLLER');
     connection.query(
-      'INSERT IGNORE INTO library (spotify_id, title, artist) VALUES ?',
+      'INSERT IGNORE INTO library (song_id, title, artist) VALUES ?',
       [insertArray],
       (err, data) => {
         if (err) throw err;
-        console.log('RETURNING FROM UPDATE LIBRARY', data);
-        return data;
+        console.log('RETURNING FROM SET LIBRARY CONTROLLER', data, cacheLibrary);
+        return cacheLibrary;
       }
     );
   },
-  updateLibraryAdvanced: library => {
+  setLibraryAdvanced: library => {
     const insertArray = library.map(
       ({ acousticness, danceability, energy, instrumentalness, loudness, tempo, valence }) => [
         acousticness,
@@ -44,39 +56,6 @@ module.exports = {
       (err, data) => {
         if (err) throw err;
         return data;
-      }
-    );
-  },
-  getUserLibrary: spotifyID => {
-    return new Promise((resolve, reject) => {
-      connection.query(
-        'SELECT * FROM library JOIN UserLibrary ON spotify_id = song_id WHERE spotify_id IN (SELECT song_id FROM UserLibrary WHERE user_id = ?) ORDER BY date_added DESC;',
-        [spotifyID],
-        (err, data) => {
-          if (err) throw err;
-          data.forEach(item => {
-            delete item.song_id;
-            delete item.user_id;
-          });
-          console.log('in lib controller, getuserlib', data[0], data.length);
-          data = {
-            ...data,
-            id: data.spotify_id,
-            dateAdded: data.date_added,
-          };
-          resolve(data);
-        }
-      );
-    });
-  },
-  setUserLibrary: (spotifyID, library) => {
-    const insertArray = library.map(song => [spotifyID, song.track.id, song.added_at]);
-    connection.query(
-      'INSERT IGNORE INTO UserLibrary (user_id, song_id, date_added) VALUES ?',
-      [insertArray],
-      (err, data) => {
-        if (err) throw err;
-        // console.log('INSERT LIB:', data);
       }
     );
   },

@@ -68,6 +68,7 @@ router.route('/spotifyLogin').get(async (req, res) => {
 
   //UPDATE CACHE WITH USER INFO************
   console.log('UPDATING CACHE...');
+  cache.set(profile.id, user);
   cache.set(profile.id, { ...userInfo, refreshToken: refresh_token, accessToken: access_token });
 
   // SAVE ENCODED TOKEN TO COOKIE ***********

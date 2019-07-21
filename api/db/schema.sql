@@ -32,7 +32,7 @@ CREATE TABLE user_settings(
 );
 
 CREATE TABLE library(
-  spotify_id VARCHAR(100),
+  song_id VARCHAR(100),
   title VARCHAR(100),
   artist VARCHAR(200),
   acousticness FLOAT(7) DEFAULT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE library(
   loudness FLOAT(7) DEFAULT NULL,
   tempo FLOAT(7) DEFAULT NULL,
   valence FLOAT(7) DEFAULT NULL,
-  PRIMARY KEY (spotify_id)
+  PRIMARY KEY (song_id)
   
   );
 

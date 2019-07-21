@@ -1,3 +1,4 @@
+const format = require('./utils/format');
 class Node {
   constructor(key, value, next = null, prev = null) {
     this.key = key;
@@ -40,17 +41,7 @@ class LRUCache {
   }
   setLibrary(spotifyID, library) {
     const cachedUser = this.get(spotifyID);
-    const libraryArray = library.map(song => {
-      const { track } = song;
-      const songID = track ? track.id : song.spotify_id;
-      return {
-        id: songID,
-        dateAdded: song.added_at || song.date_added,
-        title: song.title || track.name,
-        artist: song.artist || track.artists.map(artist => artist.name).join(', '),
-      };
-    });
-    cachedUser.library = libraryArray;
+    cachedUser.library = library;
     this.set(spotifyID, cachedUser);
   }
   setLibraryFeatures(spotifyID, library) {

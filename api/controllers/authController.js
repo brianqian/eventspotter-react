@@ -41,15 +41,6 @@ module.exports = {
     accessToken,
     accessTokenExpiration,
   }) => {
-    console.log(
-      'EDITING USER INFO',
-      displayName,
-      imgURL,
-      refreshToken,
-      accessToken,
-      accessTokenExpiration,
-      spotifyID
-    );
     connection.query(
       'UPDATE user_info SET display_name = ?, img_URL = ?, refresh_token = ?, access_token = ?, access_token_expiration = ? WHERE user_id = ?',
       [displayName, imgURL, refreshToken, accessToken, accessTokenExpiration, spotifyID],
