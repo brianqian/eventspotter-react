@@ -7,29 +7,18 @@ module.exports = {
         console.log('*******GETTING USER:', spotifyID);
         if (err) throw err;
         console.log('GET USER RAW DATA', data);
-        if (!data.length)
-          return resolve({
-            error: 'Spotify ID not found in database, please try logging in again.',
-            usersFound: 0,
-          });
-        if (data.length > 1)
-          return resolve({
-            error: 'Database error (more than 1 user found). Please contact webmaster.',
-            usersFound: data.length,
-          });
-        data.map(item => (item.usersFound = data.length));
-        [data] = data;
-        console.log('GET USER returned data', data);
-        data = {
-          spotifyID: data.user_id,
-          displayName: data.display_name,
-          imgURL: data.img_URL,
-          refreshToken: data.refresh_token,
-          accessToken: data.access_token,
-          accessTokenExpiration: data.access_token_expiration,
-          totalSongs: data.total_songs,
-        };
-        resolve(data);
+        if (data.length === 0) resolve(false);
+        if (data.length > 1) reject(new Error(`Error: users found: ${data.length}`));
+        // console.log('GET USER returned data', data);
+        resolve({
+          spotifyID: data[0].user_id,
+          displayName: data[0].display_name,
+          imgURL: data[0].img_URL,
+          refreshToken: data[0].refresh_token,
+          accessToken: data[0].access_token,
+          accessTokenExpiration: data[0].access_token_expiration,
+          totalSongs: data[0].total_songs
+        });
       });
     });
   },
@@ -39,7 +28,7 @@ module.exports = {
     imgURL,
     refreshToken,
     accessToken,
-    accessTokenExpiration,
+    accessTokenExpiration
   }) => {
     connection.query(
       'UPDATE user_info SET display_name = ?, img_URL = ?, refresh_token = ?, access_token = ?, access_token_expiration = ? WHERE user_id = ?',
@@ -56,7 +45,7 @@ module.exports = {
     imgURL,
     refreshToken,
     accessToken,
-    accessTokenExpiration,
+    accessTokenExpiration
   }) => {
     connection.query(
       'INSERT INTO user_info (user_id, display_name, img_URL, refresh_token, access_token, access_token_expiration) VALUES (?,?,?,?,?,?)',
@@ -82,5 +71,5 @@ module.exports = {
         console.log('in edit user song total', newTotal, data);
       }
     );
-  },
+  }
 };

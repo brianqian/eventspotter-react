@@ -1,5 +1,5 @@
 const connection = require('../db');
-const format = require('../../utils/format');
+const userLibraryController = require('./userLibraryController');
 
 module.exports = {
   getSong: songID => {
@@ -16,27 +16,29 @@ module.exports = {
      * library is an array of 50 or less songs from Spotify.
      * library = spotifyResp.items
      */
-    const cacheLibrary = [];
-    const insertArray = library.map(({ added_at, track: { artists, name, id } }) => {
-      artists = artists.reduce((acc, artist) => [...acc, artist.name], []).join(', ');
-      cacheLibrary.push({
-        id,
-        dateAdded: added_at,
-        artist: artists,
-        title: name,
+    return new Promise((resolve, reject) => {
+      const cacheLibrary = [];
+      const insertArray = library.map(({ added_at, track: { artists, name, id } }) => {
+        artists = artists.reduce((acc, artist) => [...acc, artist.name], []).join(', ');
+        cacheLibrary.push({
+          id,
+          dateAdded: added_at,
+          artist: artists,
+          title: name
+        });
+        return [id, name, artists.name];
       });
-      return [id, name, artists.name];
+      console.log('IN SET LIBRARY CONTROLLER');
+      connection.query(
+        'INSERT IGNORE INTO library (song_id, title, artist) VALUES ?',
+        [insertArray],
+        (err, data) => {
+          if (err) reject(err);
+          console.log('RETURNING FROM SET LIBRARY CONTROLLER', data, cacheLibrary);
+          resolve(cacheLibrary);
+        }
+      );
     });
-    console.log('IN SET LIBRARY CONTROLLER');
-    connection.query(
-      'INSERT IGNORE INTO library (song_id, title, artist) VALUES ?',
-      [insertArray],
-      (err, data) => {
-        if (err) throw err;
-        console.log('RETURNING FROM SET LIBRARY CONTROLLER', data, cacheLibrary);
-        return cacheLibrary;
-      }
-    );
   },
   setLibraryAdvanced: library => {
     const insertArray = library.map(
@@ -47,7 +49,7 @@ module.exports = {
         instrumentalness,
         loudness,
         tempo,
-        valence,
+        valence
       ]
     );
     connection.query(
@@ -58,5 +60,5 @@ module.exports = {
         return data;
       }
     );
-  },
+  }
 };

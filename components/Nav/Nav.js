@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Link from 'next/link';
-import { fetchCookie } from '../../utils/fetch';
 
 const links = [
   { href: '/libraryPage', label: 'My Library', as: '/library' },
-  { href: '/calendar', label: 'Calendar' },
+  { href: '/calendar', label: 'Calendar' }
 ].map(link => {
   link.key = `nav-link-${link.href}-${link.label}`;
   return link;
@@ -63,6 +63,10 @@ const Nav = ({ loggedIn }) => {
       </div> */}
     </StyledNav>
   );
+};
+
+Nav.propTypes = {
+  loggedIn: PropTypes.bool.isRequired
 };
 
 export default Nav;

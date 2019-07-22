@@ -7,7 +7,7 @@ const Container = styled.div`
 `;
 
 const Calendar = () => {
-  return <Container>Hello I'm Calendar</Container>;
+  return <Container>Hello I&apos;m Calendar</Container>;
 };
 
 export default Calendar;

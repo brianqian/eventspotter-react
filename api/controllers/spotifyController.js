@@ -1,43 +1,48 @@
 const { spotifyFetch } = require('../../utils/fetch');
+const format = require('../../utils/format');
 
 module.exports = {
   getAllSongs: async (accessToken, pages) => {
-    console.log('IN SPOT CONTROLLER GET ALL SONGS');
-    const limit = 50;
-    // const totalRequests = resp.total / limit;
-    const { total } = await spotifyFetch(
-      `https://api.spotify.com/v1/me/tracks?offset=0&limit=50`,
-      accessToken
-    );
-
-    if (!pages) pages = total / limit;
-
-    try {
-      const promiseArr = [];
-      for (let i = 0; i < pages; i++) {
-        const offset = 50 * i;
-        promiseArr.push(
-          spotifyFetch(
-            `https://api.spotify.com/v1/me/tracks?offset=${offset}&limit=${limit}`,
-            accessToken
-          )
+    return new Promise(async (resolve, reject) => {
+      console.log('IN SPOT CONTROLLER GET ALL SONGS');
+      const limit = 50;
+      // const totalRequests = resp.total / limit;
+      const firstFetch = await spotifyFetch(
+        `https://api.spotify.com/v1/me/tracks?offset=0&limit=50`,
+        accessToken
+      );
+      try {
+        const promiseArr = [];
+        const numOfRequests = pages || firstFetch.total / limit;
+        for (let i = 1; i < numOfRequests; i += 1) {
+          const offset = 50 * i;
+          if (offset > 200) break;
+          promiseArr.push(
+            spotifyFetch(
+              `https://api.spotify.com/v1/me/tracks?offset=${offset}&limit=${limit}`,
+              accessToken
+            )
+          );
+        }
+        const result = await Promise.all(promiseArr);
+        const userLibrary = result.reduce(
+          (acc, resp) => {
+            return [...acc, ...format.spotifyLibraryToCache(resp.items)];
+          },
+          [format.spotifyLibraryToCache(firstFetch.items)]
         );
+        resolve(userLibrary);
+      } catch (err) {
+        reject(err);
       }
-      const result = await Promise.all(promiseArr);
-      const userLibrary = result.reduce((acc, resp) => {
-        return [...acc, ...resp.items];
-      }, []);
-      return userLibrary;
-    } catch (err) {
-      console.log(err);
-    }
+    });
   },
 
   getAllSongFeatures: (songLibrary, accessToken) => {
-    //Endpoint: https://api.spotify.com/v1/audio-features?ids={songID},{songId}
-    //Bearer + access token
-    //Response object: An array of objects containing
-    /********************
+    // Endpoint: https://api.spotify.com/v1/audio-features?ids={songID},{songId}
+    // Bearer + access token
+    // Response object: An array of objects containing
+    /** ******************
      * { "danceability": 0.808,
        "energy": 0.626,
        "key": 7,
@@ -57,7 +62,7 @@ module.exports = {
        "duration_ms": 535223,
        "time_signature": 4
      },
-     *************************/
-    //check for existing song in songLibrary
-  },
+     ************************ */
+    // check for existing song in songLibrary
+  }
 };

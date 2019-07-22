@@ -21,11 +21,11 @@ body, html{
 `;
 
 export default class MyApp extends App {
-  static async getInitialProps({ Component, ctx, ctx: { req, res } }) {
+  static async getInitialProps({ Component, ctx, ctx: { req } }) {
     let isLoggedIn;
     const cookie = fetchCookie(req ? req.cookies.userInfo : document.cookie);
     jwt.verify(cookie, process.env.JWT_SECRET_KEY, (err, verified) => {
-      isLoggedIn = verified ? true : false;
+      isLoggedIn = verified === true;
     });
 
     let pageProps = {};

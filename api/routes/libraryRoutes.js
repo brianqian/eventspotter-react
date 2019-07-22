@@ -10,7 +10,7 @@ const authController = require('../controllers/authController');
 // require('dotenv').config();
 
 router.route('/all').get(async (req, res) => {
-  /*************
+  /** ***********
    * This is the route hit by the library page. First middleware will trigger and update the cache.
    *
    * DATA FLOW--
@@ -31,7 +31,7 @@ router.route('/all').get(async (req, res) => {
    * ***********
    */
   console.log(`**********ROUTING TO /ALL**********`);
-  /*****************************************************
+  /** ***************************************************
    * ATTAIN USER CREDENTIALS FOR FETCHING FROM SPOTIFY
    * ***************************************************
    */
@@ -48,19 +48,21 @@ router.route('/all').get(async (req, res) => {
     userLibrary = await userLibraryController.getUserLibrary(spotifyID);
     if (!userLibrary.length) {
       console.log('LIBRARY IN DATABASE NOT FOUND, CHECKING SPOTIFY');
+      // Here the cache receives information directly from Spotify
       userLibrary = await spotifyController.getAllSongs(accessToken, 2);
+    } else {
+      console.log('LIBRARY IN DATABASE FOUND:', userLibrary[0], userLibrary.length);
     }
     cache.setLibrary(spotifyID, userLibrary);
     userLibrary = cache.getKey(spotifyID, 'library');
   }
-  res.json({ data: userLibrary });
 
-  /**********************
+  /** ********************
    * UPDATE USER LIBRARY
    * TODO: If the very first song is deleted, the entire library is rebuilt.
    * Make a workaround that checks for differences
-   **********************/
-  //Attempt partial update if possible;
+   ********************* */
+  // Attempt partial update if possible;
   console.log('CHECKING FOR PARTIAL UPDATE');
   const spotifyLibrary = await spotifyFetch(
     `https://api.spotify.com/v1/me/tracks?limit=50`,
@@ -70,24 +72,27 @@ router.route('/all').get(async (req, res) => {
   const lastCachedSongIndex = spotifyLibrary.items.findIndex(
     item => item.track.id === lastCachedSong.id && item.added_at === lastCachedSong.dateAdded
   );
+  console.log('LAST CACHED SONG INDEX:', lastCachedSongIndex);
   if (!lastCachedSongIndex) {
-    return console.log('NO NEW SONGS FOUND, INDEX: ', lastCachedSongIndex);
+    console.log('NO NEW SONGS FOUND, INDEX: ', lastCachedSongIndex);
+    return res.json({ data: userLibrary });
   }
   if (lastCachedSongIndex > 0) {
     console.log('PARTIAL UPDATING USER LIBRARY');
     const newSongs = [];
-    for (let i = 0; i < lastCachedSongIndex; i++) {
+    for (let i = 0; i < lastCachedSongIndex; i += 1) {
       newSongs.push(spotifyLibrary.items[i]);
     }
-    libraryController.setLibraryBasic(newSongs);
-    userLibrary = [...format.spotifyLibraryToCache(newSongs), ...userLibrary];
-  } else {
-    console.log('FULL UPDATING USER LIBRARY');
-    userLibrary = await spotifyController.getAllSongs(accessToken, 2);
-    userLibrary = libraryController.setLibraryBasic(userLibrary);
+    userLibrary = await libraryController.setLibraryBasic(newSongs);
+    userLibraryController.setUserLibrary(spotifyID, userLibrary);
   }
-
+  console.log('RETURNING TO FRONT WITH', userLibrary);
+  res.json({ data: userLibrary });
+  console.log('FULL UPDATING USER LIBRARY');
+  userLibrary = await spotifyController.getAllSongs(accessToken, 2);
   userLibraryController.setUserLibrary(spotifyID, userLibrary);
+  userLibrary = libraryController.setLibraryBasic(userLibrary);
+
   authController.editUserSongTotal(spotifyID, spotifyLibrary.total);
 
   cache.setLibrary(spotifyID, format.spotifyLibraryToCache(userLibrary));
@@ -95,20 +100,20 @@ router.route('/all').get(async (req, res) => {
   console.log('END OF /ALL******************');
 });
 
-router.route('/test/cache').get(async (req, res) => {
-  console.log('************ IN TEST');
-  const { spotifyID } = await decodeCookie(req.headers.cookie);
-  console.log(`************SPOTIFY ID: ${spotifyID}`);
-  const { accessToken } = cache.get(spotifyID);
-  console.log(`************ACCESS TOKEN: ${accessToken}`);
-  const result = cache.get(spotifyID);
-  console.log(result);
-});
+// router.route('/test/cache').get(async (req, res) => {
+//   console.log('************ IN TEST');
+//   const { spotifyID } = await decodeCookie(req.headers.cookie);
+//   console.log(`************SPOTIFY ID: ${spotifyID}`);
+//   const { accessToken } = cache.get(spotifyID);
+//   console.log(`************ACCESS TOKEN: ${accessToken}`);
+//   const result = cache.get(spotifyID);
+//   console.log(result);
+// });
 
-router.route('/test').get(async (req, res) => {
-  const { spotifyID } = await decodeCookie(req.headers.cookie);
-  const result = await libraryController.getUserLibrary(123);
-  console.log('RESULTTTT', result);
-});
+// router.route('/test').get(async (req, res) => {
+//   const { spotifyID } = await decodeCookie(req.headers.cookie);
+//   const result = await libraryController.getUserLibrary(123);
+//   console.log('RESULTTTT', result);
+// });
 
 module.exports = router;

@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Library from '../components/MusicLibrary/MusicLibrary';
 import Sidebar from '../components/MusicLibrary/MusicSidebar';
 import useLibrary from '../utils/hooks/useLibrary';
+import { songType } from '../types';
 
 const Container = styled.div`
   display: grid;
@@ -25,7 +27,7 @@ const StyledSidebar = styled(Sidebar)`
 const columns = [
   { name: 'Title', width: 2, spotifyRef: 'title' },
   { name: 'Artist', width: 2, spotifyRef: 'artists' },
-  { name: 'Date Added', width: 1, spotifyRef: 'added_at' },
+  { name: 'Date Added', width: 1, spotifyRef: 'added_at' }
 ];
 
 function LibraryPage({ data, error }) {
@@ -38,18 +40,18 @@ function LibraryPage({ data, error }) {
   );
 }
 
-LibraryPage.getInitialProps = async ({ res, req, err, query }) => {
+LibraryPage.getInitialProps = async ({ req, err }) => {
   if (err) console.log('server error', err);
   const cookie = (req && req.headers.cookie) || document.cookie;
   try {
     const library = await fetch('http://localhost:3000/api/library/all', {
       credentials: 'include',
-      headers: { cookie },
+      headers: { cookie }
     });
     const { data, error } = await library.json();
     console.log('front end*************', data && data.length, data && data[0]);
     return { data, error };
-  } catch (err) {
+  } catch (error) {
     console.error(error);
     return { error };
   }

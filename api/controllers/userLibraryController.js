@@ -1,4 +1,6 @@
 const connection = require('../db');
+const format = require('../../utils/format');
+
 module.exports = {
   getUserLibrary: spotifyID => {
     return new Promise((resolve, reject) => {
@@ -12,7 +14,8 @@ module.exports = {
             delete item.user_id;
           });
           console.log('in lib controller, getuserlib', data[0], data.length);
-          resolve(data);
+
+          resolve(format.dbToCacheProfile(data));
         }
       );
     });
@@ -27,5 +30,5 @@ module.exports = {
         // console.log('INSERT LIB:', data);
       }
     );
-  },
+  }
 };

@@ -9,8 +9,8 @@ const spotifyFetch = async (endpoint, authToken) => {
     let resp = await fetch(endpoint, {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
+        Authorization: `Bearer ${authToken}`
+      }
     });
     // console.log('IN SPOTIFY FETCH: status:', resp.status, resp.statusText);
     resp = await resp.json();
@@ -22,8 +22,8 @@ const spotifyFetch = async (endpoint, authToken) => {
 };
 
 const getTokens = async params => {
-  params = JSONToURL(params);
-  console.log('***IN GET TOKENS**********');
+  const formattedParams = JSONToURL(params);
+  console.log('***IN GET TOKENS**********', formattedParams);
   const encodedIDAndSecret = btoa(
     `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
   );
@@ -31,12 +31,12 @@ const getTokens = async params => {
     method: 'POST',
     headers: {
       Authorization: `Basic ${encodedIDAndSecret}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/x-www-form-urlencoded'
     },
-    body: params,
+    body: formattedParams
   });
   resp = await resp.json();
-  // console.log('GET TOKENS// RESPONSE: ', resp);
+  console.log('GET TOKENS// RESPONSE: ', resp);
   return resp;
 };
 
@@ -67,5 +67,5 @@ module.exports = {
   spotifyFetch,
   fetchCookie,
   getTokens,
-  decodeCookie,
+  decodeCookie
 };

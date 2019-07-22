@@ -4,7 +4,7 @@ const cache = require('../../cache');
 const { decodeCookie, getTokens } = require('../../utils/fetch');
 
 router.use('/', async (req, res, next) => {
-  /******************************************************
+  /** ****************************************************
    * MIDDLEWARE RESPONSIBILITIES
    * - Bring update user recency in cache.
    * - If user not in cache, bring into cache from database
@@ -14,21 +14,21 @@ router.use('/', async (req, res, next) => {
    *
    * **************************************************
    */
-  //CHECK IF USER HAS A COOKIE
+  // CHECK IF USER HAS A COOKIE
   if (!req.cookies || !req.cookies.userInfo) return next();
 
   console.log('************MAIN MIDDLEWARE HIT');
 
-  /***********************************************
+  /** *********************************************
    * UPDATE CACHE FROM DATABASE IF USER NOT IN CACHE
-   *************************************************/
+   ************************************************ */
   try {
     const { spotifyID } = await decodeCookie(req.cookies);
-    console.log('SPOTIFY ID: ' + spotifyID);
-    //IF VALID JWT, CHECK FOR USER IN CACHE
+    console.log(`SPOTIFY ID: ${spotifyID}`);
+    // IF VALID JWT, CHECK FOR USER IN CACHE
     let cachedUser = cache.get(spotifyID);
     if (!cachedUser) {
-      //IF USER IS NOT IN CACHE, RETRIEVE USER FROM DB AND UPDATE CACHE
+      // IF USER IS NOT IN CACHE, RETRIEVE USER FROM DB AND UPDATE CACHE
       try {
         const userFromDatabase = await authController.getUserByID(spotifyID);
         cache.set(spotifyID, userFromDatabase);
@@ -39,23 +39,23 @@ router.use('/', async (req, res, next) => {
       }
     }
 
-    /******************************
+    /** ****************************
      * CHECK AND UPDATE ACCESS TOKEN
-     ******************************/
+     ***************************** */
 
     const tokenExpired = Date.now() > cachedUser.accessTokenExpiration;
-    console.log('TOKEN EXPIRED: ' + tokenExpired);
+    console.log(`TOKEN EXPIRED: ${tokenExpired}`);
     if (tokenExpired) {
       const params = {
         grant_type: 'refresh_token',
-        refresh_token: cachedUser.refreshToken,
+        refresh_token: cachedUser.refreshToken
       };
-      const { access_token } = await getTokens(params);
+      const { access_token: accessToken } = await getTokens(params);
       const updatedCachedUser = {
         ...cachedUser,
+        accessToken,
         accessTokenExpiration: Date.now() + 1000 * 60 * 55,
-        accessToken: access_token,
-        refreshToken: cachedUser.refreshToken,
+        refreshToken: cachedUser.refreshToken
       };
       cache.set(spotifyID, updatedCachedUser);
       authController.editUserInfo(updatedCachedUser);

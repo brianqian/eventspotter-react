@@ -1,7 +1,7 @@
 import React from 'react';
-import Head from '../components/head';
 import styled from 'styled-components';
 import fetch from 'isomorphic-unfetch';
+import Head from '../components/head';
 
 const Container = styled.div`
   background-color: ${props => props.theme.color.background};
@@ -21,7 +21,9 @@ const Home = () => {
   return (
     <Container>
       <Head title="Home" />
-      <button onClick={fetchFn}>CLICK ME TO FETCH</button>
+      <button onClick={fetchFn} type="button">
+        CLICK ME TO FETCH
+      </button>
       <div>HELLO WORLD</div>
     </Container>
   );

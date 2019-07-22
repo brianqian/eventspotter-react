@@ -1,4 +1,3 @@
-const format = require('./utils/format');
 class Node {
   constructor(key, value, next = null, prev = null) {
     this.key = key;
@@ -15,21 +14,26 @@ class LRUCache {
     this.head = null;
     this.tail = null;
   }
+
   getSize() {
     console.log('size is', this.size);
   }
+
   getHead() {
     console.log('THIS.HEAD IS', this.head.value);
     return this.head;
   }
+
   getTail() {
     console.log('THIS.TAIL IS', this.tail.value);
     return this.tail;
   }
+
   set(key, value) {
     this.checkLimit();
     if (!this.head) {
-      this.head = this.tail = new Node(key, value);
+      this.tail = new Node(key, value);
+      this.head = this.tail;
     } else {
       const node = new Node(key, value, this.head);
       this.head.prev = node;
@@ -39,15 +43,17 @@ class LRUCache {
     this.size += 1;
     return this.head;
   }
+
   setLibrary(spotifyID, library) {
     const cachedUser = this.get(spotifyID);
     cachedUser.library = library;
     this.set(spotifyID, cachedUser);
   }
+
   setLibraryFeatures(spotifyID, library) {
     const cachedUser = this.get(spotifyID);
     library.forEach(song => {
-      const songObject = cachedUser.library[song.id];
+      let songObject = cachedUser.library[song.id];
       const updatedObject = {
         ...songObject,
         acousticness: song.acousticness,
@@ -56,12 +62,13 @@ class LRUCache {
         instrumentalness: song.instrumentalness,
         loudness: song.loudness,
         tempo: song.tempo,
-        valence: song.valence,
+        valence: song.valence
       };
       songObject = updatedObject;
     });
     this.set(spotifyID, cachedUser);
   }
+
   setKey(spotifyID, key, value) {
     const cachedUser = this.get(spotifyID);
     const updatedUser = { ...cachedUser, [key]: value };
@@ -71,11 +78,12 @@ class LRUCache {
   get(key) {
     if (!this.cache[key]) return null;
 
-    const value = this.cache[key].value;
+    const { value } = this.cache[key];
     this.delete(key);
     this.set(key, value);
     return value;
   }
+
   getKey(spotifyID, key) {
     const cachedUser = this.get(spotifyID);
     return cachedUser[key];
@@ -98,10 +106,12 @@ class LRUCache {
     }
     delete this.cache[key];
     this.size -= 1;
+    return undefined;
   }
+
   checkLimit() {
     if (this.size === this.limit) {
-      this.delete(key);
+      this.delete(this.tail);
     }
   }
 
@@ -111,7 +121,7 @@ class LRUCache {
     while (node) {
       fn(node, counter);
       node = node.next;
-      counter++;
+      counter += 1;
     }
   }
 }

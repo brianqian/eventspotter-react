@@ -1,75 +1,70 @@
 const router = require('express').Router();
 const jwt = require('jsonwebtoken');
-const { spotifyFetch, getTokens, decodeCookie } = require('../../utils/fetch');
+const { spotifyFetch, getTokens } = require('../../utils/fetch');
 const authController = require('../controllers/authController');
 const cache = require('../../cache');
 
 router.route('/login').get((req, res) => {
-  const redirect_uri = encodeURIComponent('http://localhost:3000/api/auth/spotifyLogin');
+  const redirectURI = encodeURIComponent('http://localhost:3000/api/auth/spotifyLogin');
   const scopes = encodeURIComponent('user-read-private user-read-email user-library-read');
   res.redirect(
     `https://accounts.spotify.com/authorize?response_type=code&client_id=${
       process.env.SPOTIFY_CLIENT_ID
-    }&scope=${scopes}&redirect_uri=${redirect_uri}`
+    }&scope=${scopes}&redirect_uri=${redirectURI}`
   );
 });
 
 router.route('/spotifyLogin').get(async (req, res) => {
-  /***********************************
+  /** *********************************
    * ACQUIRE AUTH CODE FROM SPOTIFY
    **********************************
    */
   console.log('***************NOW IN /spotifyLogin ROUTE');
-  const redirect_uri = 'http://localhost:3000/api/auth/spotifyLogin';
+  const redirectURI = 'http://localhost:3000/api/auth/spotifyLogin';
   const code = req.query.code || null;
   const params = {
     code,
-    redirect_uri,
-    grant_type: 'authorization_code',
+    redirect_uri: redirectURI,
+    grant_type: 'authorization_code'
   };
   const userTokens = await getTokens(params);
-
   //* TODO: total songs info needs to be retrieved from database
-  //FETCH TOKENS AND PROFILE DATA FROM SPOTIFY************
+  // FETCH TOKENS AND PROFILE DATA FROM SPOTIFY************
 
-  const { refresh_token, access_token } = userTokens;
-  const profile = await spotifyFetch('https://api.spotify.com/v1/me', access_token);
-
-  //FORMATTING DATA FOR USER TOKEN*****************
+  const { refresh_token: refreshToken, access_token: accessToken } = userTokens;
+  console.log('PROFILE', accessToken, refreshToken);
+  const profile = await spotifyFetch('https://api.spotify.com/v1/me', accessToken);
+  // FORMATTING DATA FOR USER TOKEN*****************
   const userInfo = {
     spotifyID: profile.id,
     displayName: profile.display_name,
-    imgURL: profile.images[0].url,
+    imgURL: profile.images[0].url
   };
 
   const encodedToken = await jwt.sign({ userInfo }, process.env.JWT_SECRET_KEY, {
-    expiresIn: '999d',
+    expiresIn: '999d'
   });
 
-  //FORMATTING DATA FOR DB ENTRY/CACHE***********
-  userInfo.refreshToken = refresh_token;
+  // FORMATTING DATA FOR DB ENTRY/CACHE***********
+  userInfo.refreshToken = refreshToken;
   userInfo.accessTokenExpiration = Date.now() + 1000 * 60 * 55;
-  userInfo.accessToken = access_token;
-  //CREATE NEW USER OR UPDATE EXISTING USER********
+  userInfo.accessToken = accessToken;
+  // CREATE NEW USER OR UPDATE EXISTING USER********
   try {
     const user = await authController.getUserByID(profile.id);
     console.log('USER RETURNED FROM GETUSER:', user);
-    if (!user || user.usersFound === 0) {
+    if (!user) {
       console.log('Creating new user: ', userInfo);
       authController.createUser(userInfo);
-    } else if (user.usersFound === 1) {
+      cache.set(profile.id, { ...userInfo, refreshToken, accessToken });
+    } else {
       console.log('EDITING EXISTINg user', userInfo);
       authController.editUserInfo(userInfo);
+      cache.set(profile.id, user);
     }
   } catch (err) {
     console.log(err);
-    console.log(user.error);
   }
-
-  //UPDATE CACHE WITH USER INFO************
-  console.log('UPDATING CACHE...');
-  cache.set(profile.id, user);
-  cache.set(profile.id, { ...userInfo, refreshToken: refresh_token, accessToken: access_token });
 
   // SAVE ENCODED TOKEN TO COOKIE ***********
   res.cookie('userInfo', encodedToken, { maxAge: 1000 * 60 * 60 * 24 * 365 });
@@ -82,6 +77,6 @@ router.route('/logout').get((req, res) => {
   res.redirect('/');
 });
 
-router.route('/test').get(async (req, res) => {});
+// router.route('/test').get(async (req, res) => {});
 
 module.exports = router;

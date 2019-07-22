@@ -1,12 +1,9 @@
-const cacheableResponse = require('cacheable-response');
+// const cacheableResponse = require('cacheable-response');
 const express = require('express');
 const next = require('next');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const routes = require('./api/routes');
-const { decodeCookie, getTokens } = require('./utils/fetch');
-const cache = require('./cache');
-const authController = require('./api/controllers/authController');
 const cacheMiddleware = require('./api/routes/cacheMiddleware');
 
 const port = parseInt(process.env.PORT, 10) || 3000;
@@ -15,13 +12,13 @@ const app = next({ dev });
 
 const handle = app.getRequestHandler();
 
-const ssrCache = cacheableResponse({
-  ttl: 1000 * 60 * 60, // 1hour
-  get: async ({ req, res, pagePath, queryParams }) => ({
-    data: await app.renderToHTML(req, res, pagePath, queryParams),
-  }),
-  send: ({ data, res }) => res.send(data),
-});
+// const ssrCache = cacheableResponse({
+//   ttl: 1000 * 60 * 60, // 1hour
+//   get: async ({ req, res, pagePath, queryParams }) => ({
+//     data: await app.renderToHTML(req, res, pagePath, queryParams),
+//   }),
+//   send: ({ data, res }) => res.send(data),
+// });
 
 app.prepare().then(() => {
   const server = express();
