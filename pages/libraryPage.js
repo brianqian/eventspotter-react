@@ -1,10 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+
 import styled from 'styled-components';
 import Library from '../components/MusicLibrary/MusicLibrary';
 import Sidebar from '../components/MusicLibrary/MusicSidebar';
 import useLibrary from '../utils/hooks/useLibrary';
-import { songType } from '../types';
 
 const Container = styled.div`
   display: grid;

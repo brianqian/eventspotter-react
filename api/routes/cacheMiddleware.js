@@ -2,7 +2,7 @@ const router = require('express').Router();
 const authController = require('../controllers/authController');
 const spotifyController = require('../controllers/spotifyController');
 const cache = require('../../cache');
-const { decodeCookie, getTokens } = require('../../utils/fetch');
+const { decodeCookie } = require('../../utils/fetch');
 const format = require('../../utils/format');
 
 router.use('/', async (req, res, next) => {

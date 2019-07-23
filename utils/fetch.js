@@ -5,20 +5,17 @@ const { JSONToURL } = require('./format');
 
 const spotifyFetch = async (endpoint, authToken) => {
   console.log('SPOTIFY FETCH TO: ', endpoint);
-  try {
-    let resp = await fetch(endpoint, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${authToken}`
-      }
-    });
-    // console.log('IN SPOTIFY FETCH: status:', resp.status, resp.statusText);
-    resp = await resp.json();
-    // console.log('IN SPOTIFY FETCH: resp:', resp);
-    return resp;
-  } catch (err) {
-    console.log(err);
-  }
+
+  let resp = await fetch(endpoint, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${authToken}`
+    }
+  });
+  // console.log('IN SPOTIFY FETCH: status:', resp.status, resp.statusText);
+  resp = await resp.json();
+  // console.log('IN SPOTIFY FETCH: resp:', resp);
+  return resp;
 };
 
 const getTokens = async params => {

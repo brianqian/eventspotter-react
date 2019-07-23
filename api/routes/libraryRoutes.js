@@ -38,9 +38,10 @@ router.route('/all').get(async (req, res) => {
   const decodedCookie = await decodeCookie(req.headers.cookie);
   if (!decodedCookie) return handleError(res, 401);
   const { spotifyID } = decodedCookie;
-  const { accessToken } = cache.get(spotifyID);
+  const cachedUser = cache.get(spotifyID);
+  const { accessToken } = cachedUser;
   if (!accessToken) return handleError(res, 401);
-  let { library: userLibrary } = cache.get(spotifyID);
+  let userLibrary = cachedUser.library;
   // IF USER EXISTS IN DATABASE AND DONT NEED TO UPDATE, RETURN CACHE
   // IF LIBRARY DOESNT EXIST, CHECK DATABASE
   if (!userLibrary) {
@@ -56,6 +57,8 @@ router.route('/all').get(async (req, res) => {
     }
     cache.setLibrary(spotifyID, userLibrary);
     console.log('RETURNING TO FRONT WITH', userLibrary[0], userLibrary.length);
+  } else {
+    console.log('LIBRARY FOUND IN CACHE:', userLibrary);
   }
   res.json({ data: userLibrary });
 
@@ -70,8 +73,13 @@ router.route('/all').get(async (req, res) => {
     `https://api.spotify.com/v1/me/tracks?limit=50`,
     accessToken
   );
+
   authController.editUserSongTotal(spotifyID, spotifyLibrary.total);
   userLibrary = cache.getKey(spotifyID, 'library');
+  console.log(
+    `USER LIBRARY length: ${userLibrary && userLibrary.length}, firstItem: ${userLibrary &&
+      userLibrary[0]}`
+  );
   const lastCachedSong = userLibrary[0];
   const lastCachedSongIndex = spotifyLibrary.items.findIndex(
     item => item.track.id === lastCachedSong.id && item.added_at === lastCachedSong.dateAdded
@@ -87,13 +95,16 @@ router.route('/all').get(async (req, res) => {
     for (let i = 0; i < lastCachedSongIndex; i += 1) {
       newSongs.push(spotifyLibrary.items[i]);
     }
-    userLibrary = await libraryController.setLibraryBasic(newSongs);
+    userLibraryController.setUserLibrary(spotifyID, newSongs);
+    libraryController.setLibraryBasic(newSongs);
+    userLibrary = [...format.spotifyLibraryToCache(newSongs), ...userLibrary];
   } else {
     console.log('FULL UPDATING USER LIBRARY');
     userLibrary = await spotifyController.getAllSongs(accessToken, 2);
+    userLibraryController.setUserLibrary(spotifyID, userLibrary);
+    userLibrary = format.spotifyLibraryToCache(userLibrary);
   }
-  cache.setLibrary(spotifyID, format.spotifyLibraryToCache(userLibrary));
-  userLibraryController.setUserLibrary(spotifyID, userLibrary);
+  cache.setLibrary(spotifyID, userLibrary);
   cache.setKey(spotifyID, 'totalSongs', spotifyLibrary.total);
   console.log('END OF /ALL******************');
 });

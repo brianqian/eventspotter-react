@@ -25,7 +25,7 @@ module.exports = {
     connection.query(
       'INSERT IGNORE INTO UserLibrary (user_id, song_id, date_added) VALUES ?',
       [insertArray],
-      (err, data) => {
+      err => {
         if (err) throw err;
         // console.log('INSERT LIB:', data);
       }
