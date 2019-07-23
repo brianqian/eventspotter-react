@@ -3,6 +3,7 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import TitleRow from './MusicLibraryTitle';
 import Row from './MusicLibraryRow';
+import useLibrary from '../../utils/hooks/useLibrary';
 
 const Container = styled.div`
   color: ${props => props.theme.color.white};
@@ -18,6 +19,7 @@ const StyledTitleRow = styled(TitleRow)`
 
 function MusicLibrary({ className, library, columns, onError }) {
   console.log(library[0]);
+  const [spotifyLibrary, setLibrary] = useLibrary(library);
   return (
     <Container className={className}>
       <StyledTitleRow widths={{}} columns={columns} />
@@ -34,7 +36,11 @@ function MusicLibrary({ className, library, columns, onError }) {
           </p>
         </div>
       )}
-      {library && library.map(song => <Row key={song.id} data={song} columns={columns} />)}
+      {spotifyLibrary &&
+        spotifyLibrary.map(song => <Row key={song.id} data={song} columns={columns} />)}
+      <button type="button" onClick={() => setLibrary(spotifyLibrary.length)}>
+        Load more songs
+      </button>
     </Container>
   );
 }

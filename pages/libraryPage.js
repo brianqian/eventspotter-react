@@ -43,7 +43,7 @@ LibraryPage.getInitialProps = async ({ req, err }) => {
   if (err) console.log('server error', err);
   const cookie = (req && req.headers.cookie) || document.cookie;
   try {
-    const library = await fetch('http://localhost:3000/api/library/all', {
+    const library = await fetch(`http://localhost:3000/api/library/all`, {
       credentials: 'include',
       headers: { cookie }
     });

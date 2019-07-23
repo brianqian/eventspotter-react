@@ -4,12 +4,9 @@ import styled from 'styled-components';
 import Link from 'next/link';
 
 const links = [
-  { href: '/libraryPage', label: 'My Library', as: '/library' },
-  { href: '/calendar', label: 'Calendar' }
-].map(link => {
-  link.key = `nav-link-${link.href}-${link.label}`;
-  return link;
-});
+  { href: '/libraryPage', label: 'My Library', as: '/library', key: 'nav-library-link' },
+  { href: '/calendar', label: 'Calendar', key: 'nav-calendar-link' }
+];
 
 const StyledNav = styled.nav`
   background-color: ${props => props.theme.color.background};

@@ -1,9 +1,9 @@
 const router = require('express').Router();
 const authController = require('../controllers/authController');
-const spotifyController = require('../controllers/spotifyController');
+const { updateAccessToken } = require('../services/spotifyService');
 const cache = require('../../cache');
-const { decodeCookie } = require('../../utils/fetch');
 const format = require('../../utils/format');
+const { decodeCookie } = require('../../utils/format');
 
 router.use('/', async (req, res, next) => {
   /** ****************************************************
@@ -44,10 +44,10 @@ router.use('/', async (req, res, next) => {
      * CHECK AND UPDATE ACCESS TOKEN
      ***************************** */
 
-    const tokenExpired = Date.now() > cachedUser.accessTokenExpiration;
+    const tokenExpired = true;
     console.log(`TOKEN EXPIRED: ${tokenExpired}, ${Date.now()}`, cachedUser.accessTokenExpiration);
     if (tokenExpired) {
-      const newTokens = await spotifyController.updateAccessToken(cachedUser.refreshToken);
+      const newTokens = await updateAccessToken(cachedUser.refreshToken);
       if (!newTokens.accessToken) console.error(newTokens);
       const { accessToken, refreshToken, accessTokenExpiration } = newTokens;
       const updatedUser = cache.set(spotifyID, {

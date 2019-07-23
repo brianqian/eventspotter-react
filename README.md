@@ -28,10 +28,13 @@ The server uses an LRU cache to maintain recent users and cut down on database q
 
 ### User Table
 
-- ID
-- Email
-- Encrypted password
+- Spotify ID
+- Display Name
+- ImageURL
+- Access Token
 - Refresh token
+- Access Token Expiration
+- Total Songs
 
 ### User Settings
 
@@ -60,21 +63,18 @@ The server uses an LRU cache to maintain recent users and cut down on database q
 - ~~Edit package.json to concurrently run server in dev mode.~~
 - ~~Consider caching music library in database (is this faster than Spotify with prefetch on startup?)~~
 - ~~Consider using AWS for backend deployment~~
-- Create a class for the song object ?
 - ~~Add refresh token code to middleware~~
-- Decide where user library should be checked against the Spotify library.
+- ~~Decide where user library should be checked against the Spotify library.~~ (Create a user setting)
 - Set up server to conditionally render cached vs non-cached routes.
-- Two tab scenario // refresh Token
-- 
+- Create a class for the song object (?)
 
-## Authentication
+## Authentication & Middleware
 
-- User logs in to Spotify and receives an access token. This token is then saved via cookie.
-- On first login a user ID is created, encrypted, and saved to cookies via JWT and their refresh token is saved with their ID in the database.
-- User is always logged in while they have a userID JWT on the client side.
-- Every time a user is routed a middleware function will validate the JWT and check and update the cache from the database.
-- If their JWT is validated, each page will reflect that with a logged in state stored in a signed session cookie.
-- When the access token expires, the userID is used to look up the refresh token for that ID and a new access token is provided to the user behind the scenes.
+- User logs in to Spotify and receives an access token. This token is then saved in a JWT cookie.
+- The user's refresh token and profile information is saved to the database.
+- A middleware function authenticates the user and handles refreshing the access token.
+- Middleware updates the user in the cache and makes them the most recent user.
+- Logout removes the cookie and prompts login on other pages.
 - On logout, the JWT cookie is removed.
 
 ## User Caching

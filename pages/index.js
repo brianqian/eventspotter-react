@@ -12,7 +12,7 @@ const Container = styled.div`
 `;
 
 const fetchFn = async () => {
-  let resp = await fetch('http://localhost:3000/api/auth/test');
+  let resp = await fetch(`http://localhost:3000/api/auth/test`);
   resp = await resp.json();
   console.log(resp);
 };
