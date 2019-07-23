@@ -1,7 +1,9 @@
 const router = require('express').Router();
 const authController = require('../controllers/authController');
+const spotifyController = require('../controllers/spotifyController');
 const cache = require('../../cache');
 const { decodeCookie, getTokens } = require('../../utils/fetch');
+const format = require('../../utils/format');
 
 router.use('/', async (req, res, next) => {
   /** ****************************************************
@@ -31,8 +33,7 @@ router.use('/', async (req, res, next) => {
       // IF USER IS NOT IN CACHE, RETRIEVE USER FROM DB AND UPDATE CACHE
       try {
         const userFromDatabase = await authController.getUserByID(spotifyID);
-        cache.set(spotifyID, userFromDatabase);
-        cachedUser = cache.get(spotifyID);
+        cachedUser = cache.set(spotifyID, format.dbProfileToCache(userFromDatabase));
       } catch (err) {
         console.error('MIDDLEWARE-getuser', err);
         throw err;
@@ -44,21 +45,18 @@ router.use('/', async (req, res, next) => {
      ***************************** */
 
     const tokenExpired = Date.now() > cachedUser.accessTokenExpiration;
-    console.log(`TOKEN EXPIRED: ${tokenExpired}`);
+    console.log(`TOKEN EXPIRED: ${tokenExpired}, ${Date.now()}`, cachedUser.accessTokenExpiration);
     if (tokenExpired) {
-      const params = {
-        grant_type: 'refresh_token',
-        refresh_token: cachedUser.refreshToken
-      };
-      const { access_token: accessToken } = await getTokens(params);
-      const updatedCachedUser = {
+      const newTokens = await spotifyController.updateAccessToken(cachedUser.refreshToken);
+      if (!newTokens.accessToken) console.error(newTokens);
+      const { accessToken, refreshToken, accessTokenExpiration } = newTokens;
+      const updatedUser = cache.set(spotifyID, {
         ...cachedUser,
         accessToken,
-        accessTokenExpiration: Date.now() + 1000 * 60 * 55,
-        refreshToken: cachedUser.refreshToken
-      };
-      cache.set(spotifyID, updatedCachedUser);
-      authController.editUserInfo(updatedCachedUser);
+        refreshToken,
+        accessTokenExpiration
+      });
+      authController.editUserInfo(updatedUser);
     }
 
     console.log('PATH:', req.path);

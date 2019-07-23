@@ -41,7 +41,7 @@ class LRUCache {
     }
     this.cache[key] = this.head;
     this.size += 1;
-    return this.head;
+    return this.head.value;
   }
 
   setLibrary(spotifyID, library) {

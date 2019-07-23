@@ -17,6 +17,7 @@ const StyledTitleRow = styled(TitleRow)`
 `;
 
 function MusicLibrary({ className, library, columns, onError }) {
+  console.log(library[0]);
   return (
     <Container className={className}>
       <StyledTitleRow widths={{}} columns={columns} />
@@ -24,7 +25,8 @@ function MusicLibrary({ className, library, columns, onError }) {
         <div>
           <p>{onError.message}</p>
           <p>
-            Click{' '}
+            Click
+            {' '}
             <Link href="/api/auth/login">
               <a>Here</a>
             </Link>

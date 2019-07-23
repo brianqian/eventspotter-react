@@ -35,7 +35,7 @@ function LibraryPage({ data, error }) {
   return (
     <Container>
       <StyledSidebar />
-      <StyledLibrary library={library || []} columns={columns} onError={error} />
+      <StyledLibrary library={library} columns={columns} onError={error} />
     </Container>
   );
 }
@@ -49,12 +49,16 @@ LibraryPage.getInitialProps = async ({ req, err }) => {
       headers: { cookie }
     });
     const { data, error } = await library.json();
-    console.log('front end*************', data && data.length, data && data[0]);
+    console.log('front end*************', data[0], data.length);
     return { data, error };
   } catch (error) {
     console.error(error);
     return { error };
   }
+};
+
+LibraryPage.defaultProps = {
+  data: []
 };
 
 export default LibraryPage;

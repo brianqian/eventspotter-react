@@ -1,5 +1,4 @@
 const connection = require('../db');
-const userLibraryController = require('./userLibraryController');
 
 module.exports = {
   getSong: songID => {
@@ -26,7 +25,7 @@ module.exports = {
           artist: artists,
           title: name
         });
-        return [id, name, artists.name];
+        return [id, name, artists];
       });
       console.log('IN SET LIBRARY CONTROLLER');
       connection.query(
@@ -34,7 +33,12 @@ module.exports = {
         [insertArray],
         (err, data) => {
           if (err) reject(err);
-          console.log('RETURNING FROM SET LIBRARY CONTROLLER', data, cacheLibrary);
+          console.log(
+            'RETURNING FROM SET LIBRARY CONTROLLER',
+            data,
+            cacheLibrary[0],
+            cacheLibrary.length
+          );
           resolve(cacheLibrary);
         }
       );

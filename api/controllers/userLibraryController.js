@@ -10,12 +10,12 @@ module.exports = {
         (err, data) => {
           if (err) throw err;
           data.forEach(item => {
-            delete item.song_id;
             delete item.user_id;
           });
+
           console.log('in lib controller, getuserlib', data[0], data.length);
 
-          resolve(format.dbToCacheProfile(data));
+          resolve(format.dbLibraryToCache(data));
         }
       );
     });

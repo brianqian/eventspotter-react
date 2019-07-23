@@ -10,15 +10,7 @@ module.exports = {
         if (data.length === 0) resolve(false);
         if (data.length > 1) reject(new Error(`Error: users found: ${data.length}`));
         // console.log('GET USER returned data', data);
-        resolve({
-          spotifyID: data[0].user_id,
-          displayName: data[0].display_name,
-          imgURL: data[0].img_URL,
-          refreshToken: data[0].refresh_token,
-          accessToken: data[0].access_token,
-          accessTokenExpiration: data[0].access_token_expiration,
-          totalSongs: data[0].total_songs
-        });
+        resolve(data[0]);
       });
     });
   },
