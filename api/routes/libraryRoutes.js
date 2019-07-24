@@ -107,15 +107,6 @@ router.get('/next_songs', (req, res) => {
   const { offset } = req.query;
 });
 
-router.get('/top_artists', async (req, res) => {
-  const { spotifyID, accessToken } = res.locals;
-  if (!spotifyID || !accessToken) handleError(res, 401);
-
-  const topArtists = await spotifyService.getTopArtists(accessToken);
-  console.log('IN BACKEND TOP ARTIST', topArtists.items[0], topArtists.items.length);
-  res.json({ topArtists: topArtists.items });
-});
-
 // router.route('/test/cache').get(async (req, res) => {
 //   console.log('************ IN TEST');
 //   const { spotifyID } = await decodeCookie(req.headers.cookie);

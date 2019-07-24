@@ -25,7 +25,7 @@ function TopArtists({ className, topArtists, columns, onError }) {
       {onError && <BasicError />}
       {topArtists &&
         library.map(artist => (
-          <Row key={song.id} data={artist} columns={columns} type="topArtists" />
+          <Row key={artist.id} data={artist} columns={columns} type="topArtists" />
         ))}
     </Container>
   );

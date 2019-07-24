@@ -1,5 +1,7 @@
 const spotifyService = require('./spotifyService');
+const seatGeekService = require('./seatGeekService');
 
 module.exports = {
-  spotify: spotifyService
+  spotify: spotifyService,
+  seatGeek: seatGeekService
 };

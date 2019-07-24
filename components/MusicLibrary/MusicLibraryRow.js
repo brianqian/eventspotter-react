@@ -10,6 +10,7 @@ const Container = styled.div`
 
 const Column = styled.div`
   flex: ${props => props.width};
+  padding: 0 0.5rem;
 `;
 
 function MusicLibraryRow({ data, columns, type }) {

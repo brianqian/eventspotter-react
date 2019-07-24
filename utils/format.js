@@ -71,13 +71,36 @@ const decodeCookie = async cookie => {
   return result.userInfo;
 };
 
+const parseSeatGeekEvents = event => {
+  return {
+    title: event.title,
+    shortTitle: event.short_title,
+    url: event.url,
+    lowPrice: event.stats.lowest_price,
+    averagePrice: event.stats.average_price,
+    date: event.datetime_local,
+    dateUTC: event.datetime_utc,
+    score: event.score,
+    location: {
+      city: event.venue.city,
+      state: event.venue.state,
+      zipcode: event.venue.postal_code,
+      coordinates: {
+        lat: event.venue.location.lat,
+        lon: event.venue.location.lon
+      }
+    }
+  };
+};
+
 const format = {
   JSONToURL,
   dbProfileToCache,
   spotifyLibraryToCache,
   dbLibraryToCache,
   cookieToString,
-  decodeCookie
+  decodeCookie,
+  parseSeatGeekEvents
 };
 
 module.exports = format;
