@@ -12,7 +12,7 @@ const Column = styled.div`
   flex: ${props => props.width};
 `;
 
-function MusicLibraryRow({ data, columns }) {
+function MusicLibraryRow({ data, columns, type }) {
   return (
     <Container>
       {data && (

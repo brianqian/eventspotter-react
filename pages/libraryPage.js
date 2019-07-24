@@ -1,9 +1,8 @@
-import React from 'react';
-
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Library from '../components/MusicLibrary/MusicLibrary';
 import Sidebar from '../components/MusicLibrary/MusicSidebar';
-import useLibrary from '../utils/hooks/useLibrary';
+import useFetch from '../utils/hooks/useFetch';
 
 const Container = styled.div`
   display: grid;
@@ -11,16 +10,15 @@ const Container = styled.div`
   min-height: calc(100vh - 50px);
 `;
 
-const StyledLibrary = styled(Library)`
-  grid-column: 3/13;
-  max-height: 100vh;
-  overflow: auto;
-`;
-
 const StyledSidebar = styled(Sidebar)`
   grid-column: 1/3;
   border: 1px solid white;
   height: 100%;
+`;
+const MainDisplay = styled.div`
+  grid-column: 3/13;
+  max-height: 100vh;
+  overflow: auto;
 `;
 
 const columns = [
@@ -30,11 +28,15 @@ const columns = [
 ];
 
 function LibraryPage({ data, error }) {
-  const [library, fetchSongs] = useLibrary(data);
+  const {library, fetchSongs} = useFetch(data);
+  const [view, setView] = useState('library');
   return (
     <Container>
-      <StyledSidebar />
-      <StyledLibrary library={library} columns={columns} onError={error} />
+      <StyledSidebar changeDisplay={setView} />
+      <MainDisplay>
+        {view === 'library' && <Library library={library} columns={columns} onError={error} />}
+        {view === 'topArtists' && <div>I'm a test div</div>}
+      </MainDisplay>
     </Container>
   );
 }

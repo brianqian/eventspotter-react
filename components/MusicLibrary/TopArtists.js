@@ -1,10 +1,9 @@
 import React from 'react';
-import Link from 'next/link';
 import styled from 'styled-components';
 import TitleRow from './MusicLibraryTitle';
 import Row from './MusicLibraryRow';
-import useFetch from '../../utils/hooks/useFetch';
 import BasicError from '../error';
+import useFetch from '../../utils/hooks/useFetch';
 
 const Container = styled.div`
   color: ${props => props.theme.color.white};
@@ -18,20 +17,18 @@ const StyledTitleRow = styled(TitleRow)`
   margin-bottom: 1rem;
 `;
 
-function MusicLibrary({ className, library, columns, onError }) {
-  console.log(library[0]);
-  const { library: spotifyLibrary, setLibrary } = useFetch(library);
+function TopArtists({ className, topArtists, columns, onError }) {
+  const { library } = useFetch(topArtists);
   return (
     <Container className={className}>
       <StyledTitleRow widths={{}} columns={columns} />
-      {onError && <BasicError message={onError} />}
-      {spotifyLibrary &&
-        spotifyLibrary.map(song => <Row key={song.id} data={song} columns={columns} />)}
-      <button type="button" onClick={() => setLibrary(spotifyLibrary.length)}>
-        Load more songs
-      </button>
+      {onError && <BasicError />}
+      {topArtists &&
+        library.map(artist => (
+          <Row key={song.id} data={artist} columns={columns} type="topArtists" />
+        ))}
     </Container>
   );
 }
 
-export default MusicLibrary;
+export default TopArtists;

@@ -38,32 +38,39 @@ const SignIn = styled.div`
   }
 `;
 
-const Nav = ({ loggedIn }) => {
+const Welcome = styled.div`
+  color: ${props => props.theme.color.white};
+  display: flex;
+  align-items: center;
+`;
+
+const Nav = ({ userInfo }) => {
+  console.log('TOKEN', userInfo);
   return (
     <StyledNav>
       <Link prefetch href="/">
         <a>Home</a>
       </Link>
       {links.map(({ key, href, label, as }) => (
-        <Link href={href} key={key} as={as || ''}>
+        <Link prefetch href={href} key={key} as={as || ''}>
           <a>{label}</a>
         </Link>
       ))}
       <SignIn>
-        <a href={`http://localhost:3000/api/auth/${loggedIn ? 'logout' : 'login'}`}>
-          {loggedIn ? 'Logout' : 'Login with Spotify'}
+        <a href={`http://localhost:3000/api/auth/${userInfo ? 'logout' : 'login'}`}>
+          {userInfo ? 'Logout' : 'Login with Spotify'}
         </a>
       </SignIn>
+      <Welcome>
+        {userInfo.displayName}
+        <img src={userInfo.imgURL} alt="" height="50px" />
+      </Welcome>
       {/* <div>
         <button onClick={toggle}>Login/Sign Up</button>
         <Login isShowing={isShowing} hide={toggle} />
       </div> */}
     </StyledNav>
   );
-};
-
-Nav.propTypes = {
-  loggedIn: PropTypes.bool.isRequired
 };
 
 export default Nav;

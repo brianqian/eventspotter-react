@@ -23,29 +23,26 @@ body, html{
 export default class MyApp extends App {
   static async getInitialProps({ Component, ctx, ctx: { req } }) {
     const cookie = req ? req.cookies.userInfo : cookieToString(document.cookie, 'userInfo');
-    let isLoggedIn = false;
-    if (cookie) {
-      const decodedToken = await jwt.verify(cookie, process.env.JWT_SECRET_KEY);
-      if (decodedToken.userInfo) isLoggedIn = true;
-    }
+    let decodedToken;
+    if (cookie) decodedToken = await jwt.verify(cookie, process.env.JWT_SECRET_KEY);
     let pageProps = {};
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);
     }
 
-    return { pageProps: { ...pageProps }, isLoggedIn };
+    return { pageProps: { ...pageProps }, decodedToken };
   }
 
   render() {
-    const { Component, pageProps, isLoggedIn } = this.props;
+    const { Component, pageProps, decodedToken } = this.props;
 
     return (
       <Container>
         <ThemeProvider theme={theme}>
           <>
             <GlobalStyle />
-            <Nav loggedIn={isLoggedIn} />
-            <Component {...pageProps} loggedIn={isLoggedIn} />
+            <Nav userInfo={decodedToken.userInfo} />
+            <Component {...pageProps} />
           </>
         </ThemeProvider>
       </Container>

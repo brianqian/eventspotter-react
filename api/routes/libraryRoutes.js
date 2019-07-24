@@ -34,12 +34,9 @@ router.route('/all').get(async (req, res) => {
    * ATTAIN USER CREDENTIALS FOR FETCHING FROM SPOTIFY
    * ***************************************************
    */
-  const decodedCookie = await format.decodeCookie(req.headers.cookie);
-  if (!decodedCookie) return handleError(res, 401);
-  const { spotifyID } = decodedCookie;
+  const { spotifyID, accessToken } = res.locals;
+  if (!spotifyID || !accessToken) return handleError(res, 401);
   const cachedUser = cache.get(spotifyID);
-  const { accessToken } = cachedUser;
-  if (!accessToken) return handleError(res, 401);
   let userLibrary = cachedUser.library;
   // IF USER EXISTS IN DATABASE AND DONT NEED TO UPDATE, RETURN CACHE
   // IF LIBRARY DOESNT EXIST, CHECK DATABASE
@@ -110,9 +107,13 @@ router.get('/next_songs', (req, res) => {
   const { offset } = req.query;
 });
 
-router.get('/top_artists', (req, res) => {
-  console.log(req.cookies, req.headers);
-  spotifyService.getTopArtists();
+router.get('/top_artists', async (req, res) => {
+  const { spotifyID, accessToken } = res.locals;
+  if (!spotifyID || !accessToken) handleError(res, 401);
+
+  const topArtists = await spotifyService.getTopArtists(accessToken);
+  console.log('IN BACKEND TOP ARTIST', topArtists.items[0], topArtists.items.length);
+  res.json({ topArtists: topArtists.items });
 });
 
 // router.route('/test/cache').get(async (req, res) => {

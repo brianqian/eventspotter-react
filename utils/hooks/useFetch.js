@@ -2,7 +2,7 @@ import { useState } from 'react';
 import fetch from 'isomorphic-unfetch';
 import format from '../format';
 
-const useLibrary = data => {
+const useFetch = data => {
   const [library, setLibrary] = useState(data);
 
   async function fetchSongs(offset) {
@@ -10,7 +10,7 @@ const useLibrary = data => {
     setLibrary([...library, ...format.spotifyLibraryToCache(resp.items)]);
   }
 
-  return [library, fetchSongs];
+  return { library, fetchSongs };
 };
 
-export default useLibrary;
+export default useFetch;

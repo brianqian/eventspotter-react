@@ -4,7 +4,8 @@ const next = require('next');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const routes = require('./api/routes');
-const cacheMiddleware = require('./api/routes/cacheMiddleware');
+const cacheMiddleware = require('./api/routes/middleware/cacheMiddleware');
+const authMiddleware = require('./api/routes/middleware/authMiddleware');
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== 'production';
@@ -24,9 +25,11 @@ app.prepare().then(() => {
   const server = express();
   server.use(cookieParser());
   server.use(cors());
+
   server.get('/_next/*', (req, res) => {
     handle(req, res);
   });
+  server.use(authMiddleware);
   server.get('/library', (req, res) => {
     const actualPage = '/libraryPage';
     // ssrCache({ req, res, pagePath: '/libraryPage' });

@@ -32,12 +32,13 @@ const ButtonContainer = styled.div`
   }
 `;
 
-function MusicSidebar({ className }) {
+function MusicSidebar({ className, changeDisplay }) {
   return (
     <Container className={className}>
       <ButtonContainer>
-        <Button />
-        <label htmlFor="">Generate Calendar</label>
+        <Button onClick={() => changeDisplay('topArtists')} />
+        <h2>Hello</h2>
+        <p>See Top Artists</p>
       </ButtonContainer>
     </Container>
   );

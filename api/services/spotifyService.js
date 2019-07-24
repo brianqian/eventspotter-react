@@ -83,7 +83,6 @@ const updateAccessToken = refreshToken => {
       const { access_token: accessToken } = await getTokens(params);
       resolve({
         accessToken,
-        refreshToken,
         accessTokenExpiration: Date.now() + 1000 * 60 * 55
       });
     } catch (err) {
@@ -92,9 +91,16 @@ const updateAccessToken = refreshToken => {
   });
 };
 
-const getTopArtists = async accessToken => {
-  const topArtists = await spotifyFetch('https://api.spotify.com/v1/me/top/artists', accessToken);
-  console.log(topArtists);
+const getTopArtists = async (accessToken, range = 'medium') => {
+  // short_term = 4 weeks
+  // medium_term = 6 months
+  // long_term = years
+  const term = `${range}_term`;
+  const topArtists = await spotifyFetch(
+    `https://api.spotify.com/v1/me/top/artists?time_range=${term}`,
+    accessToken
+  );
+  return topArtists;
 };
 
 module.exports = {

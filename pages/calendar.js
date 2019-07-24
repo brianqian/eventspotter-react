@@ -5,10 +5,19 @@ import fetch from 'isomorphic-unfetch';
 const Container = styled.div`
   background-color: ${props => props.theme.color.background};
   display: grid;
+  color: ${props => props.theme.color.white};
+  min-height: calc(100vh - 50px);
 `;
 
-const Calendar = () => {
-  return <Container>Hello I&apos;m Calendar</Container>;
+const Calendar = ({ topArtists }) => {
+  return (
+    <Container>
+      Hello I&apos;m Calendar
+      {topArtists.map(artist => (
+        <div>{artist.name}</div>
+      ))}
+    </Container>
+  );
 };
 
 Calendar.getInitialProps = async ({ req, err }) => {
@@ -18,8 +27,9 @@ Calendar.getInitialProps = async ({ req, err }) => {
     credentials: 'include',
     headers: { cookie }
   });
-  topArtists = topArtists.json();
-  console.log(topArtists);
+  topArtists = await topArtists.json();
+  console.log('IN CALENDAR FRONT- TOP ARTISTS', topArtists);
+  return topArtists;
 };
 
 export default Calendar;

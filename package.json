@@ -2,6 +2,8 @@
   "name": "create-next-example-app",
   "scripts": {
     "dev": "nodemon server.js",
+    "dev:node": "node server.js",
+    "dev:test": "concurrently \"npm run dev\" \"npm run test:watch\" ",
     "server": "cd api && npm run start",
     "build": "next build",
     "start": "NODE_ENV=production node server.js",
