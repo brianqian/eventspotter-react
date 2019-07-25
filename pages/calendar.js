@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import fetch from 'isomorphic-unfetch';
 
@@ -9,7 +8,7 @@ const Container = styled.div`
   min-height: calc(100vh - 50px);
 `;
 
-const Calendar = ({ topArtists }) => {
+const Calendar = ({ data: topArtists, error }) => {
   return (
     <Container>
       Hello I&apos;m Calendar
@@ -23,13 +22,18 @@ const Calendar = ({ topArtists }) => {
 Calendar.getInitialProps = async ({ req, err }) => {
   if (err) console.log('server error', err);
   const cookie = (req && req.headers.cookie) || document.cookie;
-  let topArtists = await fetch(`http://localhost:3000/api/calendar/top_artists`, {
-    credentials: 'include',
-    headers: { cookie }
-  });
-  topArtists = await topArtists.json();
-  console.log('IN CALENDAR FRONT- TOP ARTISTS', topArtists);
-  return topArtists;
+  try {
+    let data = await fetch(`http://localhost:3000/api/calendar/top_artists`, {
+      credentials: 'include',
+      headers: { cookie }
+    });
+    data = await data.json();
+    console.log('IN CALENDAR FRONT- TOP ARTISTS', data);
+    return data;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
 };
 
 export default Calendar;

@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const handleError = require('../../utils/error');
+const { handleError } = require('../../utils/error');
 const spotifyService = require('../services/spotifyService');
 const { seatGeekFetch, getPricesForArtists } = require('../services/seatgeekService');
 

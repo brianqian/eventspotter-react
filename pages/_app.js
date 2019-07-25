@@ -1,5 +1,4 @@
 import App, { Container } from 'next/app';
-import React from 'react';
 import jwt from 'jsonwebtoken';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
 import theme from '../static/cssTheme';
@@ -22,9 +21,12 @@ body, html{
 
 export default class MyApp extends App {
   static async getInitialProps({ Component, ctx, ctx: { req } }) {
-    const cookie = req ? req.cookies.userInfo : cookieToString(document.cookie, 'userInfo');
-    let decodedToken;
-    if (cookie) decodedToken = await jwt.verify(cookie, process.env.JWT_SECRET_KEY);
+    const cookie = req
+      ? req.cookies && req.cookies.userInfo
+      : cookieToString(document.cookie, 'userInfo');
+    const decodedToken = cookie
+      ? await jwt.verify(cookie, process.env.JWT_SECRET_KEY)
+      : { userInfo: '' };
     let pageProps = {};
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);

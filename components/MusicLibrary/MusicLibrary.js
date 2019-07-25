@@ -1,5 +1,3 @@
-import React from 'react';
-import Link from 'next/link';
 import styled from 'styled-components';
 import TitleRow from './MusicLibraryTitle';
 import Row from './MusicLibraryRow';
@@ -19,8 +17,8 @@ const StyledTitleRow = styled(TitleRow)`
 `;
 
 function MusicLibrary({ className, library, columns, onError }) {
-  console.log(library[0]);
   const { library: spotifyLibrary, setLibrary } = useFetch(library);
+
   return (
     <Container className={className}>
       <StyledTitleRow widths={{}} columns={columns} />

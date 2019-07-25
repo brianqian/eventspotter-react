@@ -45,7 +45,6 @@ const Welcome = styled.div`
 `;
 
 const Nav = ({ userInfo }) => {
-  console.log('TOKEN', userInfo);
   return (
     <StyledNav>
       <Link prefetch href="/">

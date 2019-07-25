@@ -3,7 +3,7 @@ import Link from 'next/link';
 const basicError = ({ message }) => {
   return (
     <div>
-      <p>{message}</p>
+      <p>{message.message}</p>
       <p>
         Click
         {' '}

@@ -5,4 +5,12 @@ const handleError = (res, code) => {
   return res.json({ data: [], error });
 };
 
-module.exports = { handleError };
+const validateRoute = res => {
+  const { spotifyID = false, accessToken = false } = res.locals;
+  if (!spotifyID || !accessToken) {
+    res.clearCookie('userInfo');
+    return res.redirect('/error?code=401');
+  }
+  return { spotifyID, accessToken };
+};
+module.exports = { handleError, validateRoute };

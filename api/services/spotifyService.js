@@ -17,23 +17,23 @@ const spotifyFetch = async (endpoint, authToken) => {
   return resp;
 };
 
-const getAllSongs = (accessToken, pages) => {
+const getSongs = (accessToken, pages, offset = 0) => {
   return new Promise(async (resolve, reject) => {
     console.log('IN SPOT CONTROLLER GET ALL SONGS');
     const limit = 50;
     // const totalRequests = resp.total / limit;
     const firstFetch = await spotifyFetch(
-      `https://api.spotify.com/v1/me/tracks?offset=0&limit=50`,
+      `https://api.spotify.com/v1/me/tracks?offset=${offset}&limit=50`,
       accessToken
     );
     try {
       const promiseArr = [];
       const numOfRequests = pages || firstFetch.total / limit;
       for (let i = 1; i < numOfRequests; i += 1) {
-        const offset = 50 * i;
+        const newOffset = 50 * i + offset;
         promiseArr.push(
           spotifyFetch(
-            `https://api.spotify.com/v1/me/tracks?offset=${offset}&limit=${limit}`,
+            `https://api.spotify.com/v1/me/tracks?offset=${newOffset}&limit=${limit}`,
             accessToken
           )
         );
@@ -73,7 +73,6 @@ const getTokens = async params => {
 };
 
 const updateAccessToken = refreshToken => {
-  console.log('IN UPDATE ACCESS TOKEN', this);
   return new Promise(async (resolve, reject) => {
     const params = {
       grant_type: 'refresh_token',
@@ -104,7 +103,7 @@ const getTopArtists = async (accessToken, range = 'medium') => {
 };
 
 module.exports = {
-  getAllSongs,
+  getSongs,
   getTokens,
   updateAccessToken,
   spotifyFetch,

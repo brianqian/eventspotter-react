@@ -29,18 +29,23 @@ app.prepare().then(() => {
   server.get('/_next/*', (req, res) => {
     handle(req, res);
   });
-  server.use(authMiddleware);
+  server.get('/', (req, res) => {
+    app.render(req, res, '/');
+    // return ssrCache({ req, res, pagePath: '/' })
+  });
+  server.get('/error', (req, res) => {
+    const { code } = req.query;
+    app.render(req, res, `/errorPage`, { code });
+    // return ssrCache({ req, res, pagePath: '/' })
+  });
   server.get('/library', (req, res) => {
     const actualPage = '/libraryPage';
     // ssrCache({ req, res, pagePath: '/libraryPage' });
     app.render(req, res, actualPage);
   });
+  server.use(authMiddleware);
   server.use(cacheMiddleware);
   server.use('/api', routes);
-  server.get('/', (req, res) => {
-    app.render(req, res, '/');
-    // return ssrCache({ req, res, pagePath: '/' })
-  });
 
   // server.get('/blog/:id', (req, res) => {
   //   const queryParams = { id: req.params.id }

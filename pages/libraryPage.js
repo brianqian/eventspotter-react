@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Library from '../components/MusicLibrary/MusicLibrary';
 import Sidebar from '../components/MusicLibrary/MusicSidebar';
 import useFetch from '../utils/hooks/useFetch';
+import useFilterView from '../utils/hooks/useFilterView';
 
 const Container = styled.div`
   display: grid;
@@ -28,14 +29,13 @@ const columns = [
 ];
 
 function LibraryPage({ data, error }) {
-  const {library, fetchSongs} = useFetch(data);
-  const [view, setView] = useState('library');
+  const { sortBy, setSortBy, content } = useFilterView(data);
   return (
     <Container>
-      <StyledSidebar changeDisplay={setView} />
+      <StyledSidebar changeDisplay={setSortBy} />
       <MainDisplay>
-        {view === 'library' && <Library library={library} columns={columns} onError={error} />}
-        {view === 'topArtists' && <div>I'm a test div</div>}
+        {sortBy === 'all' && <Library library={data} columns={columns} onError={error} />}
+        {sortBy === 'topArtists' && <div>I'm a test div</div>}
       </MainDisplay>
     </Container>
   );
@@ -53,8 +53,8 @@ LibraryPage.getInitialProps = async ({ req, err }) => {
     console.log('front end*************', data[0], data.length);
     return { data, error };
   } catch (error) {
-    console.error(error);
-    return { error };
+    console.error('FRONT END ERROR', error);
+    return error;
   }
 };
 

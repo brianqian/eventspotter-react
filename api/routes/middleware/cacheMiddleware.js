@@ -24,7 +24,7 @@ router.use('/', async (req, res, next) => {
    * UPDATE CACHE FROM DATABASE IF USER NOT IN CACHE
    ************************************************ */
 
-  const { spotifyID } = res.locals;
+  const { spotifyID = false } = res.locals;
   if (!spotifyID) return next();
   // IF VALID JWT, CHECK FOR USER IN CACHE
   let cachedUser = cache.get(spotifyID);
@@ -46,9 +46,15 @@ router.use('/', async (req, res, next) => {
 
   const tokenExpired = Date.now() > cachedUser.accessTokenExpiration;
   console.log(`TOKEN EXPIRED: ${tokenExpired}, ${Date.now()}`, cachedUser.accessTokenExpiration);
+
   if (tokenExpired) {
-    const newTokens = await updateAccessToken(cachedUser.refreshToken);
-    if (!newTokens.accessToken) console.error(newTokens);
+    let newTokens;
+    try {
+      newTokens = await updateAccessToken(cachedUser.refreshToken);
+    } catch (err) {
+      console.error('error cache middleware- get token', err);
+      return next();
+    }
     const { accessToken, accessTokenExpiration } = newTokens;
     const updatedUser = cache.set(spotifyID, {
       ...cachedUser,

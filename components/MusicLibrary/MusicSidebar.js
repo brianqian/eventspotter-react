@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -36,9 +35,11 @@ function MusicSidebar({ className, changeDisplay }) {
   return (
     <Container className={className}>
       <ButtonContainer>
+        <h2>Filters</h2>
+        <p>See my </p>
+
         <Button onClick={() => changeDisplay('topArtists')} />
-        <h2>Hello</h2>
-        <p>See Top Artists</p>
+        <p>Generate Calendar based off</p>
       </ButtonContainer>
     </Container>
   );
