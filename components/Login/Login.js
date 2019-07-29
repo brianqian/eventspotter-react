@@ -43,25 +43,25 @@ const ManualLoginForm = styled.form`
 const Login = ({ isShowing, hide }) => {
   return isShowing
     ? ReactDOM.createPortal(
-        <Container>
-          <Modal>
-            <CloseModal onClick={hide}>
-              <svg fill="none" stroke="#fff" height="1.5em" width="1.5em" viewBox="0 0 24 24">
-                <g strokeWidth="2" fill="none" strokeLinecap="round">
-                  <path d="M6,6 L18,18" />
-                  <path d="M6,18 L18,6" />
-                </g>
-              </svg>
-            </CloseModal>
-            <ManualLoginForm>
-              <label htmlFor=""> E-mail: </label>
-              <input type="text" />
-              <label htmlFor=""> Password: </label>
-              <input type="text" />
-              <div>Login</div>
-            </ManualLoginForm>
-          </Modal>
-        </Container>,
+      <Container>
+        <Modal>
+          <CloseModal onClick={hide}>
+            <svg fill="none" stroke="#fff" height="1.5em" width="1.5em" viewBox="0 0 24 24">
+              <g strokeWidth="2" fill="none" strokeLinecap="round">
+                <path d="M6,6 L18,18" />
+                <path d="M6,18 L18,6" />
+              </g>
+            </svg>
+          </CloseModal>
+          <ManualLoginForm>
+            <label htmlFor=""> E-mail: </label>
+            <input type="text" />
+            <label htmlFor=""> Password: </label>
+            <input type="text" />
+            <div>Login</div>
+          </ManualLoginForm>
+        </Modal>
+      </Container>,
         document.body
       )
     : null;

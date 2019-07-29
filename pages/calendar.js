@@ -23,7 +23,7 @@ Calendar.getInitialProps = async ({ req, err }) => {
   if (err) console.log('server error', err);
   const cookie = (req && req.headers.cookie) || document.cookie;
   try {
-    let data = await fetch(`http://localhost:3000/api/calendar/top_artists`, {
+    let data = await fetch(`http://localhost:3000/api/library/top_artists`, {
       credentials: 'include',
       headers: { cookie }
     });

@@ -13,7 +13,7 @@ function MusicLibraryTitle({ columns, className }) {
   return (
     <Container className={className}>
       {columns.map((column, idx) => (
-        <Section key={idx} width={column.width || 1}>
+        <Section key={`row-title-${idx}`} width={column.width || 1}>
           {column.name}
         </Section>
       ))}

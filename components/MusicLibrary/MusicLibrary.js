@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import TitleRow from './MusicLibraryTitle';
 import Row from './MusicLibraryRow';
 import useFetch from '../../utils/hooks/useFetch';
-import BasicError from '../error';
 
 const Container = styled.div`
   color: ${props => props.theme.color.white};
@@ -16,18 +15,19 @@ const StyledTitleRow = styled(TitleRow)`
   margin-bottom: 1rem;
 `;
 
-function MusicLibrary({ className, library, columns, onError }) {
-  const { library: spotifyLibrary, setLibrary } = useFetch(library);
-
+function MusicLibrary({ className, library, columns, sortBy }) {
+  const { library: spotifyLibrary, getNextSongs } = useFetch(library);
+  console.log('IN MUSIC LIBRARY', spotifyLibrary[0]);
   return (
     <Container className={className}>
       <StyledTitleRow widths={{}} columns={columns} />
-      {onError && <BasicError message={onError} />}
       {spotifyLibrary &&
         spotifyLibrary.map(song => <Row key={song.id} data={song} columns={columns} />)}
-      <button type="button" onClick={() => setLibrary(spotifyLibrary.length)}>
-        Load more songs
-      </button>
+      {sortBy === 'all' && (
+        <button type="button" onClick={() => getNextSongs(spotifyLibrary.length)}>
+          Load more songs
+        </button>
+      )}
     </Container>
   );
 }

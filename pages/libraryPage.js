@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Library from '../components/MusicLibrary/MusicLibrary';
 import Sidebar from '../components/MusicLibrary/MusicSidebar';
-import useFetch from '../utils/hooks/useFetch';
 import useFilterView from '../utils/hooks/useFilterView';
 
 const Container = styled.div`
@@ -16,26 +15,20 @@ const StyledSidebar = styled(Sidebar)`
   border: 1px solid white;
   height: 100%;
 `;
-const MainDisplay = styled.div`
+const MainDisplay = styled.main`
   grid-column: 3/13;
   max-height: 100vh;
   overflow: auto;
 `;
 
-const columns = [
-  { name: 'Title', width: 2, spotifyRef: 'title' },
-  { name: 'Artist', width: 2, spotifyRef: 'artists' },
-  { name: 'Date Added', width: 1, spotifyRef: 'added_at' }
-];
-
-function LibraryPage({ data, error }) {
+function LibraryPage({ data, error, columns }) {
   const { sortBy, setSortBy, content } = useFilterView(data);
+
   return (
     <Container>
-      <StyledSidebar changeDisplay={setSortBy} />
+      <StyledSidebar setSortBy={setSortBy} />
       <MainDisplay>
-        {sortBy === 'all' && <Library library={data} columns={columns} onError={error} />}
-        {sortBy === 'topArtists' && <div>I'm a test div</div>}
+        <Library library={content} columns={columns} sortBy={sortBy} />
       </MainDisplay>
     </Container>
   );
@@ -49,12 +42,17 @@ LibraryPage.getInitialProps = async ({ req, err }) => {
       credentials: 'include',
       headers: { cookie }
     });
-    const { data, error } = await library.json();
+    const { data } = await library.json();
     console.log('front end*************', data[0], data.length);
-    return { data, error };
+    data.columns = [
+      { name: 'Title', width: 2, spotifyRef: 'title' },
+      { name: 'Artist', width: 2, spotifyRef: 'artists' },
+      { name: 'Date Added', width: 1, spotifyRef: 'added_at', isDate: true }
+    ];
+    return { data };
   } catch (error) {
     console.error('FRONT END ERROR', error);
-    return error;
+    return { data: [] };
   }
 };
 

@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const cache = require('../../cache');
-const { handleError } = require('../../utils/error');
+const { handleError, validateRoute } = require('../../utils/error');
 const format = require('../../utils/format');
 const spotifyService = require('../services/spotifyService');
 const libraryController = require('../controllers/libraryController');
@@ -34,8 +34,7 @@ router.route('/all').get(async (req, res) => {
    * ATTAIN USER CREDENTIALS FOR FETCHING FROM SPOTIFY
    * ***************************************************
    */
-  const { spotifyID, accessToken } = res.locals;
-  if (!spotifyID || !accessToken) return handleError(res, 401);
+  const { spotifyID, accessToken } = validateRoute(res);
   const cachedUser = cache.get(spotifyID);
   let userLibrary = cachedUser.library;
   // IF USER EXISTS IN DATABASE AND DONT NEED TO UPDATE, RETURN CACHE
@@ -121,14 +120,12 @@ router.get('/next_songs', async (req, res) => {
   // res.json({nextSongs})
 });
 
-router.get('/test', async (req, res) => {
-  const { accessToken } = res.locals;
-  const result = await spotifyService.spotifyFetch(
-    `https://api.spotify.com/v1/me/tracks?offset=9999&limit=50`,
-    accessToken
-  );
+router.get('/top_artists', async (req, res) => {
+  const { spotifyID, accessToken } = validateRoute(res);
+  const topArtists = await spotifyService.getTopArtists(accessToken);
 
-  console.log(result);
+  console.log('IN BACKEND TOP ARTIST', topArtists.items[0], topArtists.items.length);
+  res.json({ data: topArtists.items });
 });
 
 module.exports = router;

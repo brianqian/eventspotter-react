@@ -5,10 +5,15 @@ const useFilterView = defaultValue => {
   const [sortBy, setSortBy] = useState('all');
   const [content, setContent] = useState(defaultValue);
 
-  useEffect(async () => {
-    let result = await fetch(`http://localhost:3000/api/calendar/${sortBy}`);
-    result = await result.json();
-    setContent(result);
+  useEffect(() => {
+    async function fetchData() {
+      console.log('FILTER VIEW USE EFFECT');
+      let result = await fetch(`http://localhost:3000/api/library/${sortBy}`);
+      result = await result.json();
+      setContent(result.data);
+      console.log('FILTER VIEW USE EFFECT', result);
+    }
+    fetchData();
   }, [sortBy]);
 
   return { sortBy, setSortBy, content };

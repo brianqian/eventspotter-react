@@ -14,7 +14,7 @@ const Button = styled.div`
   box-shadow: -8px 8px darkred;
   border-radius: 50px;
   justify-self: center;
-  position: absolute;
+  position: relative;
   top: 5rem;
   :active {
     opacity: 0.9;
@@ -22,24 +22,32 @@ const Button = styled.div`
   }
 `;
 
+const Filterby = styled.div``;
+
 const ButtonContainer = styled.div`
-  display: grid;
-  position: relative;
-  label {
-    width: 100%;
-    text-align: center;
-  }
+  display: flex;
+  flex-direction: column;
 `;
 
-function MusicSidebar({ className, changeDisplay }) {
+function MusicSidebar({ className, setSortBy }) {
+  setSortBy('all');
   return (
     <Container className={className}>
       <ButtonContainer>
         <h2>Filters</h2>
-        <p>See my </p>
-
-        <Button onClick={() => changeDisplay('topArtists')} />
-        <p>Generate Calendar based off</p>
+        {/* <Button />   */}
+        <p>Filter Library by: </p>
+        <select name="" id="" onChange={e => setSortBy(e.target.value)}>
+          <option value="all">All songs</option>
+          <option value="top_artists">Top Artists</option>
+          <option value="high_danceability">Most Danceable</option>
+          <option value="high_acousticness">Most Acoustic</option>
+          <option value="high_energy">Most Energy</option>
+          <option value="high_instrumentalness">Most Instrumental</option>
+          <option value="high_loudness">Loudest</option>
+          <option value="high_tempo">Highest Tempo</option>
+          <option value="high_valence">Happiest</option>
+        </select>
       </ButtonContainer>
     </Container>
   );

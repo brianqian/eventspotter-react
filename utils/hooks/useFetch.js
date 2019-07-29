@@ -3,7 +3,6 @@ import fetch from 'isomorphic-unfetch';
 
 const useFetch = data => {
   const [library, setLibrary] = useState(data);
-
   async function getNextSongs(offset) {
     let response;
     try {
