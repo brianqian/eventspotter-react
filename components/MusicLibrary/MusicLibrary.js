@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import TitleRow from './MusicLibraryTitle';
 import Row from './MusicLibraryRow';
@@ -16,18 +17,22 @@ const StyledTitleRow = styled(TitleRow)`
 `;
 
 function MusicLibrary({ className, library, columns, sortBy }) {
-  const { library: spotifyLibrary, getNextSongs } = useFetch(library);
-  console.log('IN MUSIC LIBRARY', spotifyLibrary[0]);
+  console.log('IN MUSIC LIBRARY FIRST', library.length);
+  // const { library: spotifyLibrary, getNextSongs } = useFetch(library);
+  console.log('IN MUSIC LIBRARY', library[0]);
+  columns = library.columns || columns;
   return (
     <Container className={className}>
-      <StyledTitleRow widths={{}} columns={columns} />
-      {spotifyLibrary &&
-        spotifyLibrary.map(song => <Row key={song.id} data={song} columns={columns} />)}
-      {sortBy === 'all' && (
-        <button type="button" onClick={() => getNextSongs(spotifyLibrary.length)}>
-          Load more songs
-        </button>
-      )}
+      <>
+        <StyledTitleRow widths={{}} columns={columns} />
+        {library &&
+          library.map(song => <Row key={song.id} data={song} columns={columns} type={sortBy} />)}
+        {/* {sortBy === 'all' && (
+          <button type="button" onClick={() => getNextSongs(library.length)}>
+            Load more songs
+          </button>
+        )} */}
+      </>
     </Container>
   );
 }

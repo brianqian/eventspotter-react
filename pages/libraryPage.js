@@ -23,7 +23,6 @@ const MainDisplay = styled.main`
 
 function LibraryPage({ data, error, columns }) {
   const { sortBy, setSortBy, content } = useFilterView(data);
-
   return (
     <Container>
       <StyledSidebar setSortBy={setSortBy} />
@@ -42,14 +41,9 @@ LibraryPage.getInitialProps = async ({ req, err }) => {
       credentials: 'include',
       headers: { cookie }
     });
-    const { data } = await library.json();
+    const { data, columns } = await library.json();
     console.log('front end*************', data[0], data.length);
-    data.columns = [
-      { name: 'Title', width: 2, spotifyRef: 'title' },
-      { name: 'Artist', width: 2, spotifyRef: 'artists' },
-      { name: 'Date Added', width: 1, spotifyRef: 'added_at', isDate: true }
-    ];
-    return { data };
+    return { data, columns };
   } catch (error) {
     console.error('FRONT END ERROR', error);
     return { data: [] };

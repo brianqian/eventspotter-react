@@ -10,6 +10,7 @@ const Section = styled.div`
 `;
 
 function MusicLibraryTitle({ columns, className }) {
+  // console.log('IN TITLE ROW', columns);
   return (
     <Container className={className}>
       {columns.map((column, idx) => (

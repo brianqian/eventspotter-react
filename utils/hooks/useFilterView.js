@@ -4,7 +4,10 @@ import fetch from 'isomorphic-unfetch';
 const useFilterView = defaultValue => {
   const [sortBy, setSortBy] = useState('all');
   const [content, setContent] = useState(defaultValue);
-
+  console.log('~~~~~~~~~~~~~~~');
+  console.log(`sortby: ${sortBy}`);
+  console.log('content', content);
+  console.log('~~~~~~~~~~~~~~~');
   useEffect(() => {
     async function fetchData() {
       console.log('FILTER VIEW USE EFFECT');

@@ -15,7 +15,7 @@ const Column = styled.div`
 function MusicLibraryRow({ data, columns, type }) {
   return (
     <Container>
-      {data && (
+      {data && type === 'all' && (
         <>
           <Column width={columns[0].width || 2}>{data.title}</Column>
           <Column width={columns[1].width || 2}>{data.artist}</Column>
@@ -24,6 +24,11 @@ function MusicLibraryRow({ data, columns, type }) {
             columns.map(column => (
               <Column width={column.width}>{data.track[column.spotifyRef]}</Column>
             ))} */}
+        </>
+      )}
+      {data && type === 'top_artists' && (
+        <>
+          <Column width={columns[0].width || 2}>{data.name}</Column>
         </>
       )}
     </Container>

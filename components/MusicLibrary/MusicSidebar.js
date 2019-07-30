@@ -30,7 +30,6 @@ const ButtonContainer = styled.div`
 `;
 
 function MusicSidebar({ className, setSortBy }) {
-  setSortBy('all');
   return (
     <Container className={className}>
       <ButtonContainer>

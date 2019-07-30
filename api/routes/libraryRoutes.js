@@ -55,7 +55,12 @@ router.route('/all').get(async (req, res) => {
     console.log('LIBRARY FOUND IN CACHE:');
   }
   console.log('RETURNING TO FRONT WITH', userLibrary[0], userLibrary.length);
-  res.json({ data: userLibrary });
+  const columns = [
+    { name: 'Title', width: 2, spotifyRef: 'title' },
+    { name: 'Artist', width: 2, spotifyRef: 'artists' },
+    { name: 'Date Added', width: 1, spotifyRef: 'added_at', isDate: true }
+  ];
+  res.json({ data: userLibrary, columns });
 
   /** ********************
    * UPDATE USER LIBRARY
@@ -72,13 +77,14 @@ router.route('/all').get(async (req, res) => {
   authController.editUserSongTotal(spotifyID, spotifyLibrary.total);
   userLibrary = cache.getKey(spotifyID, 'library');
   console.log(
-    `USER LIBRARY length: ${userLibrary && userLibrary.length}, firstItem: ${userLibrary &&
-      userLibrary[0]}`
+    `USER LIBRARY length: ${userLibrary && userLibrary.length}`,
+    `firstItem: ${userLibrary && userLibrary[0]}`
   );
   const lastCachedSong = userLibrary[0];
   const lastCachedSongIndex = spotifyLibrary.items.findIndex(
     item => item.track.id === lastCachedSong.id && item.added_at === lastCachedSong.dateAdded
   );
+
   console.log('LAST CACHED SONG INDEX:', lastCachedSongIndex);
   if (lastCachedSongIndex === 0 && spotifyLibrary.total === cachedUser.totalSongs)
     return console.log('NO NEW SONGS FOUND, INDEX: ', lastCachedSongIndex);
@@ -125,7 +131,8 @@ router.get('/top_artists', async (req, res) => {
   const topArtists = await spotifyService.getTopArtists(accessToken);
 
   console.log('IN BACKEND TOP ARTIST', topArtists.items[0], topArtists.items.length);
-  res.json({ data: topArtists.items });
+  const columns = [{ name: 'Artist', width: 10, spotifyRef: 'artists' }];
+  res.json({ data: topArtists.items, columns });
 });
 
 module.exports = router;
