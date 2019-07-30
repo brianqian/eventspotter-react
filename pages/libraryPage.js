@@ -1,8 +1,10 @@
+// import ReactTable from 'react-table';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Library from '../components/MusicLibrary/MusicLibrary';
 import Sidebar from '../components/MusicLibrary/MusicSidebar';
 import useFilterView from '../utils/hooks/useFilterView';
+import ReactTable from '../components/MusicLibrary/LibraryTable';
 
 const Container = styled.div`
   display: grid;
@@ -21,13 +23,14 @@ const MainDisplay = styled.main`
   overflow: auto;
 `;
 
-function LibraryPage({ data, error, columns }) {
+function LibraryPage({ data = [], error }) {
   const { sortBy, setSortBy, content } = useFilterView(data);
   return (
     <Container>
       <StyledSidebar setSortBy={setSortBy} />
       <MainDisplay>
-        <Library library={content} columns={columns} sortBy={sortBy} />
+        {/* <Library library={content} columns={columns} sortBy={sortBy} /> */}
+        <ReactTable library={content} sortBy={sortBy} />
       </MainDisplay>
     </Container>
   );
@@ -48,10 +51,6 @@ LibraryPage.getInitialProps = async ({ req, err }) => {
     console.error('FRONT END ERROR', error);
     return { data: [] };
   }
-};
-
-LibraryPage.defaultProps = {
-  data: []
 };
 
 export default LibraryPage;
