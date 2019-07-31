@@ -55,12 +55,7 @@ router.route('/all').get(async (req, res) => {
     console.log('LIBRARY FOUND IN CACHE:');
   }
   console.log('RETURNING TO FRONT WITH', userLibrary[0], userLibrary.length);
-  const columns = [
-    { name: 'Title', width: 2, spotifyRef: 'title' },
-    { name: 'Artist', width: 2, spotifyRef: 'artists' },
-    { name: 'Date Added', width: 1, spotifyRef: 'added_at', isDate: true }
-  ];
-  res.json({ data: userLibrary, columns });
+  res.json({ data: userLibrary });
 
   /** ********************
    * UPDATE USER LIBRARY
@@ -129,10 +124,8 @@ router.get('/next_songs', async (req, res) => {
 router.get('/top_artists', async (req, res) => {
   const { spotifyID, accessToken } = validateRoute(res);
   const topArtists = await spotifyService.getTopArtists(accessToken);
-
   console.log('IN BACKEND TOP ARTIST', topArtists.items[0], topArtists.items.length);
-  const columns = [{ name: 'Artist', width: 10, spotifyRef: 'artists' }];
-  res.json({ data: topArtists.items, columns });
+  res.json({ data: topArtists.items });
 });
 
 module.exports = router;

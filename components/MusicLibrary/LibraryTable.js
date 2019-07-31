@@ -56,7 +56,6 @@ function Table({ columns, data }) {
 }
 
 function AllSongsLibrary({ library, sortBy }) {
-  console.log('IN TABLE library', library, 'sortBy', sortBy);
   const columnIndex = {
     all: [
       {

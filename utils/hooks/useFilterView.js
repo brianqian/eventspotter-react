@@ -4,10 +4,7 @@ import fetch from 'isomorphic-unfetch';
 const useFilterView = defaultValue => {
   const [sortBy, setSortBy] = useState('all');
   const [content, setContent] = useState(defaultValue);
-  console.log('~~~~~~~~~~~~~~~');
-  console.log(`sortby: ${sortBy}`);
-  console.log('content', content);
-  console.log('~~~~~~~~~~~~~~~');
+
   useEffect(() => {
     async function fetchData() {
       console.log('FILTER VIEW USE EFFECT');
@@ -19,7 +16,24 @@ const useFilterView = defaultValue => {
     fetchData();
   }, [sortBy]);
 
-  return { sortBy, setSortBy, content };
+  const getArtists = () => {
+    if (!content.length) return [];
+    let formattedArtists;
+    if (sortBy === 'top_artists') {
+      formattedArtists = content.map(({ name }) => name);
+    } else {
+      formattedArtists = [];
+      content.forEach(({ track }) => {
+        track.artists.forEach(artist => {
+          formattedArtists.push(artist.name);
+        });
+      });
+    }
+
+    return formattedArtists;
+  };
+
+  return { sortBy, setSortBy, content, getArtists };
 };
 
 export default useFilterView;

@@ -6,15 +6,19 @@ const seatGeekFetch = async endpoint => {
   const encodedClient = btoa(
     `${process.env.SEATGEEK_CLIENT_ID}:${process.env.SEATGEEK_CLIENT_SECRET}`
   );
-  const result = await (await fetch(endpoint, {
-    headers: {
-      Authorization: `Basic ${encodedClient}`
-    }
-  })).json();
-  return result;
+  try {
+    const result = await (await fetch(endpoint, {
+      headers: {
+        Authorization: `Basic ${encodedClient}`
+      }
+    })).json();
+    return result;
+  } catch (err) {
+    console.error('SEAT GEEK FETCH ERROR', err);
+  }
 };
 
-const searchEventByArtists = async artistArray => {
+const getEventsByArtists = async artistArray => {
   const promiseArr = [];
   artistArray.forEach(artist => {
     promiseArr.push(
@@ -29,10 +33,10 @@ const searchEventByArtists = async artistArray => {
     if (artist.meta.total === 0) return [];
     return artist.events.map(event => format.parseSeatGeekEvents(event));
   });
-  console.log(result);
+  return result;
 };
 
 module.exports = {
   seatGeekFetch,
-  searchEventByArtists
+  getEventsByArtists
 };

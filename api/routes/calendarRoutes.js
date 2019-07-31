@@ -1,13 +1,24 @@
 const router = require('express').Router();
-const { handleError } = require('../../utils/error');
-const spotifyService = require('../services/spotifyService');
-const { seatGeekFetch, getPricesForArtists } = require('../services/seatgeekService');
+const fetch = require('isomorphic-unfetch');
+const querystring = require('querystring');
+const { getEventsByArtists } = require('../services/seatgeekService');
 
-router.get('/test', async (req, res) => {
-  const artists = ['odesza', 'goldlink', 'rise against'];
-  const result = await getPricesForArtists(artists);
+router.get('/test', async (req, res) => {});
 
-  console.log('SEAT GEEK FETCH', result);
+router.get('/generate_calendar', async (req, res) => {
+  const artists = req.query || null;
+  console.log('IN GEN CALENDAR');
+  console.log('artists', artists);
+  if (!artists) return res.json({ artists: [] });
+  const result = await getEventsByArtists(Object.values(artists));
+  const calendar = result.reduce((acc, events, i) => {
+    if (result.length) {
+      acc.push({ [artists[i]]: events });
+    }
+    return acc;
+  }, []);
+  console.log('GENERAT4 CALENDAR', calendar[2]);
+  res.json({ calendar });
 });
 
 module.exports = router;

@@ -6,6 +6,7 @@ const cors = require('cors');
 const routes = require('./api/routes');
 const cacheMiddleware = require('./api/routes/middleware/cacheMiddleware');
 const authMiddleware = require('./api/routes/middleware/authMiddleware');
+const cache = require('./cache');
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== 'production';
@@ -29,13 +30,18 @@ app.prepare().then(() => {
   server.get('/_next/*', (req, res) => {
     handle(req, res);
   });
+  server.get('/error', (req, res) => {
+    const { code } = req.query;
+    app.render(req, res, `/errorPage`, { code });
+    // return ssrCache({ req, res, pagePath: '/' })
+  });
   server.get('/', (req, res) => {
     app.render(req, res, '/');
     // return ssrCache({ req, res, pagePath: '/' })
   });
-  server.get('/error', (req, res) => {
-    const { code } = req.query;
-    app.render(req, res, `/errorPage`, { code });
+  server.get('/calendar', (req, res) => {
+    console.log('IN SERVER BACKEND', req.query);
+    app.render(req, res, '/calendar', { artists: req.query.artists });
     // return ssrCache({ req, res, pagePath: '/' })
   });
   server.get('/library', (req, res) => {

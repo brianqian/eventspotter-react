@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import fetch from 'isomorphic-unfetch';
+import querystring from 'querystring';
 
 const Container = styled.div`
   background-color: ${props => props.theme.color.background};
@@ -8,32 +9,45 @@ const Container = styled.div`
   min-height: calc(100vh - 50px);
 `;
 
-const Calendar = ({ data: topArtists, error }) => {
+const Calendar = ({ error, calendar, artists }) => {
+  console.log('IN CAL COMP FRONT', calendar);
   return (
     <Container>
       Hello I&apos;m Calendar
-      {topArtists.map(artist => (
-        <div>{artist.name}</div>
-      ))}
+      {calendar.map((event, i) => {
+        const current = artists[i];
+        return (
+          <div>
+            <header>{artists[i]}</header>
+            <div>
+              <p>{event[current].shortTitle}</p>
+              <p>{event[current].url}</p>
+              <p>{event[current].lowPrice}</p>
+              <p>{event[current].averagePrice}</p>
+              <p>{event[current].date}</p>
+              <p>{event[current].dateUTC}</p>
+            </div>
+          </div>
+        );
+      })}
     </Container>
   );
 };
 
-Calendar.getInitialProps = async ({ req, err }) => {
+Calendar.getInitialProps = async ({ req, err, query }) => {
   if (err) console.log('server error', err);
-  const cookie = (req && req.headers.cookie) || document.cookie;
-  try {
-    let data = await fetch(`http://localhost:3000/api/library/top_artists`, {
-      credentials: 'include',
-      headers: { cookie }
-    });
-    data = await data.json();
-    console.log('IN CALENDAR FRONT- TOP ARTISTS', data);
-    return data;
-  } catch (error) {
-    console.error(error);
-    return error;
-  }
+  console.log('QUERY', req && req.query, query);
+  const artists = (req && req.query.artists) || query.artists;
+  const encodedArtists = querystring.encode(artists);
+  console.log('ENCODED ARTIST', encodedArtists);
+  const data = await (await fetch(
+    `http://localhost:3000/api/calendar/generate_calendar?${encodedArtists}`
+  )).json();
+
+  const { calendar } = data;
+  return { calendar, artists };
+  // console.log('IN CALENDAR, ', query.calendar);
+  // console.log('IN CALENDAR, ', res.locals);
 };
 
 export default Calendar;

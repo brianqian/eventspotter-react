@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import Link from 'next/link';
 
 const links = [
-  { href: '/libraryPage', label: 'My Library', as: '/library', key: 'nav-library-link' },
-  { href: '/calendar', label: 'Calendar', key: 'nav-calendar-link' }
+  { href: '/libraryPage', label: 'My Library', as: '/library', key: 'nav-library-link' }
+  // { href: '/calendar', label: 'Calendar', key: 'nav-calendar-link' }
 ];
 
 const StyledNav = styled.nav`

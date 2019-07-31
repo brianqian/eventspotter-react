@@ -1,7 +1,6 @@
 // import ReactTable from 'react-table';
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import Library from '../components/MusicLibrary/MusicLibrary';
 import Sidebar from '../components/MusicLibrary/MusicSidebar';
 import useFilterView from '../utils/hooks/useFilterView';
 import ReactTable from '../components/MusicLibrary/LibraryTable';
@@ -15,8 +14,12 @@ const Container = styled.div`
 const StyledSidebar = styled(Sidebar)`
   grid-column: 1/3;
   border: 1px solid white;
+  color: ${props => props.theme.color.white};
   height: 100%;
+  width: 100%;
+  background-color: ${props => props.theme.color.background};
 `;
+
 const MainDisplay = styled.main`
   grid-column: 3/13;
   max-height: 100vh;
@@ -24,10 +27,10 @@ const MainDisplay = styled.main`
 `;
 
 function LibraryPage({ data = [], error }) {
-  const { sortBy, setSortBy, content } = useFilterView(data);
+  const { sortBy, setSortBy, content, getArtists } = useFilterView(data);
   return (
     <Container>
-      <StyledSidebar setSortBy={setSortBy} />
+      <StyledSidebar setSortBy={setSortBy} sortBy={sortBy} getArtists={getArtists} />
       <MainDisplay>
         {/* <Library library={content} columns={columns} sortBy={sortBy} /> */}
         <ReactTable library={content} sortBy={sortBy} />
@@ -44,9 +47,9 @@ LibraryPage.getInitialProps = async ({ req, err }) => {
       credentials: 'include',
       headers: { cookie }
     });
-    const { data, columns } = await library.json();
+    const { data } = await library.json();
     console.log('front end*************', data[0], data.length);
-    return { data, columns };
+    return { data };
   } catch (error) {
     console.error('FRONT END ERROR', error);
     return { data: [] };
