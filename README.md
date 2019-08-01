@@ -66,7 +66,8 @@ The server uses an LRU cache to maintain recent users and cut down on database q
 - ~~Add refresh token code to middleware~~
 - ~~Decide where user library should be checked against the Spotify library.~~ (Create a user setting)
 - Set up server to conditionally render cached vs non-cached routes.
-- Create a class for the song object (?)
+- Decide where artists are formatted for display and SeatGeek query
+- Decide where date added is formatted
 
 ## Authentication & Middleware
 

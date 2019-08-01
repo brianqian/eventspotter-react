@@ -90,7 +90,7 @@ const updateAccessToken = refreshToken => {
   });
 };
 
-const getTopArtists = async (accessToken, range = 'medium') => {
+const getTopArtists = async (accessToken, range = 'long') => {
   // short_term = 4 weeks
   // medium_term = 6 months
   // long_term = years

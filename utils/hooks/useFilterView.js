@@ -16,7 +16,7 @@ const useFilterView = defaultValue => {
     fetchData();
   }, [sortBy]);
 
-  const getArtists = () => {
+  const formatArtistsForQuery = () => {
     if (!content.length) return [];
     let formattedArtists;
     if (sortBy === 'top_artists') {
@@ -33,7 +33,7 @@ const useFilterView = defaultValue => {
     return formattedArtists;
   };
 
-  return { sortBy, setSortBy, content, getArtists };
+  return { sortBy, setSortBy, content, formatArtistsForQuery };
 };
 
 export default useFilterView;

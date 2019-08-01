@@ -27,13 +27,17 @@ const MainDisplay = styled.main`
 `;
 
 function LibraryPage({ data = [], error }) {
-  const { sortBy, setSortBy, content, getArtists } = useFilterView(data);
+  const { sortBy, setSortBy, content, formatArtistsForQuery } = useFilterView(data);
   return (
     <Container>
-      <StyledSidebar setSortBy={setSortBy} sortBy={sortBy} getArtists={getArtists} />
+      <StyledSidebar setSortBy={setSortBy} sortBy={sortBy} />
       <MainDisplay>
         {/* <Library library={content} columns={columns} sortBy={sortBy} /> */}
-        <ReactTable library={content} sortBy={sortBy} />
+        <ReactTable
+          library={content}
+          sortBy={sortBy}
+          formatArtistsForQuery={formatArtistsForQuery}
+        />
       </MainDisplay>
     </Container>
   );

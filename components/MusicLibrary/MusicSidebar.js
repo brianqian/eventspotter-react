@@ -1,6 +1,4 @@
 import styled from 'styled-components';
-import fetch from 'isomorphic-unfetch';
-import querystring from 'querystring';
 import Router from 'next/router';
 
 const Container = styled.div`
@@ -30,15 +28,7 @@ const ButtonContainer = styled.div`
   width: 100%;
 `;
 
-function MusicSidebar({ className, setSortBy, sortBy, getArtists }) {
-  const generateCalendar = () => {
-    const artists = getArtists();
-    const query = querystring.encode({ artists });
-    // make fetch request to backend with list of top artists generated from cookie
-    Router.push(`/calendar?${query}`);
-    // fetch(`http://localhost:3000/api/calendar/generate_calendar?${query}`);
-  };
-
+function MusicSidebar({ className, setSortBy, sortBy }) {
   return (
     <Container className={className}>
       <h2>Filters</h2>
@@ -66,9 +56,7 @@ function MusicSidebar({ className, setSortBy, sortBy, getArtists }) {
         </>
       )}
 
-      <ButtonContainer>
-        <Button onClick={generateCalendar} />
-      </ButtonContainer>
+      <ButtonContainer>{/* <Button onClick={generateCalendar} /> */}</ButtonContainer>
     </Container>
   );
 }

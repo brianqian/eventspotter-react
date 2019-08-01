@@ -1,4 +1,5 @@
 // const cacheableResponse = require('cacheable-response');
+const jwt = require('jsonwebtoken');
 const express = require('express');
 const next = require('next');
 const cookieParser = require('cookie-parser');
@@ -6,7 +7,6 @@ const cors = require('cors');
 const routes = require('./api/routes');
 const cacheMiddleware = require('./api/routes/middleware/cacheMiddleware');
 const authMiddleware = require('./api/routes/middleware/authMiddleware');
-const cache = require('./cache');
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== 'production';
@@ -35,13 +35,21 @@ app.prepare().then(() => {
     app.render(req, res, `/errorPage`, { code });
     // return ssrCache({ req, res, pagePath: '/' })
   });
+  server.use(authMiddleware);
+  server.use(cacheMiddleware);
+  server.use('/api', routes);
   server.get('/', (req, res) => {
     app.render(req, res, '/');
     // return ssrCache({ req, res, pagePath: '/' })
   });
-  server.get('/calendar', (req, res) => {
-    console.log('IN SERVER BACKEND', req.query);
-    app.render(req, res, '/calendar', { artists: req.query.artists });
+  server.get('/calendar', async (req, res) => {
+    // const encodedToken = await jwt.sign({ req.query }, process.env.JWT_SECRET_KEY, {
+    //   expiresIn: '999d'
+    // });
+    console.log('IN SERVER BACKEND -- /calendar route. query:', req.query);
+
+    res.cookie('topArtists');
+    app.render(req, res, '/calendar');
     // return ssrCache({ req, res, pagePath: '/' })
   });
   server.get('/library', (req, res) => {
@@ -49,9 +57,6 @@ app.prepare().then(() => {
     // ssrCache({ req, res, pagePath: '/libraryPage' });
     app.render(req, res, actualPage);
   });
-  server.use(authMiddleware);
-  server.use(cacheMiddleware);
-  server.use('/api', routes);
 
   // server.get('/blog/:id', (req, res) => {
   //   const queryParams = { id: req.params.id }

@@ -27,7 +27,7 @@ const SignIn = styled.div`
   width: 150px;
   height: 35px;
   border-radius: 35px;
-  background-color: #24d060;
+  background-color: ${props => props.theme.color.green};
   display: flex;
   align-items: center;
   justify-content: center;

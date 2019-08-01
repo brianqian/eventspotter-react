@@ -1,6 +1,8 @@
 import React from 'react';
 import { useTable } from 'react-table';
 import styled from 'styled-components';
+import Link from 'next/link';
+import Router from 'next/router';
 
 const Styles = styled.div`
   padding: 1rem;
@@ -21,6 +23,19 @@ const Styles = styled.div`
       font-size: 22px;
     }
   }
+`;
+
+const GenerateCalendar = styled.div`
+  width: 100%;
+  height: 50px;
+  background-color: ${props => props.theme.color.green};
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-family: 'Roboto Condensed', sans-serif;
+  border-radius: 30px;
 `;
 
 function Table({ columns, data }) {
@@ -55,7 +70,7 @@ function Table({ columns, data }) {
   );
 }
 
-function AllSongsLibrary({ library, sortBy }) {
+function AllSongsLibrary({ library, sortBy, formatArtistsForQuery }) {
   const columnIndex = {
     all: [
       {
@@ -81,7 +96,7 @@ function AllSongsLibrary({ library, sortBy }) {
         Header: 'Top Artists',
         columns: [
           {
-            Header: 'Artist',
+            Header: '',
             accessor: 'name'
           }
         ]
@@ -93,8 +108,24 @@ function AllSongsLibrary({ library, sortBy }) {
   const memoLibrary = React.useMemo(() => library);
 
   console.log('END OF TABLE', memoLibrary[0]);
+
   return (
     <Styles>
+      {sortBy !== 'all' && (
+        <GenerateCalendar
+          onClick={() => {
+            Router.push(
+              {
+                pathname: '/calendar',
+                query: formatArtistsForQuery()
+              },
+              '/calendar'
+            );
+          }}
+        >
+          Generate Calendar
+        </GenerateCalendar>
+      )}
       <Table columns={columns} data={memoLibrary} />
     </Styles>
   );

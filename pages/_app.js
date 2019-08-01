@@ -6,7 +6,8 @@ import Nav from '../components/Nav/Nav';
 import { cookieToString } from '../utils/format';
 
 const GlobalStyle = createGlobalStyle`
-@import url("https://fonts.googleapis.com/css?family=Roboto:400,700|Source+Sans+Pro:400,900&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700|Source+Sans+Pro:400,900&display=swap");
+
 body, html{
   font-family: ${props => props.theme.textFont};
   max-width: 100vw;

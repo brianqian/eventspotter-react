@@ -29,7 +29,7 @@ Head.propTypes = {
   title: string,
   description: string,
   url: string,
-  ogImage: string,
+  ogImage: string
 };
 
 export default Head;
