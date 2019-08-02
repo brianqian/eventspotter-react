@@ -14,8 +14,6 @@ const Title = styled.h2`
   position: relative;
 `;
 
-const observer = new IntersectionObserver({});
-
 function CalendarArtistsCard({ name, events }) {
   console.log('IN CALENDAR ARTISTS CARD', events);
   return (

@@ -28,7 +28,8 @@ function EventCard({ shortTitle, url, lowPrice, averagePrice, date, dateUTC, loc
       </a>
       <p>{`Low Price: $${lowPrice}`}</p>
       <p>{`Average Price: $${averagePrice}`}</p>
-      <p>{`Local Time: ${format(date, 'MM-DD-YYYY')}`}</p>
+      <p>{`Time: ${format(date, 'h:mm A')}`}</p>
+      <p>{`Date: ${format(date, 'ddd, MMM D YYYY')}`}</p>
       <p>{`Location: ${location.city}, ${location.state}`}</p>
       <p>{`UTC time: ${format(dateUTC, 'MM-DD-YYYY')}`}</p>
       <p />

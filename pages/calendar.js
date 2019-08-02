@@ -8,6 +8,7 @@ const Container = styled.div`
   display: grid;
   color: ${props => props.theme.color.white};
   min-height: calc(100vh - 50px);
+  padding: 1rem;
 `;
 
 const Calendar = ({ calendar }) => {

@@ -11,6 +11,7 @@ const StyledNav = styled.nav`
   background-color: ${props => props.theme.color.background};
   display: flex;
   height: 50px;
+  padding: 0.5rem;
   border-bottom: 1px solid white;
   align-items: center;
   justify-content: flex-end;
