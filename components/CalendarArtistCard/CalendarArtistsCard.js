@@ -9,7 +9,12 @@ const Container = styled.div`
 
 const Title = styled.h2`
   text-align: right;
+  border-bottom: 6px solid white;
+  font-size: 40px;
+  position: relative;
 `;
+
+const observer = new IntersectionObserver({});
 
 function CalendarArtistsCard({ name, events }) {
   console.log('IN CALENDAR ARTISTS CARD', events);

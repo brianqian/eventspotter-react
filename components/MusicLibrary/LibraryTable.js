@@ -13,6 +13,7 @@ const Styles = styled.div`
   font-family: 'Source Sans Pro';
 
   table {
+    width: 100%;
     th,
     td {
       margin: 0;
@@ -97,21 +98,49 @@ function AllSongsLibrary({ library, sortBy, formatArtistsForQuery }) {
         columns: [
           {
             Header: '',
-            accessor: 'name'
+            accessor: '0.name'
+          },
+          {
+            Header: '',
+            accessor: '1.name'
+          },
+          {
+            Header: '',
+            accessor: '2.name'
+          },
+          {
+            Header: '',
+            accessor: '3.name'
           }
         ]
       }
     ]
   };
 
+  let memoLibrary;
+  if (sortBy === 'top_artists') {
+    const tempList = [];
+    const topArtists = library;
+    topArtists.forEach((artistName, i) => {
+      const currentList = tempList[i % 5];
+      if (currentList) {
+        currentList.push(artistName);
+      } else {
+        tempList[i % 5] = [artistName];
+      }
+    });
+    console.log('TOP ARTISTS IN TABLE', tempList);
+
+    memoLibrary = React.useMemo(() => tempList);
+  } else {
+    memoLibrary = React.useMemo(() => library);
+  }
+
   const columns = React.useMemo(() => columnIndex[sortBy], [sortBy]);
-  const memoLibrary = React.useMemo(() => library);
-
-  console.log('END OF TABLE', memoLibrary[0]);
-
+  // TODO: change library.length validation
   return (
     <Styles>
-      {sortBy !== 'all' && (
+      {sortBy !== 'all' && library.length < 100 && (
         <GenerateCalendar
           onClick={() => {
             Router.push(

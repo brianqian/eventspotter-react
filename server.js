@@ -35,9 +35,8 @@ app.prepare().then(() => {
     app.render(req, res, `/errorPage`, { code });
     // return ssrCache({ req, res, pagePath: '/' })
   });
-  server.use(authMiddleware);
-  server.use(cacheMiddleware);
-  server.use('/api', routes);
+
+
   server.get('/', (req, res) => {
     app.render(req, res, '/');
     // return ssrCache({ req, res, pagePath: '/' })
@@ -47,8 +46,6 @@ app.prepare().then(() => {
     //   expiresIn: '999d'
     // });
     console.log('IN SERVER BACKEND -- /calendar route. query:', req.query);
-
-    res.cookie('topArtists');
     app.render(req, res, '/calendar');
     // return ssrCache({ req, res, pagePath: '/' })
   });
@@ -57,6 +54,9 @@ app.prepare().then(() => {
     // ssrCache({ req, res, pagePath: '/libraryPage' });
     app.render(req, res, actualPage);
   });
+  server.use(authMiddleware);
+  server.use(cacheMiddleware);
+  server.use('/api', routes);
 
   // server.get('/blog/:id', (req, res) => {
   //   const queryParams = { id: req.params.id }

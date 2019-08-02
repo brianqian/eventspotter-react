@@ -61,7 +61,7 @@ const Nav = ({ userInfo }) => {
       </SignIn>
       <Welcome>
         {userInfo.displayName}
-        <img src={userInfo.imgURL} alt="" height="50px" />
+        <img src={userInfo.imgURL} alt="" height="47px" />
       </Welcome>
       {/* <div>
         <button onClick={toggle}>Login/Sign Up</button>

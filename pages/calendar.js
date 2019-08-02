@@ -11,10 +11,9 @@ const Container = styled.div`
 `;
 
 const Calendar = ({ calendar }) => {
-  console.log('IN CAL COMP FRONT', calendar);
+  console.log('IN CALENDAR.JS FRONT', calendar);
   return (
     <Container>
-      Hello I&apos;m Calendar
       {calendar.map((artistEvents, i) => {
         return <CalendarArtistCard {...artistEvents} />;
       })}

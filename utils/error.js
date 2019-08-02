@@ -11,6 +11,5 @@ const validateRoute = res => {
     res.clearCookie('userInfo');
     return res.redirect('/error?code=401');
   }
-  return { spotifyID, accessToken };
 };
 module.exports = { handleError, validateRoute };

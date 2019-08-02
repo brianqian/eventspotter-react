@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import fetch from 'isomorphic-unfetch';
+import NProgress from 'nprogress';
 
 const useFilterView = defaultValue => {
   const [sortBy, setSortBy] = useState('all');
@@ -7,9 +8,11 @@ const useFilterView = defaultValue => {
 
   useEffect(() => {
     async function fetchData() {
+      NProgress.start();
       console.log('FILTER VIEW USE EFFECT');
       let result = await fetch(`http://localhost:3000/api/library/${sortBy}`);
       result = await result.json();
+      NProgress.done();
       setContent(result.data);
       console.log('FILTER VIEW USE EFFECT', result);
     }

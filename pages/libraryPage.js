@@ -33,6 +33,7 @@ function LibraryPage({ data = [], error }) {
       <StyledSidebar setSortBy={setSortBy} sortBy={sortBy} />
       <MainDisplay>
         {/* <Library library={content} columns={columns} sortBy={sortBy} /> */}
+
         <ReactTable
           library={content}
           sortBy={sortBy}
