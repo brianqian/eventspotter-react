@@ -12,10 +12,9 @@ const Container = styled.div`
 `;
 
 const Calendar = ({ calendar }) => {
-  console.log('IN CALENDAR.JS FRONT', calendar);
   return (
     <Container>
-      {calendar.map((artistEvents, i) => {
+      {calendar.map((artistEvents) => {
         return <CalendarArtistCard {...artistEvents} />;
       })}
     </Container>

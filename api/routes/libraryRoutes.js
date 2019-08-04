@@ -1,14 +1,14 @@
 const router = require('express').Router();
 const cache = require('../../cache');
-const { handleError, validateRoute } = require('../../utils/error');
 const format = require('../../utils/format');
 const spotifyService = require('../services/spotifyService');
 const libraryController = require('../controllers/libraryController');
 const userLibraryController = require('../controllers/userLibraryController');
 const authController = require('../controllers/authController');
+const { requiresLogin } = require('./middleware/authMiddleware');
 // require('dotenv').config();
 
-router.route('/all').get(async (req, res) => {
+router.route('/all').get(requiresLogin, async (req, res) => {
   /** ***********
    * This is the route hit by the library page. First middleware will trigger and update the cache.
    *
@@ -34,7 +34,9 @@ router.route('/all').get(async (req, res) => {
    * ATTAIN USER CREDENTIALS FOR FETCHING FROM SPOTIFY
    * ***************************************************
    */
-  validateRoute(res);
+  console.log('AUTH MIDDLEWARE', req.headers, req.accepts(['html', 'json']));
+  console.log('ALL RES.STATUS', res.statusCode);
+  if (res.statusCode !== 200) return res.status(401).json({ data: [] });
   const { spotifyID, accessToken } = res.locals;
   const cachedUser = cache.get(spotifyID);
   let userLibrary = cachedUser.library;
@@ -106,7 +108,6 @@ router.route('/all').get(async (req, res) => {
 
 router.get('/next_songs', async (req, res) => {
   const { spotifyID, accessToken } = res.locals;
-  if (!spotifyID || !accessToken) handleError(res, 401);
   const { offset } = req.query;
   const nextSongs = format.spotifyLibraryToCache(
     await spotifyService.getSongs(accessToken, 4, offset)
@@ -123,8 +124,7 @@ router.get('/next_songs', async (req, res) => {
 });
 
 router.get('/top_artists', async (req, res) => {
-  validateRoute(res);
-  const { spotifyID, accessToken } = res.locals;
+  const { accessToken } = res.locals;
   const topArtists = await spotifyService.getTopArtists(accessToken);
   console.log('IN BACKEND TOP ARTIST', topArtists.items[0], topArtists.items.length);
   res.json({ data: topArtists.items });

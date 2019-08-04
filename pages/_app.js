@@ -30,30 +30,27 @@ Router.events.on('routeChangeComplete', () => NProgress.done());
 Router.events.on('routeChangeError', () => NProgress.done());
 
 export default class MyApp extends App {
-  static async getInitialProps({ Component, ctx, ctx: { req } }) {
-    const cookie = req
-      ? req.cookies && req.cookies.userInfo
-      : cookieToString(document.cookie, 'userInfo');
-    const decodedToken = cookie
-      ? await jwt.verify(cookie, process.env.JWT_SECRET_KEY)
-      : { userInfo: '' };
+  static async getInitialProps({ Component, ctx, ctx: { req, res } }) {
+    const cookie = (req && req.headers.cookie) || document.cookie;
+    console.log('COOKIE', cookie);
+    const cookieExists = cookie.userInfo || cookie.includes('userInfo');
     let pageProps = {};
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);
     }
 
-    return { pageProps: { ...pageProps }, decodedToken };
+    return { pageProps: { ...pageProps }, cookieExists };
   }
 
   render() {
-    const { Component, pageProps, decodedToken } = this.props;
+    const { Component, pageProps, cookieExists } = this.props;
 
     return (
       <Container>
         <ThemeProvider theme={theme}>
           <>
             <GlobalStyle />
-            <Nav userInfo={decodedToken.userInfo} />
+            {cookieExists && <Nav />}
             <Component {...pageProps} />
           </>
         </ThemeProvider>

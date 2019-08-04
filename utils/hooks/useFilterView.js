@@ -16,7 +16,11 @@ const useFilterView = defaultValue => {
       setContent(result.data);
       console.log('FILTER VIEW USE EFFECT', result);
     }
-    fetchData();
+    try {
+      fetchData();
+    } catch (err) {
+      if (err) throw new Error('Error in filter view useEffect');
+    }
   }, [sortBy]);
 
   const formatArtistsForQuery = () => {

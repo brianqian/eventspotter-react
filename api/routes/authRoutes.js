@@ -79,6 +79,17 @@ router.route('/logout').get((req, res) => {
   res.clearCookie('userInfo');
   res.redirect('/');
 });
+router.route('/').get((req, res) => {
+  const { spotifyID = null } = res.locals;
+  if (!spotifyID) return res.status(401).end();
+  const cachedUser = cache.get(spotifyID);
+  const { displayName, imgURL } = cachedUser;
+  res.json({
+    spotifyID,
+    displayName,
+    imgURL
+  });
+});
 
 // router.route('/test').get(async (req, res) => {});
 

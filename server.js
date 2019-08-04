@@ -1,12 +1,12 @@
 // const cacheableResponse = require('cacheable-response');
-const jwt = require('jsonwebtoken');
 const express = require('express');
 const next = require('next');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const morgan = require('morgan');
 const routes = require('./api/routes');
 const cacheMiddleware = require('./api/routes/middleware/cacheMiddleware');
-const authMiddleware = require('./api/routes/middleware/authMiddleware');
+const { isLoggedIn, updateSpotifyToken } = require('./api/routes/middleware/authMiddleware');
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== 'production';
@@ -24,46 +24,48 @@ const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
   const server = express();
+  server.use(morgan('dev'));
   server.use(cookieParser());
   server.use(cors());
 
   server.get('/_next/*', (req, res) => {
     handle(req, res);
   });
+  server.use(isLoggedIn);
+  server.use(updateSpotifyToken);
+
   server.get('/error', (req, res) => {
+    console.log('ERROR PAGE HIT. path: ', req.path);
     const { code } = req.query;
-    app.render(req, res, `/errorPage`, { code });
-    // return ssrCache({ req, res, pagePath: '/' })
+    console.log('TCL: code', code);
+    console.log('REs.STATUS', res.statusCode);
+    app.render(req, res, '/errorPage', { code });
   });
 
+  server.get('/', async (req, res) => {
+    // console.log('******************************');
+    // console.log('IN SERVER / route', res.locals);
+    // res.setHeader('asdff', 'asdfadfd');
+    // console.log('HEADERS', req.headers);
+    // console.log('******************************');
 
-  server.get('/', (req, res) => {
+    // return ssrCache({ req, res, pagePath: '/' })
     app.render(req, res, '/');
-    // return ssrCache({ req, res, pagePath: '/' })
   });
+
   server.get('/calendar', async (req, res) => {
-    // const encodedToken = await jwt.sign({ req.query }, process.env.JWT_SECRET_KEY, {
-    //   expiresIn: '999d'
-    // });
-    console.log('IN SERVER BACKEND -- /calendar route. query:', req.query);
     app.render(req, res, '/calendar');
     // return ssrCache({ req, res, pagePath: '/' })
   });
+
   server.get('/library', (req, res) => {
     const actualPage = '/libraryPage';
+    console.log('LIBRARY ROUTE HIT IN SERVER.JS');
     // ssrCache({ req, res, pagePath: '/libraryPage' });
     app.render(req, res, actualPage);
   });
-  server.use(authMiddleware);
   server.use(cacheMiddleware);
   server.use('/api', routes);
-
-  // server.get('/blog/:id', (req, res) => {
-  //   const queryParams = { id: req.params.id }
-  //   const pagePath = '/blog'
-  //   return ssrCache({ req, res, pagePath, queryParams })
-  // })
-
   server.get('*', (req, res) => handle(req, res));
 
   server.listen(port, err => {

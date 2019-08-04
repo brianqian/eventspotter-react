@@ -44,31 +44,31 @@ router.use('/', async (req, res, next) => {
    * CHECK AND UPDATE ACCESS TOKEN
    ***************************** */
 
-  const tokenExpired = Date.now() > cachedUser.accessTokenExpiration;
-  console.log(`TOKEN EXPIRED: ${tokenExpired}, ${Date.now()}`, cachedUser.accessTokenExpiration);
+  // const tokenExpired = Date.now() > cachedUser.accessTokenExpiration;
+  // console.log(`TOKEN EXPIRED: ${tokenExpired}, ${Date.now()}`, cachedUser.accessTokenExpiration);
 
-  if (tokenExpired) {
-    let newTokens;
-    try {
-      newTokens = await updateAccessToken(cachedUser.refreshToken);
-    } catch (err) {
-      console.error('error cache middleware- get token', err);
-      return next();
-    }
-    const { accessToken, accessTokenExpiration } = newTokens;
-    const updatedUser = cache.set(spotifyID, {
-      ...cachedUser,
-      accessToken,
-      accessTokenExpiration
-    });
-    res.locals.accessToken = accessToken;
-    authController.editUserInfo(updatedUser);
-  } else {
-    res.locals.accessToken = cachedUser.accessToken;
-  }
-  console.log('PATH:', req.path);
-  console.log('******************MAIN MIDDLEWARE ENDING');
-  return next();
+  // if (tokenExpired) {
+  //   let newTokens;
+  //   try {
+  //     newTokens = await updateAccessToken(cachedUser.refreshToken);
+  //   } catch (err) {
+  //     console.error('error cache middleware- get token', err);
+  //     return next();
+  //   }
+  //   const { accessToken, accessTokenExpiration } = newTokens;
+  //   const updatedUser = cache.set(spotifyID, {
+  //     ...cachedUser,
+  //     accessToken,
+  //     accessTokenExpiration
+  //   });
+  //   res.locals.accessToken = accessToken;
+  //   authController.editUserInfo(updatedUser);
+  // } else {
+  //   res.locals.accessToken = cachedUser.accessToken;
+  // }
+  // console.log('PATH:', req.path);
+  // console.log('******************MAIN MIDDLEWARE ENDING');
+  // return next();
 });
 
 module.exports = router;

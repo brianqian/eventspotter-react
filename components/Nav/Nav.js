@@ -1,11 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import Router from 'next/router';
 import styled from 'styled-components';
 import Link from 'next/link';
-
-const links = [
-  { href: '/libraryPage', label: 'My Library', as: '/library', key: 'nav-library-link' }
-  // { href: '/calendar', label: 'Calendar', key: 'nav-calendar-link' }
-];
 
 const StyledNav = styled.nav`
   background-color: ${props => props.theme.color.background};
@@ -44,30 +40,41 @@ const Welcome = styled.div`
   align-items: center;
 `;
 
-const Nav = ({ userInfo }) => {
+const Nav = () => {
+  const [userInfo, setUserInfo] = useState();
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      let resp = await fetch('/api/auth/');
+      if (resp.status === 200) {
+        resp = await resp.json();
+        setUserInfo(resp);
+      } else {
+        console.log('IN NAV STATUS', resp.status);
+        setUserInfo(null);
+        Router.push('/');
+      }
+    };
+    fetchUserInfo();
+  }, []);
   return (
     <StyledNav>
       <Link prefetch href="/">
         <a>Home</a>
       </Link>
-      {links.map(({ key, href, label, as }) => (
-        <Link prefetch href={href} key={key} as={as || ''}>
-          <a>{label}</a>
-        </Link>
-      ))}
-      <SignIn>
-        <a href={`http://localhost:3000/api/auth/${userInfo ? 'logout' : 'login'}`}>
-          {userInfo ? 'Logout' : 'Login with Spotify'}
-        </a>
-      </SignIn>
+
+      <Link prefetch href="/libraryPage" as="/library">
+        <a>My Library</a>
+      </Link>
+
+      {/* <SignIn>
+            <a href={`http://localhost:3000/api/auth/${userInfo ? 'logout' : 'login'}`}>
+              {userInfo ? 'Logout' : 'Login with Spotify'}
+            </a>
+          </SignIn> */}
       <Welcome>
         {userInfo.displayName}
         <img src={userInfo.imgURL} alt="" height="47px" />
       </Welcome>
-      {/* <div>
-        <button onClick={toggle}>Login/Sign Up</button>
-        <Login isShowing={isShowing} hide={toggle} />
-      </div> */}
     </StyledNav>
   );
 };
