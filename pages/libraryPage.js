@@ -44,17 +44,15 @@ function LibraryPage({ data = [], error }) {
   );
 }
 
-LibraryPage.getInitialProps = async ({ req, err }) => {
+LibraryPage.getInitialProps = async ({ req, err, res }) => {
   if (err) console.log('server error', err);
   const cookie = (req && req.headers.cookie) || document.cookie;
   try {
-    const library = await fetch(`http://localhost:3000/api/library/all`, {
+    const resp = await fetch(`http://localhost:3000/api/library/all`, {
       credentials: 'include',
       headers: { cookie, Accept: 'application/json' }
     });
-    if (library.status !== 200) return Router.push(`/error?code=${library.status}`, '/error');
-    console.log('IN LIB PAGE', library.status);
-    const { data } = await library.json();
+    const { data } = await resp.json();
     console.log('front end*************', data[0], data.length);
     return { data };
   } catch (error) {

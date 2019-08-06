@@ -28,7 +28,7 @@ const Home = () => {
       <Head title="Home" />
       <div>HELLO WORLD</div>
       <SignIn>
-        <a href={`http://localhost:3000/api/auth/login'}`}>Login with Spotify</a>
+        <a href="http://localhost:3000/api/auth/login">Login with Spotify</a>
       </SignIn>
     </Container>
   );

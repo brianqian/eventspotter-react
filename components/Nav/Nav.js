@@ -41,7 +41,7 @@ const Welcome = styled.div`
 `;
 
 const Nav = () => {
-  const [userInfo, setUserInfo] = useState();
+  const [userInfo, setUserInfo] = useState({ displayName: '', imgURL: '' });
   useEffect(() => {
     const fetchUserInfo = async () => {
       let resp = await fetch('/api/auth/');

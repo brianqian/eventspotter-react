@@ -3,28 +3,27 @@ const cache = require('../../../cache');
 const { updateAccessToken } = require('../../services/spotifyService');
 const authController = require('../../controllers/authController');
 
-const isLoggedIn = async (req, res, next) => {
+const validateCookie = async (req, res, next) => {
   const decodedCookie = await decodeCookie(req.headers.cookie);
   res.locals.spotifyID = decodedCookie && decodedCookie.spotifyID;
   console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`');
-  console.log('HEADERS SENT: ', res.headersSent);
-  res.setHeader('X-test', '12342342342');
-  console.log('HEADERS SENT: ', res.headersSent);
+  console.log('INSIDE VALIDATE COOKIE!!!!');
   console.log('HEADERS;', req.headers);
-
   console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`');
 
   next();
 };
 
 const requiresLogin = (req, res, next) => {
+  console.log('REQUIRES LOGIN', req.accepts(['html, json']));
   const { spotifyID = null, accessToken = null } = res.locals;
   if (!spotifyID || !accessToken) {
     res.status(401);
     res.clearCookie('userInfo');
-  }
+    res.redirect(`/error?code=401`);
+  } else {
     next();
-
+  }
 };
 
 const updateSpotifyToken = async (req, res, next) => {
@@ -59,7 +58,7 @@ const updateSpotifyToken = async (req, res, next) => {
 };
 
 module.exports = {
-  isLoggedIn,
+  validateCookie,
   updateSpotifyToken,
   requiresLogin
 };
