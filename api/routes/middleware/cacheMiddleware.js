@@ -11,7 +11,6 @@ router.use('/', async (req, res, next) => {
    * - If user not in cache, bring into cache from database
    *  -Get user info from authController
    *  -Get user library from libraryController
-   * - Update access token if expired
    *
    * **************************************************
    */

@@ -14,7 +14,7 @@ const Container = styled.div`
 const Calendar = ({ calendar }) => {
   return (
     <Container>
-      {calendar.map((artistEvents) => {
+      {calendar.map(artistEvents => {
         return <CalendarArtistCard {...artistEvents} />;
       })}
     </Container>
@@ -28,15 +28,13 @@ Calendar.getInitialProps = async ({ req, err, query }) => {
   console.log('ARTIST LIST', artistList);
   const encodedArtists = querystring.encode(artistList);
   console.log('ENCODED ARTIST', encodedArtists);
-  const data = await (await fetch(
+  const resp = await fetch(
     `http://localhost:3000/api/calendar/generate_calendar?${encodedArtists}`
-  )).json();
-
+  );
+  const data = await resp.json();
+  // Todo: trycatch, statuscode
   const { calendar = [] } = data;
-
   return { calendar };
-  // console.log('IN CALENDAR, ', query.calendar);
-  // console.log('IN CALENDAR, ', res.locals);
 };
 
 export default Calendar;

@@ -50,8 +50,6 @@ const Nav = () => {
         setUserInfo(resp);
       } else {
         console.log('IN NAV STATUS', resp.status);
-        setUserInfo(null);
-        Router.push('/');
       }
     };
     fetchUserInfo();

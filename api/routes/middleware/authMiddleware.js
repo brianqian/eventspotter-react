@@ -6,11 +6,6 @@ const authController = require('../../controllers/authController');
 const validateCookie = async (req, res, next) => {
   const decodedCookie = await decodeCookie(req.headers.cookie);
   res.locals.spotifyID = decodedCookie && decodedCookie.spotifyID;
-  console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`');
-  console.log('INSIDE VALIDATE COOKIE!!!!');
-  console.log('HEADERS;', req.headers);
-  console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`');
-
   next();
 };
 

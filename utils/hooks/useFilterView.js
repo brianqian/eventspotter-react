@@ -11,8 +11,8 @@ const useFilterView = defaultValue => {
       NProgress.start();
       console.log('FILTER VIEW USE EFFECT');
       let result = await fetch(`http://localhost:3000/api/library/${sortBy}`);
-      result = await result.json();
       NProgress.done();
+      result = await result.json();
       setContent(result.data);
       console.log('FILTER VIEW USE EFFECT', result);
     }

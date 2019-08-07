@@ -1,11 +1,10 @@
 import App, { Container } from 'next/app';
-import jwt from 'jsonwebtoken';
+import fetch from 'isomorphic-unfetch';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
 import Router from 'next/router';
 import NProgress from 'nprogress';
 import theme from '../static/cssTheme';
 import Nav from '../components/Nav/Nav';
-import { cookieToString } from '../utils/format';
 
 const GlobalStyle = createGlobalStyle`
 @import url("https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700|Source+Sans+Pro:400,900&display=swap");
@@ -31,14 +30,14 @@ Router.events.on('routeChangeError', () => NProgress.done());
 
 export default class MyApp extends App {
   static async getInitialProps({ Component, ctx, ctx: { req, res } }) {
-    const cookie = (req && req.headers.cookie) || document.cookie;
-    console.log('COOKIE', cookie);
-    const cookieExists = cookie.userInfo || cookie.includes('userInfo');
+    const cookie = req ? req.headers.cookie : document.cookie;
+    // Checks if cookie exists to display Nav.
+    // Navigating to unauthorized routes with an invalid cookie will be handled serverside
+    const cookieExists = cookie && (cookie.userInfo || cookie.includes('userInfo'));
     let pageProps = {};
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);
     }
-
     return { pageProps: { ...pageProps }, cookieExists };
   }
 

@@ -46,7 +46,7 @@ function LibraryPage({ data = [], error }) {
 
 LibraryPage.getInitialProps = async ({ req, err, res }) => {
   if (err) console.log('server error', err);
-  const cookie = (req && req.headers.cookie) || document.cookie;
+  const cookie = req ? req.headers.cookie : document.cookie;
   try {
     const resp = await fetch(`http://localhost:3000/api/library/all`, {
       credentials: 'include',
@@ -56,7 +56,7 @@ LibraryPage.getInitialProps = async ({ req, err, res }) => {
     console.log('front end*************', data[0], data.length);
     return { data };
   } catch (error) {
-    console.error('FRONT END ERROR', error);
+    console.log('TCL: LibraryPage.getInitialProps -> error', error);
     return { data: [] };
   }
 };

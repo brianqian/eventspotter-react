@@ -4,29 +4,32 @@ const { JSONToURL } = require('../../utils/format');
 const libraryController = require('../controllers/libraryController');
 
 const spotifyFetch = async (endpoint, authToken) => {
-  console.log('SPOTIFY FETCH TO: ', endpoint);
-  let resp = await fetch(endpoint, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${authToken}`
-    }
-  });
-  // console.log('IN SPOTIFY FETCH: status:', resp.status, resp.statusText);
-  resp = await resp.json();
-  // console.log('IN SPOTIFY FETCH: resp:', resp);
-  return resp;
+  // console.log('SPOTIFY FETCH TO: ', endpoint);
+  try {
+    let resp = await fetch(endpoint, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${authToken}`
+      }
+    });
+    // console.log('IN SPOTIFY FETCH: status:', resp.status, resp.statusText);
+    resp = await resp.json();
+
+    // console.log('IN SPOTIFY FETCH: resp:', resp);
+    return resp;
+  } catch (err) {
+    if (err) throw new Error(err);
+  }
 };
 
 const getSongs = (accessToken, pages, offset = 0) => {
   return new Promise(async (resolve, reject) => {
-    console.log('IN SPOT CONTROLLER GET ALL SONGS');
     const limit = 50;
-    // const totalRequests = resp.total / limit;
-    const firstFetch = await spotifyFetch(
-      `https://api.spotify.com/v1/me/tracks?offset=${offset}&limit=50`,
-      accessToken
-    );
     try {
+      const firstFetch = await spotifyFetch(
+        `https://api.spotify.com/v1/me/tracks?offset=${offset}&limit=50`,
+        accessToken
+      );
       const promiseArr = [];
       const numOfRequests = pages || firstFetch.total / limit;
       for (let i = 1; i < numOfRequests; i += 1) {
@@ -41,14 +44,15 @@ const getSongs = (accessToken, pages, offset = 0) => {
       const result = await Promise.all(promiseArr);
       const userLibrary = result.reduce(
         (acc, resp) => {
-          return [...acc, ...resp.items];
+          acc.push(...resp.items);
+          return acc;
         },
         [...firstFetch.items]
       );
       libraryController.setLibraryBasic(userLibrary);
       resolve(userLibrary);
     } catch (err) {
-      reject(err);
+      reject(new Error(err));
     }
   });
 };

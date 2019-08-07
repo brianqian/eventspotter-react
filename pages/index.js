@@ -6,7 +6,7 @@ const Container = styled.div`
   color: ${props => props.theme.color.white};
   font-family: ${props => props.theme.textFont};
   font-size: 18px;
-  min-height: calc(100vh - 50px);
+  height: 100vh;
 `;
 
 const SignIn = styled.div`

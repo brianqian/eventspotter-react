@@ -14,7 +14,6 @@ module.exports = {
           });
 
           console.log('in lib controller, getuserlib', data[0], data.length);
-
           resolve(format.dbLibraryToCache(data));
         }
       );

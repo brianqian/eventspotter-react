@@ -48,26 +48,16 @@ app.prepare().then(() => {
     return ssrCache({ req, res, pagePath: '/' });
   });
 
-  server.get('/calendar', async (req, res) => {
+  server.get('/calendar', requiresLogin, async (req, res) => {
     app.render(req, res, '/calendar');
-    // return ssrCache({ req, res, pagePath: '/' })
   });
 
   server.get('/library', requiresLogin, (req, res) => {
-    const actualPage = '/libraryPage';
-    console.log('LIBRARY ROUTE HIT IN SERVER.JS');
-    console.log('LIB ROUT HIT', res.statusCode);
-    // if (res.statusCode !== 200) {
-    //   res.redirect(`/error?code=${res.statusCode}`);
-    // }
-    // ssrCache({ req, res, pagePath: '/libraryPage' });
-    app.render(req, res, actualPage);
+    app.render(req, res, '/libraryPage');
   });
 
   server.use('/api', routes);
-  server.get('*', (req, res) => {
-    return handle(req, res);
-  });
+  server.get('*', (req, res) => handle(req, res));
 
   server.listen(port, err => {
     if (err) throw err;
