@@ -12,19 +12,20 @@ const Container = styled.div`
 const IntroDiv = styled.div`
   align-items: center;
   width: 100%;
-  /* height: 60vh; */
   text-align: right;
-  /* display: grid; */
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  position: relative;
+  position: absolute;
+  top: 80px;
   padding-right: 3rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
-const Welcome = styled.h1`
+const EventSpotter = styled.h1`
+  font-family: 'Open Sans', sans-serif;
   font-size: 80px;
+  font-display: swap;
   width: 60%;
   z-index: 2;
 `;
@@ -51,8 +52,9 @@ const SignIn = styled.div`
   user-select: none;
   cursor: pointer;
   > a {
-    font-family: 'Roboto Condensed';
-    font-size: 23px;
+    font-family: 'Work Sans';
+    font-size: 18px;
+    z-index: 2;
     color: ${props => props.theme.color.white};
     text-decoration: none;
   }
@@ -74,12 +76,11 @@ const Home = () => {
     <Container>
       <Head title="Home" />
       <IntroDiv>
-        <Welcome>EventSpotter.</Welcome>
+        <EventSpotter>EventSpotter.</EventSpotter>
         <BodyText>Find your favorite Top Artists on Spotify and their upcoming events.</BodyText>
         <HeroImage src="../static/img/SpotifyExample-800.png" />
-
         <SignIn>
-          <a href="http://localhost:3000/api/auth/login">Login with Spotify</a>
+          <a href="http://localhost:3000/api/auth/login">LOGIN WITH SPOTIFY</a>
         </SignIn>
       </IntroDiv>
     </Container>

@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import fetch from 'isomorphic-unfetch';
+import Head from 'next/head';
 import querystring from 'querystring';
 import CalendarArtistCard from '../components/CalendarArtistCard/CalendarArtistsCard';
 
@@ -14,6 +15,9 @@ const Container = styled.div`
 const Calendar = ({ calendar }) => {
   return (
     <Container>
+      <Head>
+        <title>EventSpotter - Calendar</title>
+      </Head>
       {calendar.map(artistEvents => {
         return <CalendarArtistCard {...artistEvents} />;
       })}

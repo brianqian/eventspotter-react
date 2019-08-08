@@ -1,25 +1,9 @@
 import styled from 'styled-components';
-import Router from 'next/router';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-`;
-
-const Button = styled.div`
-  height: 80px;
-  width: 80px;
-  background-color: red;
-  box-shadow: -8px 8px darkred;
-  border-radius: 50px;
-  justify-self: center;
-  position: relative;
-  top: 5rem;
-  :active {
-    opacity: 0.9;
-    translate: transformY(5px);
-  }
 `;
 
 const ButtonContainer = styled.div`

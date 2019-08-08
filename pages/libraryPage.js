@@ -1,6 +1,7 @@
 // import ReactTable from 'react-table';
 import React from 'react';
 import styled from 'styled-components';
+import Head from 'next/head';
 import Sidebar from '../components/MusicLibrary/MusicSidebar';
 import useFilterView from '../utils/hooks/useFilterView';
 import ReactTable from '../components/MusicLibrary/LibraryTable';
@@ -13,7 +14,7 @@ const Container = styled.div`
 
 const StyledSidebar = styled(Sidebar)`
   grid-column: 1/3;
-  border: 1px solid white;
+  /* border: 1px solid white; */
   color: ${props => props.theme.color.white};
   height: 100%;
   width: 100%;
@@ -30,6 +31,9 @@ function LibraryPage({ data = [], error }) {
   const { sortBy, setSortBy, content, formatArtistsForQuery } = useFilterView(data);
   return (
     <Container>
+      <Head>
+        <title>EventSpotter - Library</title>
+      </Head>
       <StyledSidebar setSortBy={setSortBy} sortBy={sortBy} />
       <MainDisplay>
         <ReactTable

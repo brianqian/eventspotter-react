@@ -9,12 +9,13 @@ Users will also have the ability to customize search parameters according to top
 # Technical Specs
 
 ## APIs
+
 Spotify API
 SeatGeek API
 
 ## Features
 
-This project uses Next.js to handle routing and server-side rendering (SSR) and styled-components for CSS. The site is built with functional components and Hooks. In order to prevent hitting rate limits on the Spotify API (each user library requires 1 request per 50 songs), user libraries and songs are saved in the database. To further reduce the amount of calls to the database, I built a custom LRU-cache class to save the most recent 50 users in server memory which stores the user's library. In order to keep the users fresh, a middleware function retrieves the user from the cache and will also use a Spotify refresh token to update the access token if necessary. 
+This project uses Next.js to handle routing and server-side rendering (SSR) and styled-components for CSS. The site is built with functional components and Hooks. In order to prevent hitting rate limits on the Spotify API (each user library requires 1 request per 50 songs), user libraries and songs are saved in the database. To further reduce the amount of calls to the database, I built a custom LRU-cache class to save the most recent 50 users in server memory which stores the user's library. In order to keep the users fresh, a middleware function retrieves the user from the cache and will also use a Spotify refresh token to update the access token if necessary.
 
 Top artists are retrieved from Spotify and then cross checked with SeatGeek's API to provide a list of current concerts.
 
@@ -77,24 +78,6 @@ Top artists are retrieved from Spotify and then cross checked with SeatGeek's AP
 - loudness
 - valence
 
-## Todo
-
-- ~~Place frontend in its own folder, set up monorepo~~
-- ~~Edit package.json to concurrently run server in dev mode.~~
-- ~~Consider caching music library in database (is this faster than Spotify with prefetch on startup?)~~
-- ~~Consider using AWS for backend deployment~~
-- ~~Add refresh token code to middleware~~
-- ~~Decide where user library should be checked against the Spotify library.~~ (Create a user setting)
-- Set up server to conditionally render cached vs non-cached routes.
-- Decide where artists are formatted for display and SeatGeek query
-- Decide where date added is formatted
-- Rethink front and backend login validation
-- Error handling
-- Collecting audio features for songs
-- Add sorting to React Table for audio features
-- Intersection Observer for EventCard to make sticky artist names
-- Consider a Map API for a map page
-
 # Learning Notes
 
 ## Node
@@ -123,7 +106,6 @@ const useFetch = (data)=>{
     setLibrary(updatedLibrary);
   }
   return { library, getNextSongs };
-
 }
 
 //LibraryComponent.js
@@ -138,9 +120,12 @@ const LibraryComponent = ({data})=>{
 
 ```
 
-## System Design & Responsibility
+## Javascript
+
+- Destructured variables can have default values
+
+# System Design & Responsibility
 
 - Typescript would have been extremely useful in this project
-- Data shape varies when it's passed to and from the database, cache, front-end, external API's, routes, etc. 
+- Data shape varies when it's passed to and from the database, cache, front-end, external API's, routes, etc.
 - The shape needs to be formatted and where the shaping of data happens should be consistent.
-

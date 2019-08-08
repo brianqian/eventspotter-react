@@ -32,6 +32,10 @@ export default class MyDocument extends Document {
       <Html>
         <Head>
           <link rel="stylesheet" type="text/css" href="/static/nprogress.css" />
+          <link
+            href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto+Condensed|Roboto|Work+Sans|Source+Sans+Pro:400,900&display=swap"
+            rel="stylesheet"
+          />
         </Head>
         <body>
           <Main />
