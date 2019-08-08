@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import Link from 'next/link';
 import Head from 'next/head';
+import Error from '../components/Error/ErrorComponents';
 
 const Container = styled.div`
   background-color: ${props => props.theme.color.background};
@@ -12,36 +12,15 @@ const Container = styled.div`
     color: ${props => props.theme.color.white};
   }
 `;
-const Error401 = () => {
-  const ErrorCode = styled.div`
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-  `;
 
-  return (
-    <ErrorCode>
-      <h1>User Account Error!</h1>
-      <p>
-        Click
-        {' '}
-        <Link prefetch href="/api/auth/login">
-          <a>here</a>
-        </Link>
-        {' '}
-        to try logging in again!
-      </p>
-      <Link prefetch href="/">
-        <a>
-          <p>{'<- Go HOME'}</p>
-        </a>
-      </Link>
-    </ErrorCode>
-  );
-};
+const ErrorMessage = styled.div`
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+`;
 
 function errorPage({ code }) {
   return (
@@ -52,8 +31,7 @@ Error -
           {code}
         </title>
       </Head>
-      {code === '401' && <Error401 />}
-      {code === '404' && <div>Page not found, redirecting?</div>}
+      <ErrorMessage>{Error[code]()}</ErrorMessage>
     </Container>
   );
 }

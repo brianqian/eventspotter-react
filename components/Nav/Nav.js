@@ -6,12 +6,13 @@ import Link from 'next/link';
 const StyledNav = styled.nav`
   background-color: ${props => props.theme.color.background};
   display: flex;
-  height: 50px;
+  /* height: 50px; */
+  border-bottom: 1px solid ${props => props.theme.color.black};
   padding: 0.5rem;
-  border-bottom: 1px solid white;
   align-items: center;
   justify-content: flex-end;
   width: 100vw;
+  z-index: 1000;
   a {
     color: ${props => props.theme.color.white};
   }
@@ -19,21 +20,6 @@ const StyledNav = styled.nav`
     margin: 0 3rem;
   }
 `;
-
-const SignIn = styled.div`
-  width: 150px;
-  height: 35px;
-  border-radius: 35px;
-  background-color: ${props => props.theme.color.green};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-  > a {
-    color: ${props => props.theme.color.accent};
-  }
-`;
-
 const Welcome = styled.div`
   color: ${props => props.theme.color.white};
   display: flex;
@@ -63,12 +49,6 @@ const Nav = () => {
       <Link prefetch href="/libraryPage" as="/library">
         <a>My Library</a>
       </Link>
-
-      {/* <SignIn>
-            <a href={`http://localhost:3000/api/auth/${userInfo ? 'logout' : 'login'}`}>
-              {userInfo ? 'Logout' : 'Login with Spotify'}
-            </a>
-          </SignIn> */}
       <Welcome>
         {userInfo.displayName}
         <img src={userInfo.imgURL} alt="" height="47px" />

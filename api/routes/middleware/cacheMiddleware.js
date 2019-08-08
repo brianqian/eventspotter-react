@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const authController = require('../../controllers/authController');
-const { updateAccessToken } = require('../../services/spotifyService');
 const cache = require('../../../cache');
 const format = require('../../../utils/format');
 
@@ -10,12 +9,9 @@ router.use('/', async (req, res, next) => {
    * - Bring update user recency in cache.
    * - If user not in cache, bring into cache from database
    *  -Get user info from authController
-   *  -Get user library from libraryController
    *
    * **************************************************
    */
-  // CHECK IF USER HAS A COOKIE
-  if (!req.cookies || !req.cookies.userInfo) return next();
 
   console.log('************MAIN MIDDLEWARE HIT');
 
@@ -23,7 +19,7 @@ router.use('/', async (req, res, next) => {
    * UPDATE CACHE FROM DATABASE IF USER NOT IN CACHE
    ************************************************ */
 
-  const { spotifyID = false } = res.locals;
+  const { spotifyID = null } = res.locals;
   if (!spotifyID) return next();
   // IF VALID JWT, CHECK FOR USER IN CACHE
   let cachedUser = cache.get(spotifyID);

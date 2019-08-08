@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTable } from 'react-table';
 import styled from 'styled-components';
-import Link from 'next/link';
 import Router from 'next/router';
 
 const Styles = styled.div`

@@ -4,6 +4,8 @@ const { updateAccessToken } = require('../../services/spotifyService');
 const authController = require('../../controllers/authController');
 
 const validateCookie = async (req, res, next) => {
+  console.log('COOKIE VALIDATED----');
+  if (!req.headers.cookie) return next();
   const decodedCookie = await decodeCookie(req.headers.cookie);
   res.locals.spotifyID = decodedCookie && decodedCookie.spotifyID;
   next();
@@ -12,7 +14,9 @@ const validateCookie = async (req, res, next) => {
 const requiresLogin = (req, res, next) => {
   console.log('REQUIRES LOGIN', req.accepts(['html, json']));
   const { spotifyID = null, accessToken = null } = res.locals;
+  console.log('RES.LOCALS IN REQ LOGIN', res.locals);
   if (!spotifyID || !accessToken) {
+    console.log('ACCESS DENIED REROUTING');
     res.status(401);
     res.clearCookie('userInfo');
     res.redirect(`/error?code=401`);

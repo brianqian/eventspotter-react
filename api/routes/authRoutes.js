@@ -48,7 +48,6 @@ router.route('/spotifyLogin').get(async (req, res) => {
   const encodedToken = await jwt.sign({ userInfo }, process.env.JWT_SECRET_KEY, {
     expiresIn: '999d'
   });
-  res.clearCookie('userInfo');
   res.cookie('userInfo', encodedToken, { maxAge: 1000 * 60 * 60 * 24 * 365 });
   // FORMATTING DATA FOR DB ENTRY/CACHE***********
   userInfo.accessToken = accessToken;

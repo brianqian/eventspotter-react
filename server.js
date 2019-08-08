@@ -45,7 +45,8 @@ app.prepare().then(() => {
   });
 
   server.get('/', async (req, res) => {
-    return ssrCache({ req, res, pagePath: '/' });
+    // return ssrCache({ req, res, pagePath: '/' });
+    app.render(req, res, '/');
   });
 
   server.get('/calendar', requiresLogin, async (req, res) => {
@@ -53,6 +54,11 @@ app.prepare().then(() => {
   });
 
   server.get('/library', requiresLogin, (req, res) => {
+    app.render(req, res, '/libraryPage');
+  });
+
+  server.get('/test', (req, res) => {
+    res.cookie('test', 'test');
     app.render(req, res, '/libraryPage');
   });
 

@@ -1,11 +1,9 @@
 // import ReactTable from 'react-table';
 import React from 'react';
 import styled from 'styled-components';
-import Router from 'next/router';
 import Sidebar from '../components/MusicLibrary/MusicSidebar';
 import useFilterView from '../utils/hooks/useFilterView';
 import ReactTable from '../components/MusicLibrary/LibraryTable';
-import ErrorPage from './errorPage';
 
 const Container = styled.div`
   display: grid;
@@ -50,7 +48,7 @@ LibraryPage.getInitialProps = async ({ req, err, res }) => {
   try {
     const resp = await fetch(`http://localhost:3000/api/library/all`, {
       credentials: 'include',
-      headers: { cookie, Accept: 'application/json' }
+      headers: { cookie }
     });
     const { data } = await resp.json();
     console.log('front end*************', data[0], data.length);
