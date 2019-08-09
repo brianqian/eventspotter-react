@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import Router from 'next/router';
 import styled from 'styled-components';
 import Link from 'next/link';
+import Dropdown from '../NavDropdown/NavDropdown';
 
 const StyledNav = styled.nav`
   background-color: ${props => props.theme.color.background};
   display: flex;
-  /* height: 50px; */
+  font-size: 20px;
+  text-transform: uppercase;
+
   border-bottom: 1px solid ${props => props.theme.color.black};
   padding: 0.5rem;
   align-items: center;
@@ -15,6 +18,7 @@ const StyledNav = styled.nav`
   z-index: 1000;
   a {
     color: ${props => props.theme.color.white};
+    text-decoration: none;
   }
   > * {
     margin: 0 3rem;
@@ -46,9 +50,17 @@ const Nav = () => {
         <a>Home</a>
       </Link>
 
-      <Link prefetch href="/libraryPage" as="/library">
-        <a>My Library</a>
-      </Link>
+      <Dropdown>
+        <Link prefetch href="/libraryPage" as="/library">
+          <a>My Library</a>
+        </Link>
+        <Link prefetch href="/libraryPage" as="/library">
+          <a>My Library</a>
+        </Link>
+        <Link prefetch href="/libraryPage" as="/library">
+          <a>My Library</a>
+        </Link>
+      </Dropdown>
       <Welcome>
         {userInfo.displayName}
         <img src={userInfo.imgURL} alt="" height="47px" />
