@@ -4,15 +4,23 @@ const { updateAccessToken } = require('../../services/spotifyService');
 const authController = require('../../controllers/authController');
 
 const validateCookie = async (req, res, next) => {
-  console.log('COOKIE VALIDATED----');
+  console.log('*************************');
+  console.log('COOKIE VALIDATION STARTING ');
+  console.log('*************************');
   if (!req.headers.cookie) return next();
   const decodedCookie = await decodeCookie(req.headers.cookie);
   res.locals.spotifyID = decodedCookie && decodedCookie.spotifyID;
+  console.log('*************************');
+  console.log('COOKIE VALDIATION - SPOTIFYID ', res.locals.spotifyID);
+  console.log('*************************');
   next();
 };
 
 const requiresLogin = (req, res, next) => {
-  console.log('REQUIRES LOGIN', req.accepts(['html, json']));
+  console.log('*************************');
+  console.log('requiresLogin MIDDLEWARE HIT');
+  console.log('*************************');
+
   const { spotifyID = null, accessToken = null } = res.locals;
   console.log('RES.LOCALS IN REQ LOGIN', res.locals);
   if (!spotifyID || !accessToken) {
@@ -31,7 +39,9 @@ const updateSpotifyToken = async (req, res, next) => {
   const cachedUser = cache.get(spotifyID);
   const tokenExpired = Date.now() > cachedUser.accessTokenExpiration;
   console.log(`TOKEN EXPIRED: ${tokenExpired}, ${Date.now()}`, cachedUser.accessTokenExpiration);
-
+  console.log('*************************');
+  console.log('UPDATING SPOTIFY TOKEN START');
+  console.log('*************************');
   if (tokenExpired) {
     let newTokens;
     try {
@@ -51,8 +61,10 @@ const updateSpotifyToken = async (req, res, next) => {
   } else {
     res.locals.accessToken = cachedUser.accessToken;
   }
+  console.log('*************************');
+  console.log('UPDATING SPOTIFY TOKEN END');
+  console.log('*************************');
   console.log('PATH:', req.path);
-  console.log('******************MAIN MIDDLEWARE ENDING');
   return next();
 };
 

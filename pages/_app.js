@@ -6,9 +6,6 @@ import theme from '../static/cssTheme';
 import Nav from '../components/Nav/Nav';
 
 const GlobalStyle = createGlobalStyle`
-${
-  '' /* @import url("https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700|Roboto|Source+Sans+Pro:400,900&display=swap"); */
-}
 
 body, html{
   font-family: ${props => props.theme.textFont};

@@ -71,7 +71,7 @@ const HeroImage = styled.img`
   z-index: 1;
 `;
 
-const Home = () => {
+const Home = ({ authenticated }) => {
   return (
     <Container>
       <Head title="Home" />
@@ -79,16 +79,20 @@ const Home = () => {
         <EventSpotter>EventSpotter.</EventSpotter>
         <BodyText>Find your favorite Top Artists on Spotify and their upcoming events.</BodyText>
         <HeroImage src="../static/img/SpotifyExample-800.png" />
-        <SignIn>
-          <a href="http://localhost:3000/api/auth/login">LOGIN WITH SPOTIFY</a>
-        </SignIn>
+        {!authenticated && (
+          <SignIn>
+            <a href="http://localhost:3000/api/auth/login">LOGIN WITH SPOTIFY</a>
+          </SignIn>
+        )}
       </IntroDiv>
     </Container>
   );
 };
 
-Home.getInitialProps = ({ req, res }) => {
-  console.log('HEADER IN HOME', req && req.headers);
+Home.getInitialProps = ({ req, res, query }) => {
+  const isServer = typeof window === 'undefined';
+  const authenticated = isServer ? res.locals.spotifyID : document.cookie.includes('userInfo');
+  return { authenticated };
 };
 
 export default Home;

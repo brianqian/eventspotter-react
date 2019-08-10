@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -18,8 +17,8 @@ const OptionContainer = styled.div`
   overflow: hidden;
   display: flex;
   flex-direction: column;
-
   transition: 0.25s;
+  background-color: hsla(141, 25%, 4%, 1);
   ${Container}:hover & {
     border: 1px solid ${props => props.theme.color.green};
     height: ${props => (props.length - 1) * 30}px;
@@ -28,19 +27,23 @@ const OptionContainer = styled.div`
 
 const Option = styled.div`
   width: 200px;
+  height: 30px;
   display: block;
   text-align: center;
   cursor: pointer;
   z-index: 200;
   &:hover {
-    background-color: hsla(141, 40%, 4%, 0.7);
-    color: ${props => props.theme.color.green};
+    background-color: hsla(141, 25%, 12%, 1);
+  }
+  a {
+    :hover {
+      color: ${props => props.theme.color.green};
+    }
   }
 `;
 
 function Dropdown({ children }) {
   const [sectionTitle, ...dropdownOptions] = children;
-  const [isOpen, setIsOpen] = useState(false);
   return (
     <Container length={children.length}>
       <Option className="dropdown_first_item">{sectionTitle}</Option>

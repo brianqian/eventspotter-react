@@ -34,8 +34,6 @@ router.route('/all').get(requiresLogin, async (req, res) => {
    * ATTAIN USER CREDENTIALS FOR FETCHING FROM SPOTIFY
    * ***************************************************
    */
-  console.log('AUTH MIDDLEWARE', req.headers, req.accepts(['html', 'json']));
-  console.log('ALL RES.STATUS', res.statusCode);
   if (res.statusCode !== 200) return res.status(401).json({ data: [] });
   const { spotifyID, accessToken } = res.locals;
   const cachedUser = cache.get(spotifyID);
