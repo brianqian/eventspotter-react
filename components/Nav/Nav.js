@@ -40,32 +40,32 @@ const Welcome = styled.div`
 const Nav = ({ user }) => {
   const [modalIsOpen, toggleModal] = useModal();
   return (
-    <StyledNav>
-      <Link prefetch href="/">
-        <a>Home</a>
-      </Link>
+    <>
+      <StyledNav>
+        <Link prefetch href="/">
+          <a>Home</a>
+        </Link>
 
-      <Dropdown>
-        <Link prefetch href="/libraryPage" as="/library">
-          <a>My Library</a>
-        </Link>
-        <Link prefetch href="/libraryPage" as="/library">
-          <a>My Library</a>
-        </Link>
-        <Link prefetch href="/libraryPage" as="/library">
-          <a>My Library</a>
-        </Link>
-      </Dropdown>
-      <Welcome>
         <Dropdown>
-          <img src={user.imgURL} alt="" height="47px" />
-          <div onClick={() => toggleModal()}>
-            User Settings
-            <UserSettings isShowing={modalIsOpen} hide={toggleModal} />
-          </div>
+          <Link prefetch href="/libraryPage" as="/library">
+            <a>My Library</a>
+          </Link>
+          <Link prefetch href="/libraryPage" as="/library">
+            <a>My Library</a>
+          </Link>
+          <Link prefetch href="/libraryPage" as="/library">
+            <a>My Library</a>
+          </Link>
         </Dropdown>
-      </Welcome>
-    </StyledNav>
+        <Welcome>
+          <Dropdown>
+            <img src={user.imgURL} alt="" height="47px" />
+            <div onClick={toggleModal}>User Settings</div>
+          </Dropdown>
+        </Welcome>
+      </StyledNav>
+      <UserSettings isShowing={modalIsOpen} hide={toggleModal} />
+    </>
   );
 };
 

@@ -13,7 +13,7 @@ const OptionContainer = styled.div`
   position: absolute;
   width: 200px;
   z-index: 200;
-  height: 0;
+  max-height: 0;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -21,7 +21,7 @@ const OptionContainer = styled.div`
   background-color: hsla(141, 25%, 4%, 1);
   ${Container}:hover & {
     border: 1px solid ${props => props.theme.color.green};
-    height: ${props => (props.length - 1) * 30}px;
+    max-height: ${props => props.length * 40}px;
     /* height: auto; */
   }
 `;
@@ -49,8 +49,8 @@ function Dropdown({ children }) {
     <Container length={children.length}>
       <Option className="dropdown_first_item">{firstItem}</Option>
       <OptionContainer length={children.length}>
-        {dropdownOptions.map(item => (
-          <Option>{item}</Option>
+        {dropdownOptions.map((item, i) => (
+          <Option key={item + i}>{item}</Option>
         ))}
       </OptionContainer>
     </Container>

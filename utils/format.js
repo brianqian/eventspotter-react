@@ -73,6 +73,7 @@ const decodeCookie = async cookie => {
 
 const parseSeatGeekEvents = event => {
   return {
+    id: event.id,
     title: event.title,
     shortTitle: event.short_title,
     url: event.url,

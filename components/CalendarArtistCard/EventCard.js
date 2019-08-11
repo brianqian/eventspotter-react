@@ -10,6 +10,7 @@ const Container = styled.section`
 
   p {
     padding: 0.3rem 0;
+    font-weight: 700;
   }
   a {
     color: white;
@@ -17,6 +18,10 @@ const Container = styled.section`
       color: white;
     }
     font-size: 24px;
+  }
+  span {
+    font-weight: 400;
+    margin-left: 4px;
   }
 `;
 
@@ -26,13 +31,30 @@ function EventCard({ shortTitle, url, lowPrice, averagePrice, date, dateUTC, loc
       <a href={url} target="__blank">
         {shortTitle}
       </a>
-      <p>{`Low Price: $${lowPrice}`}</p>
-      <p>{`Average Price: $${averagePrice}`}</p>
-      <p>{`Time: ${format(date, 'h:mm A')}`}</p>
-      <p>{`Date: ${format(date, 'ddd, MMM D YYYY')}`}</p>
-      <p>{`Location: ${location.city}, ${location.state}`}</p>
-      <p>{`UTC time: ${format(dateUTC, 'MM-DD-YYYY')}`}</p>
-      <p />
+      <p>
+        Low Price (incl. fees):
+        <span>${lowPrice}</span>
+      </p>
+      <p>
+        Average Price (incl. fees):
+        <span>${averagePrice}</span>
+      </p>
+      <p>
+        Time:
+        <span>{format(date, 'h:mm A')}</span>
+      </p>
+      <p>
+        Date:
+        <span>{format(date, 'ddd, MMM D YYYY')}</span>
+      </p>
+      <p>
+        Location:
+        <span>{`${location.city}, ${location.state}`}</span>
+      </p>
+      {/* <p>
+        UTC time:
+        <span>{format(dateUTC, 'MM-DD-YYYY')}</span>
+      </p> */}
     </Container>
   );
 }

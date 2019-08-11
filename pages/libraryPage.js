@@ -7,22 +7,19 @@ import useFilterView from '../utils/hooks/useFilterView';
 import ReactTable from '../components/MusicLibrary/LibraryTable';
 
 const Container = styled.div`
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  min-height: calc(100vh - 50px);
+  display: flex;
 `;
 
 const StyledSidebar = styled(Sidebar)`
-  grid-column: 1/3;
-  /* border: 1px solid white; */
+  flex: 2;
   color: ${props => props.theme.color.white};
-  height: 100%;
   width: 100%;
   background-color: ${props => props.theme.color.background};
 `;
 
 const MainDisplay = styled.main`
-  grid-column: 3/13;
+  flex: 10;
+  min-height: 100vh;
   max-height: 100vh;
   overflow: auto;
 `;

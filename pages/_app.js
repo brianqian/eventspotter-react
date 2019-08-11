@@ -37,7 +37,6 @@ export default class MyApp extends App {
       headers: { cookie }
     });
     const user = resp.status === 200 && (await resp.json());
-    const cookieExists = cookie && (cookie.userInfo || cookie.includes('userInfo'));
     let pageProps = {};
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);
