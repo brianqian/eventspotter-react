@@ -2,6 +2,7 @@ import App, { Container } from 'next/app';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
 import Router from 'next/router';
 import NProgress from 'nprogress';
+import fetch from 'isomorphic-unfetch';
 import theme from '../static/cssTheme';
 import Nav from '../components/Nav/Nav';
 
@@ -31,24 +32,29 @@ export default class MyApp extends App {
     const cookie = req ? req.headers.cookie : document.cookie;
     // Checks if cookie exists to display Nav.
     // Navigating to unauthorized routes with an invalid cookie will be handled serverside
+    const resp = await fetch('http://localhost:3000/api/auth/', {
+      credentials: 'include',
+      headers: { cookie }
+    });
+    const user = resp.status === 200 && (await resp.json());
     const cookieExists = cookie && (cookie.userInfo || cookie.includes('userInfo'));
     let pageProps = {};
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);
     }
-    return { pageProps: { ...pageProps }, cookieExists };
+    return { pageProps: { ...pageProps }, user };
   }
 
   render() {
-    const { Component, pageProps, cookieExists } = this.props;
+    const { Component, pageProps, user } = this.props;
 
     return (
       <Container>
         <ThemeProvider theme={theme}>
           <>
             <GlobalStyle />
-            {cookieExists && <Nav />}
-            <Component {...pageProps} />
+            {user && <Nav user={user} />}
+            <Component {...pageProps} user={user} />
           </>
         </ThemeProvider>
       </Container>

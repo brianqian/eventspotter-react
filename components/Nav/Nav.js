@@ -19,9 +19,15 @@ const StyledNav = styled.nav`
   a {
     color: ${props => props.theme.color.white};
     text-decoration: none;
+    :hover {
+      text-decoration: underline;
+    }
   }
   > * {
     margin: 0 3rem;
+    :hover {
+      color: ${props => props.theme.color.green};
+    }
   }
 `;
 const Welcome = styled.div`
@@ -30,20 +36,7 @@ const Welcome = styled.div`
   align-items: center;
 `;
 
-const Nav = () => {
-  const [userInfo, setUserInfo] = useState({ displayName: '', imgURL: '' });
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      let resp = await fetch('/api/auth/');
-      if (resp.status === 200) {
-        resp = await resp.json();
-        setUserInfo(resp);
-      } else {
-        console.log('IN NAV STATUS', resp.status);
-      }
-    };
-    fetchUserInfo();
-  }, []);
+const Nav = ({ user }) => {
   return (
     <StyledNav>
       <Link prefetch href="/">
@@ -62,8 +55,8 @@ const Nav = () => {
         </Link>
       </Dropdown>
       <Welcome>
-        {userInfo.displayName}
-        <img src={userInfo.imgURL} alt="" height="47px" />
+        {user.displayName}
+        <img src={user.imgURL} alt="" height="47px" />
       </Welcome>
     </StyledNav>
   );

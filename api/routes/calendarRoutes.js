@@ -3,15 +3,15 @@ const { getEventsByArtists } = require('../services/seatgeekService');
 
 router.get('/generate_calendar', async (req, res) => {
   const artists = req.query || null;
-  if (!artists) return res.json({ calendar: [] });
+  if (!artists) return res.json({ data: [] });
   const result = await getEventsByArtists(Object.values(artists));
-  let calendar = result.reduce((acc, events, i) => {
+  let data = result.reduce((acc, events, i) => {
     if (result.length) acc.push({ name: artists[i], events });
     return acc;
   }, []);
-  calendar = calendar.sort((a, b) => (a.events.length > b.events.length ? -1 : 1));
-  console.log('GENERATE CALENDAR', calendar);
-  res.json({ calendar });
+  data = data.sort((a, b) => (a.events.length > b.events.length ? -1 : 1));
+  console.log('GENERATE CALENDAR', data);
+  res.json({ data });
 });
 
 module.exports = router;

@@ -33,12 +33,18 @@ Calendar.getInitialProps = async ({ req, err, query }) => {
   const encodedArtists = querystring.encode(artistList);
   console.log('ENCODED ARTIST', encodedArtists);
   const resp = await fetch(
-    `http://localhost:3000/api/calendar/generate_calendar?${encodedArtists}`
+    `http://localhost:3000/api/calendar/generate_calendar?${encodedArtists}`,
+    {
+      headers: {
+        Accept: 'application/json'
+      }
+    }
   );
-  const data = await resp.json();
+
+  console.log('resp 🐷', resp.status);
+  const { data = [] } = await resp.json();
   // Todo: trycatch, statuscode
-  const { calendar = [] } = data;
-  return { calendar };
+  return { calendar: data };
 };
 
 export default Calendar;

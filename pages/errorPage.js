@@ -31,7 +31,7 @@ Error -
           {code}
         </title>
       </Head>
-      <ErrorMessage>{Error[code]()}</ErrorMessage>
+      {code ? <ErrorMessage>{Error[code]()}</ErrorMessage> : <div>Something went wrong!</div>}
     </Container>
   );
 }

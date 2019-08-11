@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Link from 'next/link';
 import Head from '../components/head';
 
 const Container = styled.div`
@@ -71,7 +72,7 @@ const HeroImage = styled.img`
   z-index: 1;
 `;
 
-const Home = ({ authenticated }) => {
+const Home = ({ user }) => {
   return (
     <Container>
       <Head title="Home" />
@@ -79,9 +80,11 @@ const Home = ({ authenticated }) => {
         <EventSpotter>EventSpotter.</EventSpotter>
         <BodyText>Find your favorite Top Artists on Spotify and their upcoming events.</BodyText>
         <HeroImage src="../static/img/SpotifyExample-800.png" />
-        {!authenticated && (
+        {!user && (
           <SignIn>
-            <a href="http://localhost:3000/api/auth/login">LOGIN WITH SPOTIFY</a>
+            <Link prefetch href="http://localhost:3000/api/auth/login">
+              <a>LOGIN WITH SPOTIFY</a>
+            </Link>
           </SignIn>
         )}
       </IntroDiv>

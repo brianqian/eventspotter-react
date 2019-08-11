@@ -40,6 +40,7 @@ app.prepare().then(() => {
   server.use(updateSpotifyToken);
 
   server.get('/error', (req, res) => {
+    console.log('️ ⚠️ ⚠️️ ⚠️ ERORR PAGE HIT ⚠️ ⚠️ ⚠️');
     const { code } = req.query;
     app.render(req, res, '/errorPage', { code });
   });
@@ -53,6 +54,7 @@ app.prepare().then(() => {
   });
 
   server.get('/calendar', requiresLogin, async (req, res) => {
+    console.log(' CALENDAR HIT IN SERVER 🐷');
     app.render(req, res, '/calendar');
   });
 

@@ -26,7 +26,7 @@ const OptionContainer = styled.div`
 `;
 
 const Option = styled.div`
-  width: 200px;
+  /* width: 200px; */
   height: 30px;
   display: block;
   text-align: center;
@@ -43,10 +43,10 @@ const Option = styled.div`
 `;
 
 function Dropdown({ children }) {
-  const [sectionTitle, ...dropdownOptions] = children;
+  const [firstItem, ...dropdownOptions] = children;
   return (
     <Container length={children.length}>
-      <Option className="dropdown_first_item">{sectionTitle}</Option>
+      <Option className="dropdown_first_item">{firstItem}</Option>
       <OptionContainer length={children.length}>
         {dropdownOptions.map(item => (
           <Option>{item}</Option>

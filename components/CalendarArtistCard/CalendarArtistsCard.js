@@ -11,7 +11,10 @@ const ArtistName = styled.h2`
   text-align: right;
   border-bottom: 6px solid white;
   font-size: 40px;
-  position: relative;
+  position: sticky;
+  top: 0px;
+  width: 100%;
+  background-color: ${props => props.theme.color.background};
 `;
 
 function CalendarArtistsCard({ name, events }) {
