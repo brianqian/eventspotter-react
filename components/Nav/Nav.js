@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Router from 'next/router';
 import styled from 'styled-components';
 import Link from 'next/link';
+import useModal from '../../utils/hooks/useModal';
+import UserSettings from '../UserSettingsModal/UserSettings';
 import Dropdown from '../NavDropdown/NavDropdown';
 
 const StyledNav = styled.nav`
@@ -37,6 +38,7 @@ const Welcome = styled.div`
 `;
 
 const Nav = ({ user }) => {
+  const [modalIsOpen, toggleModal] = useModal();
   return (
     <StyledNav>
       <Link prefetch href="/">
@@ -55,8 +57,13 @@ const Nav = ({ user }) => {
         </Link>
       </Dropdown>
       <Welcome>
-        {user.displayName}
-        <img src={user.imgURL} alt="" height="47px" />
+        <Dropdown>
+          <img src={user.imgURL} alt="" height="47px" />
+          <div onClick={() => toggleModal()}>
+            User Settings
+            <UserSettings isShowing={modalIsOpen} hide={toggleModal} />
+          </div>
+        </Dropdown>
       </Welcome>
     </StyledNav>
   );

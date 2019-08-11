@@ -22,6 +22,7 @@ const OptionContainer = styled.div`
   ${Container}:hover & {
     border: 1px solid ${props => props.theme.color.green};
     height: ${props => (props.length - 1) * 30}px;
+    /* height: auto; */
   }
 `;
 

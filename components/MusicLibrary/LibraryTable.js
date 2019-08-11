@@ -2,6 +2,7 @@ import React from 'react';
 import { useTable } from 'react-table';
 import styled from 'styled-components';
 import Router from 'next/router';
+import { format } from 'date-fns';
 
 const Styles = styled.div`
   padding: 1rem;
@@ -60,6 +61,9 @@ function Table({ columns, data }) {
             prepareRow(row) || (
               <tr {...row.getRowProps()}>
                 {row.cells.map(cell => {
+                  if (cell.column.id === 'dateAdded') {
+                    cell.value = format(cell.value, 'MM-DD-YYYY');
+                  }
                   return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
                 })}
               </tr>
@@ -137,6 +141,7 @@ function AllSongsLibrary({ library, sortBy, formatArtistsForQuery }) {
 
   const columns = React.useMemo(() => columnIndex[sortBy], [sortBy]);
   // TODO: change library.length validation
+  // This exists to allow for "top <audio metric>" sorting to have similar styling to all
   return (
     <Styles>
       {sortBy !== 'all' && library.length < 100 && (
