@@ -71,14 +71,14 @@ const decodeCookie = async cookie => {
   return result.userInfo;
 };
 
-const formatArtistsForQuery = () => {
-  if (!content.length) return [];
+const formatArtistsToArray = (data, filterBy) => {
+  if (!data.length) return [];
   let formattedArtists;
   if (filterBy === 'top_artists') {
-    formattedArtists = content.map(({ name }) => name);
+    formattedArtists = data.map(({ name }) => name);
   } else {
     formattedArtists = [];
-    content.forEach(({ track }) => {
+    data.forEach(({ track }) => {
       track.artists.forEach(artist => {
         formattedArtists.push(artist.name);
       });
@@ -118,7 +118,8 @@ const format = {
   dbLibraryToCache,
   cookieToString,
   decodeCookie,
-  parseSeatGeekEvents
+  parseSeatGeekEvents,
+  formatArtistsToArray
 };
 
 module.exports = format;

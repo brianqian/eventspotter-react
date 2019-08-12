@@ -17,9 +17,9 @@ const useFilterView = (defaultValue, defaultFilter) => {
       console.log('FILTER VIEW USE EFFECT RESULT', result);
     }
     try {
+      setFilterBy(defaultFilter);
       fetchData();
       console.log('PREVIOUS FILTER', filterBy, defaultFilter);
-      setFilterBy(defaultFilter);
       console.log('NEW FILTER', filterBy, defaultFilter);
     } catch (err) {
       if (err) throw new Error('Error in filter view useEffect');

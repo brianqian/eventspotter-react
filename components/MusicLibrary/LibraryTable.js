@@ -3,6 +3,7 @@ import { useTable } from 'react-table';
 import styled from 'styled-components';
 import Router from 'next/router';
 import { format } from 'date-fns';
+import { formatArtistsToArray } from '../../utils/format';
 
 const Styles = styled.div`
   padding: 1rem;
@@ -41,6 +42,7 @@ const GenerateCalendar = styled.div`
 `;
 
 function Table({ columns, data }) {
+  console.log('DATA IN TABLE', data);
   const { getTableProps, headerGroups, rows, prepareRow } = useTable({
     columns,
     data
@@ -147,10 +149,11 @@ function AllSongsLibrary({ library, filterBy, formatArtistsForQuery }) {
       {filterBy !== 'all' && library.length < 100 && (
         <GenerateCalendar
           onClick={() => {
+            const query = formatArtistsToArray(library, filterBy);
             Router.push(
               {
-                pathname: '/calendar',
-                query: formatArtistsForQuery()
+                query,
+                pathname: '/calendar'
               },
 
               '/calendar'
