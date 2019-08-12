@@ -12,12 +12,12 @@ const ButtonContainer = styled.div`
   width: 100%;
 `;
 
-function MusicSidebar({ className, setSortBy, sortBy }) {
+function MusicSidebar({ className, setFilterBy, filterBy }) {
   return (
     <Container className={className}>
       <h2>Filters</h2>
       <p>Filter Library by: </p>
-      <select name="" id="" onChange={e => setSortBy(e.target.value)}>
+      <select name="" id="" onChange={e => setFilterBy(e.target.value)}>
         <option value="all">All songs</option>
         <option value="top_artists">Top Artists</option>
         <option value="high_danceability">Most Danceable</option>
@@ -29,7 +29,7 @@ function MusicSidebar({ className, setSortBy, sortBy }) {
         <option value="high_valence">Happiest</option>
       </select>
 
-      {sortBy === 'top_artists' && (
+      {filterBy === 'top_artists' && (
         <>
           <p>In the last...</p>
           <select name="" id="">

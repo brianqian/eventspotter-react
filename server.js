@@ -59,8 +59,8 @@ app.prepare().then(() => {
   });
 
   server.get('/library', requiresLogin, (req, res) => {
-    const sortBy = req.query.sortBy || 'all';
-    app.render(req, res, '/libraryPage', { sortBy });
+    const filterBy = req.query.filterBy || 'all';
+    app.render(req, res, '/libraryPage', { filterBy });
   });
 
   server.get('/test', (req, res) => {

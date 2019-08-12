@@ -2,31 +2,34 @@ import { useState, useEffect } from 'react';
 import fetch from 'isomorphic-unfetch';
 import NProgress from 'nprogress';
 
-const useFilterView = defaultValue => {
-  const [sortBy, setSortBy] = useState('all');
+const useFilterView = (defaultValue, defaultFilter) => {
+  const [filterBy, setFilterBy] = useState(defaultFilter);
   const [content, setContent] = useState(defaultValue);
 
   useEffect(() => {
     async function fetchData() {
       NProgress.start();
-      console.log('FILTER VIEW USE EFFECT');
-      let result = await fetch(`http://localhost:3000/api/library/${sortBy}`);
+      console.log('FILTER VIEW USE EFFECT', filterBy);
+      let result = await fetch(`http://localhost:3000/api/library/${filterBy}`);
       NProgress.done();
       result = await result.json();
       setContent(result.data);
-      console.log('FILTER VIEW USE EFFECT', result);
+      console.log('FILTER VIEW USE EFFECT RESULT', result);
     }
     try {
       fetchData();
+      console.log('PREVIOUS FILTER', filterBy, defaultFilter);
+      setFilterBy(defaultFilter);
+      console.log('NEW FILTER', filterBy, defaultFilter);
     } catch (err) {
       if (err) throw new Error('Error in filter view useEffect');
     }
-  }, [sortBy]);
+  }, [filterBy, defaultFilter]);
 
   const formatArtistsForQuery = () => {
     if (!content.length) return [];
     let formattedArtists;
-    if (sortBy === 'top_artists') {
+    if (filterBy === 'top_artists') {
       formattedArtists = content.map(({ name }) => name);
     } else {
       formattedArtists = [];
@@ -40,7 +43,7 @@ const useFilterView = defaultValue => {
     return formattedArtists;
   };
 
-  return { sortBy, setSortBy, content, formatArtistsForQuery };
+  return { filterBy, setFilterBy, content, formatArtistsForQuery };
 };
 
 export default useFilterView;

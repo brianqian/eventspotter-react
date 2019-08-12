@@ -71,6 +71,23 @@ const decodeCookie = async cookie => {
   return result.userInfo;
 };
 
+const formatArtistsForQuery = () => {
+  if (!content.length) return [];
+  let formattedArtists;
+  if (filterBy === 'top_artists') {
+    formattedArtists = content.map(({ name }) => name);
+  } else {
+    formattedArtists = [];
+    content.forEach(({ track }) => {
+      track.artists.forEach(artist => {
+        formattedArtists.push(artist.name);
+      });
+    });
+  }
+
+  return formattedArtists;
+};
+
 const parseSeatGeekEvents = event => {
   return {
     id: event.id,

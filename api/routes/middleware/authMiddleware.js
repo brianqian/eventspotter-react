@@ -10,7 +10,6 @@ const validateCookie = async (req, res, next) => {
   const decodedCookie = await decodeCookie(req.headers.cookie);
   res.locals.spotifyID = decodedCookie && decodedCookie.spotifyID;
   console.log('SPOTIFYID ', res.locals.spotifyID);
-  console.log('🍪 🍪 🍪 🍪 🍪 🍪 🍪 🍪 🍪 🍪 🍪 🍪 🍪 ');
   next();
 };
 

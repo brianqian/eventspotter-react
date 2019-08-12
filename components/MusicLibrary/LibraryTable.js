@@ -75,7 +75,7 @@ function Table({ columns, data }) {
   );
 }
 
-function AllSongsLibrary({ library, sortBy, formatArtistsForQuery }) {
+function AllSongsLibrary({ library, filterBy, formatArtistsForQuery }) {
   const columnIndex = {
     all: [
       {
@@ -122,7 +122,7 @@ function AllSongsLibrary({ library, sortBy, formatArtistsForQuery }) {
   };
 
   let memoLibrary;
-  if (sortBy === 'top_artists') {
+  if (filterBy === 'top_artists') {
     const tempList = [];
     const topArtists = library;
     topArtists.forEach((artistName, i) => {
@@ -133,19 +133,18 @@ function AllSongsLibrary({ library, sortBy, formatArtistsForQuery }) {
         tempList[i % 5] = [artistName];
       }
     });
-    console.log('TOP ARTISTS IN TABLE', tempList);
 
     memoLibrary = React.useMemo(() => tempList);
   } else {
     memoLibrary = React.useMemo(() => library);
   }
 
-  const columns = React.useMemo(() => columnIndex[sortBy], [sortBy]);
+  const columns = React.useMemo(() => columnIndex[filterBy], [filterBy]);
   // TODO: change library.length validation
   // This exists to allow for "top <audio metric>" sorting to have similar styling to all
   return (
     <Styles>
-      {sortBy !== 'all' && library.length < 100 && (
+      {filterBy !== 'all' && library.length < 100 && (
         <GenerateCalendar
           onClick={() => {
             Router.push(
@@ -153,6 +152,7 @@ function AllSongsLibrary({ library, sortBy, formatArtistsForQuery }) {
                 pathname: '/calendar',
                 query: formatArtistsForQuery()
               },
+
               '/calendar'
             );
           }}

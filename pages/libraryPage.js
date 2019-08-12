@@ -24,18 +24,21 @@ const MainDisplay = styled.main`
   overflow: auto;
 `;
 
-function LibraryPage({ data = [], error }) {
-  const { sortBy, setSortBy, content, formatArtistsForQuery } = useFilterView(data);
+function LibraryPage({ data = [], error, defaultFilter }) {
+  const { filterBy, setFilterBy, content, formatArtistsForQuery } = useFilterView(
+    data,
+    defaultFilter
+  );
   return (
     <Container>
       <Head>
         <title>EventSpotter - Library</title>
       </Head>
-      <StyledSidebar setSortBy={setSortBy} sortBy={sortBy} />
+      <StyledSidebar setFilterBy={setFilterBy} filterBy={filterBy} />
       <MainDisplay>
         <ReactTable
           library={content}
-          sortBy={sortBy}
+          filterBy={filterBy}
           formatArtistsForQuery={formatArtistsForQuery}
         />
       </MainDisplay>
@@ -43,21 +46,24 @@ function LibraryPage({ data = [], error }) {
   );
 }
 
-LibraryPage.getInitialProps = async ({ req, err, res }) => {
+LibraryPage.getInitialProps = async ({ req, err, res, query }) => {
   if (err) console.log('server error', err);
+  console.log('QUERY 🍐🍐🍐🍐🍐', query);
   const cookie = req ? req.headers.cookie : document.cookie;
-  try {
-    const resp = await fetch(`http://localhost:3000/api/library/all`, {
-      credentials: 'include',
-      headers: { cookie }
-    });
-    const { data } = await resp.json();
-    console.log('front end*************', data[0], data.length);
-    return { data };
-  } catch (error) {
-    console.log('TCL: LibraryPage.getInitialProps -> error', error);
-    return { data: [] };
-  }
+  const { filterBy = 'all' } = query;
+  // try {
+  //   const resp = await fetch(`http://localhost:3000/api/library/${filterBy}`, {
+  //     credentials: 'include',
+  //     headers: { cookie }
+  //   });
+  //   const { data } = await resp.json();
+  //   console.log('front end*************', data[0], data.length);
+  //   return { data, filterBy};
+  // } catch (error) {
+  //   console.log('TCL: LibraryPage.getInitialProps -> error', error);
+  //   return { data: [] };
+  // }
+  return { defaultFilter: filterBy };
 };
 
 export default LibraryPage;

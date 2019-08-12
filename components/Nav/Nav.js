@@ -47,11 +47,11 @@ const Nav = ({ user }) => {
         </Link>
 
         <Dropdown>
-          <Link prefetch href="/libraryPage" as="/library">
+          <Link prefetch href="/libraryPage?filterBy=all" as="/library/all">
             <a>My Library</a>
           </Link>
-          <Link prefetch href="/libraryPage" as="/library">
-            <a>My Library</a>
+          <Link prefetch href="/libraryPage?filterBy=top_artists" as="/library/top_artists">
+            <a>Top Artists</a>
           </Link>
           <Link prefetch href="/libraryPage" as="/library">
             <a>My Library</a>
