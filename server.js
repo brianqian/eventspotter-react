@@ -48,7 +48,6 @@ app.prepare().then(() => {
   server.get('/', async (req, res) => {
     const { spotifyID = null } = res.locals;
     console.log('SPOTIFY ID IN SERVER', spotifyID);
-
     // return ssrCache({ req, res, pagePath: '/' });
     app.render(req, res, '/', { spotifyID });
   });

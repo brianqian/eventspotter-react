@@ -32,6 +32,7 @@ export default class MyApp extends App {
     const cookie = req ? req.headers.cookie : document.cookie;
     // Checks if cookie exists to display Nav.
     // Navigating to unauthorized routes with an invalid cookie will be handled serverside
+
     const resp = await fetch('http://localhost:3000/api/auth/', {
       credentials: 'include',
       headers: { cookie }

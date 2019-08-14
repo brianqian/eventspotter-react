@@ -65,6 +65,9 @@ const Nav = ({ user }) => {
           <Dropdown>
             <img src={user.imgURL} alt="" height="47px" />
             <div onClick={toggleModal}>User Settings</div>
+            <Link href="/api/auth/logout">
+              <a>Logout</a>
+            </Link>
           </Dropdown>
         </Welcome>
       </StyledNav>

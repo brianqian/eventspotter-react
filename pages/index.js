@@ -79,6 +79,12 @@ const Home = ({ user }) => {
       <IntroDiv>
         <EventSpotter>EventSpotter.</EventSpotter>
         <BodyText>Find your favorite Top Artists on Spotify and their upcoming events.</BodyText>
+        <BodyText>
+          Sync your Spotify Account and get access to hidden Spotify metrics for your library.
+        </BodyText>
+        <BodyText>
+          Sync your Spotify Account and get access to hidden Spotify metrics for your library.
+        </BodyText>
         <HeroImage src="../static/img/SpotifyExample-800.png" />
         {!user && (
           <SignIn>
@@ -90,12 +96,6 @@ const Home = ({ user }) => {
       </IntroDiv>
     </Container>
   );
-};
-
-Home.getInitialProps = ({ req, res, query }) => {
-  const isServer = typeof window === 'undefined';
-  const authenticated = isServer ? res.locals.spotifyID : document.cookie.includes('userInfo');
-  return { authenticated };
 };
 
 export default Home;

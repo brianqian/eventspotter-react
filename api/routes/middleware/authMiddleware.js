@@ -14,11 +14,10 @@ const validateCookie = async (req, res, next) => {
 };
 
 const requiresLogin = (req, res, next) => {
-  console.log('*************************');
+  console.log('✋************************✋');
   console.log('requiresLogin MIDDLEWARE HIT ');
-  console.log('REQ.ACCEPTS', req.accepts(['html', 'json']));
   console.log('REQ.PATH', req.path);
-  console.log('*************************');
+  console.log('✋*************************✋');
 
   const { spotifyID = null, accessToken = null } = res.locals;
   console.log('RES.LOCALS IN requiresLogin MIDDLEWARE', res.locals);

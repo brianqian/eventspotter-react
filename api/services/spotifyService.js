@@ -1,79 +1,75 @@
 const fetch = require('isomorphic-unfetch');
 const btoa = require('btoa');
+const ServerError = require('../ErrorConstructor');
 const { JSONToURL } = require('../../utils/format');
 const libraryController = require('../controllers/libraryController');
 
 const spotifyFetch = async (endpoint, authToken) => {
-  // console.log('SPOTIFY FETCH TO: ', endpoint);
-  try {
-    let resp = await fetch(endpoint, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${authToken}`
-      }
-    });
-    // console.log('IN SPOTIFY FETCH: status:', resp.status, resp.statusText);
-    resp = await resp.json();
-
-    // console.log('IN SPOTIFY FETCH: resp:', resp);
-    return resp;
-  } catch (err) {
-    if (err) throw new Error(err);
-  }
+  let resp = await fetch(endpoint, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${authToken}`
+    }
+  });
+  if (resp.status !== 200) throw new ServerError('spotify, spotifyFetch', resp.status, resp.statusText);
+  resp = await resp.json();
+  return resp;
 };
 
 const getSongs = (accessToken, pages, offset = 0) => {
   return new Promise(async (resolve, reject) => {
     const limit = 50;
-    try {
-      const firstFetch = await spotifyFetch(
-        `https://api.spotify.com/v1/me/tracks?offset=${offset}&limit=50`,
-        accessToken
+    const firstFetch = await spotifyFetch(
+      `https://api.spotify.com/v1/me/tracks?offset=${offset}&limit=50`,
+      accessToken
+    );
+    const promiseArr = [];
+    const numOfRequests = pages || firstFetch.total / limit;
+    for (let i = 1; i < numOfRequests; i += 1) {
+      const newOffset = 50 * i + offset;
+      promiseArr.push(
+        spotifyFetch(
+          `https://api.spotify.com/v1/me/tracks?offset=${newOffset}&limit=${limit}`,
+          accessToken
+        )
       );
-      const promiseArr = [];
-      const numOfRequests = pages || firstFetch.total / limit;
-      for (let i = 1; i < numOfRequests; i += 1) {
-        const newOffset = 50 * i + offset;
-        promiseArr.push(
-          spotifyFetch(
-            `https://api.spotify.com/v1/me/tracks?offset=${newOffset}&limit=${limit}`,
-            accessToken
-          )
-        );
-      }
-      const result = await Promise.all(promiseArr);
-      const userLibrary = result.reduce(
-        (acc, resp) => {
-          acc.push(...resp.items);
-          return acc;
-        },
-        [...firstFetch.items]
-      );
-      libraryController.setLibraryBasic(userLibrary);
-      resolve(userLibrary);
-    } catch (err) {
-      reject(new Error(err));
     }
+    const result = await Promise.all(promiseArr);
+    const userLibrary = result.reduce(
+      (acc, resp) => {
+        acc.push(...resp.items);
+        return acc;
+      },
+      [...firstFetch.items]
+    );
+    libraryController.setLibraryBasic(userLibrary);
+    resolve(userLibrary);
+    reject(new ServerError('spotify, getSongs'))
   });
 };
 
 const getTokens = async params => {
-  const formattedParams = JSONToURL(params);
-  console.log('***IN GET TOKENS**********', formattedParams);
-  const encodedIDAndSecret = btoa(
-    `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
-  );
-  let resp = await fetch('https://accounts.spotify.com/api/token', {
-    method: 'POST',
-    headers: {
-      Authorization: `Basic ${encodedIDAndSecret}`,
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: formattedParams
-  });
-  resp = await resp.json();
-  // console.log('GET TOKENS// RESPONSE: ', resp);
-  return resp;
+  try {
+    const formattedParams = JSONToURL(params);
+    console.log('***IN GET TOKENS**********', formattedParams);
+    const encodedIDAndSecret = btoa(
+      `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
+    );
+    let resp = await fetch('https://accounts.spotify.com/api/token', {
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${encodedIDAndSecret}`,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: formattedParams
+    });
+    if (resp.status !== 200) throw new ServerError('spotify, getTokens', resp.status, resp.statusText);
+    resp = await resp.json();
+    if (resp.error) throw new Error(resp.error_description || resp.error.message);
+    return resp;
+  } catch (err) {
+    throw err;
+  }
 };
 
 const updateAccessToken = refreshToken => {

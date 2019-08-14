@@ -1,6 +1,7 @@
 // import ReactTable from 'react-table';
 import React from 'react';
 import styled from 'styled-components';
+import Router from 'next/router';
 import Head from 'next/head';
 import Sidebar from '../components/MusicLibrary/MusicSidebar';
 import useFilterView from '../utils/hooks/useFilterView';
@@ -19,11 +20,11 @@ const StyledSidebar = styled(Sidebar)`
 
 const MainDisplay = styled.main`
   flex: 10;
-  /* min-height: 100vh; */
   overflow: auto;
 `;
 
 function LibraryPage({ data = [], error, filterBy }) {
+  if (error) Router.push(`/error?code=${error.code}`);
   return (
     <Container>
       <Head>
@@ -39,21 +40,18 @@ function LibraryPage({ data = [], error, filterBy }) {
 
 LibraryPage.getInitialProps = async ({ req, err, res, query }) => {
   if (err) console.log('server error', err);
-  console.log('QUERY 🍐🍐🍐🍐🍐', query);
+  console.log('LIB PAGE QUERY 🍐🍐🍐🍐🍐', query);
   const cookie = req ? req.headers.cookie : document.cookie;
   const { filterBy = 'all' } = query;
-  try {
-    const resp = await fetch(`http://localhost:3000/api/library/${filterBy}`, {
-      credentials: 'include',
-      headers: { cookie }
-    });
-    const { data } = await resp.json();
-    console.log('front end*************', data[0], data.length);
-    return { data, filterBy };
-  } catch (error) {
-    console.log('TCL: LibraryPage.getInitialProps -> error', error);
-    return { data: [] };
-  }
+
+  const resp = await fetch(`http://localhost:3000/api/library/${filterBy}`, {
+    credentials: 'include',
+    headers: { cookie }
+  });
+  if (resp.status !== 200) return { data: [], error: { code: resp.status }, filterBy };
+  const { data } = await resp.json();
+  console.log('front end*************', data[0], data.length);
+  return { data, filterBy };
 };
 
 export default LibraryPage;

@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import fetch from 'isomorphic-unfetch';
+import Router from 'next/router';
 import Head from 'next/head';
 import querystring from 'querystring';
 import CalendarArtistCard from '../components/CalendarArtistCard/CalendarArtistsCard';
@@ -12,7 +13,8 @@ const Container = styled.div`
   padding: 1rem;
 `;
 
-const Calendar = ({ calendar }) => {
+const Calendar = ({ calendar, error }) => {
+  if (error) Router.push(`/error?code=${error.code}`);
   return (
     <Container>
       <Head>
@@ -32,6 +34,7 @@ Calendar.getInitialProps = async ({ req, err, query }) => {
   console.log('ARTIST LIST', artistList);
   const encodedArtists = querystring.encode(artistList);
   console.log('ENCODED ARTIST', encodedArtists);
+
   const resp = await fetch(
     `http://localhost:3000/api/calendar/generate_calendar?${encodedArtists}`,
     {
@@ -41,7 +44,8 @@ Calendar.getInitialProps = async ({ req, err, query }) => {
     }
   );
 
-  console.log('resp 🐷', resp.status);
+  console.log('resp 🐷', resp.status, resp.statusText);
+  if (resp.status !== 200) return { calendar: [], error: { code: resp.status } };
   const { data = [] } = await resp.json();
   // Todo: trycatch, statuscode
   return { calendar: data };

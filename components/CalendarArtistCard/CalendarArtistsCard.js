@@ -30,20 +30,20 @@ const EventCardsContainer = styled.div`
 
 function CalendarArtistsCard({ name, events }) {
   console.log('IN CALENDAR ARTISTS CARD', events, events[0]);
-
   const [isOpen, setIsOpen] = useState(false);
-
+  let message = '';
+  if (events.length) message = isOpen ? 'Hide Details' : 'Show Details';
   return (
     <Container>
       <TitleBar>
         <ArtistName>{name}</ArtistName>
         <span onClick={() => setIsOpen(!isOpen)}>
           {`${events.length} events found.`}
-          {events.length && (isOpen ? 'Hide Details' : 'Show Details')}
+          {message}
         </span>
       </TitleBar>
       <EventCardsContainer open={isOpen}>
-        {events.map((event, i) => {
+        {events.map(event => {
           return <EventCard {...event} key={event.id} />;
         })}
       </EventCardsContainer>

@@ -13,9 +13,9 @@ const Container = styled.section`
     font-weight: 700;
   }
   a {
-    color: white;
+    color: ${props => props.theme.color.white};
     :visited {
-      color: white;
+      color: ${props => props.theme.color.white};
     }
     font-size: 24px;
   }

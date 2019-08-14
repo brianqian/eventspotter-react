@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Head from 'next/head';
-import Error from '../components/Error/ErrorComponents';
+import Error from '../components/Error';
 
 const Container = styled.div`
   background-color: ${props => props.theme.color.background};
@@ -31,6 +31,7 @@ Error -
           {code}
         </title>
       </Head>
+
       {code ? <ErrorMessage>{Error[code]()}</ErrorMessage> : <div>Something went wrong!</div>}
     </Container>
   );
