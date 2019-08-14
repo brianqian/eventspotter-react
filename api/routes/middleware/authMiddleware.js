@@ -22,7 +22,7 @@ const requiresLogin = (req, res, next) => {
   const { spotifyID = null, accessToken = null } = res.locals;
   console.log('RES.LOCALS IN requiresLogin MIDDLEWARE', res.locals);
   if (!spotifyID || !accessToken) {
-    console.log('🚫 🚫 🚫 ACCESS DENIED REROUTING 🚫 🚫 🚫');
+    console.log('🚫 🚫 🚫 ACCESS DENIED -- REROUTING 🚫 🚫 🚫');
     res.status(401);
     res.clearCookie('userInfo');
     if (req.accepts(['html', 'json']) === 'json') {
@@ -30,6 +30,7 @@ const requiresLogin = (req, res, next) => {
     } else {
       res.redirect('/error?code=401');
     }
+    // next(new Error());
   } else {
     next();
   }

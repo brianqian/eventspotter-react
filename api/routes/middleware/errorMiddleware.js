@@ -1,11 +1,29 @@
-const router = require('express').Router();
-
-router.use((err, req, res, next) => {
+const logError = (err, req, res, next) => {
+  console.log('IN ERROR ⚠️ MIDDLEWARE. Headers sent?', res.headersSent);
   console.error(`Server Error`);
   console.error('Code: ', err.code);
   console.error('Source: ', err.source);
-  console.error('Stack Trace: ', err.stack);
-  res.status(500).send({ error: err.code });
-});
+  // console.error('Stack Trace: ', err.stack);
+  next(err);
+};
 
-module.exports = router;
+const handleError = (err, req, res, next) => {
+  console.log('handling error');
+  // console.log('req', req);
+
+  if (req.xhr || req.accepts(['html', 'json']) === 'json') {
+    res.status(err.code);
+    res.json({ data: [] });
+  } else {
+    res.status(err.code);
+    res.redirect(`/error`);
+  }
+  res.end();
+};
+
+const ifAysncError = fn => {
+  return (req, res, next) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+  };
+};
+module.exports = { logError, ifAysncError, handleError };

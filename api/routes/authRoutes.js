@@ -2,10 +2,12 @@ const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const authController = require('../controllers/authController');
 const { getTokens, spotifyFetch } = require('../services/spotifyService');
+const ServerError = require('../ServerError');
+
 const cache = require('../../cache');
 const format = require('../../utils/format');
 
-router.route('/login').get((req, res) => {
+router.get('/login', (req, res) => {
   const redirectURI = encodeURIComponent(`http://localhost:3000/api/auth/spotifyLogin`);
   const scopes = encodeURIComponent(
     'user-read-private user-read-email user-library-read user-top-read'
@@ -17,7 +19,7 @@ router.route('/login').get((req, res) => {
   );
 });
 
-router.route('/spotifyLogin').get(async (req, res) => {
+router.get('/spotifyLogin', async (req, res) => {
   /** *********************************
    * ACQUIRE AUTH CODE FROM SPOTIFY
    **********************************
@@ -74,11 +76,11 @@ router.route('/spotifyLogin').get(async (req, res) => {
   res.redirect(`http://localhost:3000/library`);
 });
 
-router.route('/logout').get((req, res) => {
+router.get('/logout', (req, res) => {
   res.clearCookie('userInfo');
   res.redirect('/');
 });
-router.route('/').get((req, res) => {
+router.get('/', (req, res) => {
   const { spotifyID = null } = res.locals;
   if (!spotifyID) return res.status(401).end();
   const cachedUser = cache.get(spotifyID);
@@ -88,6 +90,12 @@ router.route('/').get((req, res) => {
     displayName,
     imgURL
   });
+});
+
+router.get('/test', (req, res) => {
+  console.log('TEST ROUTE HIT 🐷🐷🐷🐷');
+  console.log('REQ ACCEPTS');
+  throw new ServerError('test', 401);
 });
 
 // router.route('/test').get(async (req, res) => {});

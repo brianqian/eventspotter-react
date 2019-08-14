@@ -6,6 +6,8 @@ const cors = require('cors');
 const morgan = require('morgan');
 const routes = require('./api/routes');
 const cacheMiddleware = require('./api/routes/middleware/cacheMiddleware');
+const { logError, handleError } = require('./api/routes/middleware/errorMiddleware');
+
 const {
   validateCookie,
   updateSpotifyToken,
@@ -41,7 +43,9 @@ app.prepare().then(() => {
 
   server.get('/error', (req, res) => {
     console.log('️ ⚠️ ⚠️️ ⚠️ ERORR PAGE HIT ⚠️ ⚠️ ⚠️');
+    console.log('res.status', res.statusCode);
     const { code } = req.query;
+    res.status(code);
     app.render(req, res, '/errorPage', { code });
   });
 
@@ -68,6 +72,8 @@ app.prepare().then(() => {
   });
 
   server.use('/api', routes);
+  server.use(logError);
+  server.use(handleError);
   server.get('*', (req, res) => handle(req, res));
 
   server.listen(port, err => {

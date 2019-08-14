@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import fetch from 'isomorphic-unfetch';
 import Link from 'next/link';
 import useModal from '../../utils/hooks/useModal';
 import UserSettings from '../UserSettingsModal/UserSettings';
@@ -17,6 +18,8 @@ const StyledNav = styled.nav`
   justify-content: flex-end;
   width: 100vw;
   z-index: 1000;
+  position: absolute;
+  top: 0;
   a {
     color: ${props => props.theme.color.white};
     text-decoration: none;
@@ -39,9 +42,16 @@ const Welcome = styled.div`
 
 const Nav = ({ user }) => {
   const [modalIsOpen, toggleModal] = useModal();
+  // const [user, setUser] = useState({imgURL: '', displayName: ''})
+  // useEffect(()=>{
+
+  // }[])
   return (
     <>
       <StyledNav>
+        <Link prefetch href="/api/auth/test">
+          <a>TEST</a>
+        </Link>
         <Link prefetch href="/">
           <a>Home</a>
         </Link>

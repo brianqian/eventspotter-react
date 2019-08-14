@@ -1,6 +1,6 @@
 const fetch = require('isomorphic-unfetch');
 const btoa = require('btoa');
-const ServerError = require('../ErrorConstructor');
+const ServerError = require('../ServerError');
 const { JSONToURL } = require('../../utils/format');
 const libraryController = require('../controllers/libraryController');
 
@@ -11,7 +11,8 @@ const spotifyFetch = async (endpoint, authToken) => {
       Authorization: `Bearer ${authToken}`
     }
   });
-  if (resp.status !== 200) throw new ServerError('spotify, spotifyFetch', resp.status, resp.statusText);
+  if (resp.status !== 200)
+    throw new ServerError('spotify, spotifyFetch', resp.status, resp.statusText);
   resp = await resp.json();
   return resp;
 };
@@ -44,32 +45,30 @@ const getSongs = (accessToken, pages, offset = 0) => {
     );
     libraryController.setLibraryBasic(userLibrary);
     resolve(userLibrary);
-    reject(new ServerError('spotify, getSongs'))
+    reject(new ServerError('spotify, getSongs'));
   });
 };
 
 const getTokens = async params => {
-  try {
-    const formattedParams = JSONToURL(params);
-    console.log('***IN GET TOKENS**********', formattedParams);
-    const encodedIDAndSecret = btoa(
-      `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
-    );
-    let resp = await fetch('https://accounts.spotify.com/api/token', {
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${encodedIDAndSecret}`,
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: formattedParams
-    });
-    if (resp.status !== 200) throw new ServerError('spotify, getTokens', resp.status, resp.statusText);
-    resp = await resp.json();
-    if (resp.error) throw new Error(resp.error_description || resp.error.message);
-    return resp;
-  } catch (err) {
-    throw err;
-  }
+  const formattedParams = JSONToURL(params);
+  console.log('***IN GET TOKENS**********', formattedParams);
+  const encodedIDAndSecret = btoa(
+    `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
+  );
+  let resp = await fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: {
+      Authorization: `Basic ${encodedIDAndSecret}`,
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: formattedParams
+  });
+  if (resp.status !== 200)
+    throw new ServerError('spotify, getTokens', resp.status, resp.statusText);
+  resp = await resp.json();
+  if (resp.error)
+    throw new ServerError('spotify, SpotifySite', resp.error.status, resp.error.message);
+  return resp;
 };
 
 const updateAccessToken = refreshToken => {

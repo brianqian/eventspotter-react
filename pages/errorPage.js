@@ -15,7 +15,7 @@ const Container = styled.div`
 
 const ErrorMessage = styled.div`
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -26,10 +26,7 @@ function errorPage({ code }) {
   return (
     <Container>
       <Head>
-        <title>
-Error -
-          {code}
-        </title>
+        <title>Error -{code}</title>
       </Head>
 
       {code ? <ErrorMessage>{Error[code]()}</ErrorMessage> : <div>Something went wrong!</div>}
@@ -37,7 +34,9 @@ Error -
   );
 }
 
-errorPage.getInitialProps = ({ query }) => {
+errorPage.getInitialProps = ({ req, res, query }) => {
+  console.log('ERROR PAGE GIP. QUERY: ', query);
+  console.log('res', res.statusCode);
   return { code: query.code };
 };
 

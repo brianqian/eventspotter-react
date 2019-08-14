@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { getEventsByArtists } = require('../services/seatgeekService');
+const { ifAsyncError } = require('../routes/middleware/errorMiddleware');
 
 router.get('/generate_calendar', async (req, res) => {
   const artists = req.query || null;

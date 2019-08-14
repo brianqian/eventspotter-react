@@ -1,21 +1,20 @@
 const fetch = require('isomorphic-unfetch');
 const btoa = require('btoa');
 const format = require('../../utils/format');
+const ServerError = require('../ServerError');
 
 const seatGeekFetch = async endpoint => {
   const encodedClient = btoa(
     `${process.env.SEATGEEK_CLIENT_ID}:${process.env.SEATGEEK_CLIENT_SECRET}`
   );
-  try {
-    const result = await (await fetch(endpoint, {
-      headers: {
-        Authorization: `Basic ${encodedClient}`
-      }
-    })).json();
-    return result;
-  } catch (err) {
-    console.error('SEAT GEEK FETCH ERROR', err);
-  }
+  const resp = await fetch(endpoint, {
+    headers: {
+      Authorization: `Basic ${encodedClient}`
+    }
+  });
+  if (resp.status !== 200) throw new ServerError('seatgeek, fetch', resp.status, resp.statusText);
+  const data = await resp.json();
+  return data;
 };
 
 const getEventsByArtists = async artistArray => {
