@@ -2,6 +2,7 @@ const { decodeCookie } = require('../../../utils/format');
 const cache = require('../../../cache');
 const { updateAccessToken } = require('../../services/spotifyService');
 const authController = require('../../controllers/authController');
+const ServerError = require('../../ServerError');
 
 const validateCookie = async (req, res, next) => {
   console.log('🍪 🍪 🍪 🍪 🍪 🍪 🍪 🍪 🍪 🍪 🍪 🍪 🍪 ');
@@ -23,14 +24,7 @@ const requiresLogin = (req, res, next) => {
   console.log('RES.LOCALS IN requiresLogin MIDDLEWARE', res.locals);
   if (!spotifyID || !accessToken) {
     console.log('🚫 🚫 🚫 ACCESS DENIED -- REROUTING 🚫 🚫 🚫');
-    res.status(401);
-    res.clearCookie('userInfo');
-    if (req.accepts(['html', 'json']) === 'json') {
-      res.json({ data: [] });
-    } else {
-      res.redirect('/error?code=401');
-    }
-    // next(new Error());
+    throw new ServerError(req.path, 401, `Not Authorized`);
   } else {
     next();
   }

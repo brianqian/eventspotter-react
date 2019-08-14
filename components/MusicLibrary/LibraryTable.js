@@ -42,7 +42,7 @@ const GenerateCalendar = styled.div`
 `;
 
 function Table({ columns, data }) {
-  console.log('DATA IN TABLE', data);
+  console.log('DATA IN TABLE', data[0], data.length);
   const { getTableProps, headerGroups, rows, prepareRow } = useTable({
     columns,
     data

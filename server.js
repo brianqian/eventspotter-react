@@ -42,7 +42,7 @@ app.prepare().then(() => {
   server.use(updateSpotifyToken);
 
   server.get('/error', (req, res) => {
-    console.log('️ ⚠️ ⚠️️ ⚠️ ERORR PAGE HIT ⚠️ ⚠️ ⚠️');
+    console.log('️ ⚠️ ⚠️️ ⚠️ ERROR SERVER ROUTE HIT ⚠️ ⚠️ ⚠️');
     console.log('res.status', res.statusCode);
     const { code } = req.query;
     res.status(code);

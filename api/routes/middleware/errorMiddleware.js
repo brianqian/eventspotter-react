@@ -21,9 +21,10 @@ const handleError = (err, req, res, next) => {
   res.end();
 };
 
-const ifAysncError = fn => {
+const ifAsyncError = fn => {
+  console.log('⚠️IF ASYNC ERROR HIT⚠️');
   return (req, res, next) => {
     Promise.resolve(fn(req, res, next)).catch(next);
   };
 };
-module.exports = { logError, ifAysncError, handleError };
+module.exports = { logError, ifAsyncError, handleError };
