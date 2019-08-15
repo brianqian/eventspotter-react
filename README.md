@@ -85,6 +85,7 @@ Top artists are retrieved from Spotify and then cross checked with SeatGeek's AP
 - In each route the header can pass cookies as authentication with the {include: credentials} key. Cookies are usually sent on each request for routes within the same domain but not necessarily for an external API.
 - Custom server middleware can be built and pass information along in res.locals. The HTTP route continues down a single path until the response ends at a res.end, res.json, res.send.
 - While the HTTP response can end with an express command, more work can be done in the callback until a `return` is reached.
+- For a custom error handler to be recognized by Node, you need all 4 parameters, `(err,res,req,next)`, in the function definition.
 
 ## React
 

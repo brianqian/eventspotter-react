@@ -6,13 +6,13 @@ const libraryController = require('../controllers/libraryController');
 const userLibraryController = require('../controllers/userLibraryController');
 const authController = require('../controllers/authController');
 const { requiresLogin } = require('./middleware/authMiddleware');
-const { ifAsyncError } = require('./middleware/errorMiddleware');
+const { catchAsyncError } = require('./middleware/errorMiddleware');
 
 // require('dotenv').config();
 
 router.route('/all').get(
   requiresLogin,
-  ifAsyncError(async (req, res) => {
+  catchAsyncError(async (req, res) => {
     /** ***********
      * This is the route hit by the library page. First middleware will trigger and update the cache.
      *

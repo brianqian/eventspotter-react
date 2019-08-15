@@ -1,9 +1,9 @@
-const router = require('express').Router();
 const authController = require('../../controllers/authController');
 const cache = require('../../../cache');
 const format = require('../../../utils/format');
+const { catchAsyncError } = require('./errorMiddleware');
 
-router.use('/', async (req, res, next) => {
+const cacheMiddleware = catchAsyncError(async (req, res, next) => {
   /** ****************************************************
    * MIDDLEWARE RESPONSIBILITIES
    * - Bring update user recency in cache.
@@ -25,15 +25,10 @@ router.use('/', async (req, res, next) => {
   let cachedUser = cache.get(spotifyID);
   if (!cachedUser) {
     // IF USER IS NOT IN CACHE, RETRIEVE USER FROM DB AND UPDATE CACHE
-    try {
-      const userFromDatabase = await authController.getUserByID(spotifyID);
-      cachedUser = cache.set(spotifyID, format.dbProfileToCache(userFromDatabase));
-    } catch (err) {
-      console.error('MIDDLEWARE-getuser', err);
-      throw err;
-    }
+    const userFromDatabase = await authController.getUserByID(spotifyID);
+    cachedUser = cache.set(spotifyID, format.dbProfileToCache(userFromDatabase));
   }
   return next();
 });
 
-module.exports = router;
+module.exports = cacheMiddleware;

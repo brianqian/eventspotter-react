@@ -37,10 +37,6 @@ app.prepare().then(() => {
   server.get('/_next/*', (req, res) => {
     handle(req, res);
   });
-  server.use(validateCookie);
-  server.use(cacheMiddleware);
-  server.use(updateSpotifyToken);
-
   server.get('/error', (req, res) => {
     console.log('️ ⚠️ ⚠️️ ⚠️ ERROR SERVER ROUTE HIT ⚠️ ⚠️ ⚠️');
     console.log('res.status', res.statusCode);
@@ -48,6 +44,10 @@ app.prepare().then(() => {
     res.status(code);
     app.render(req, res, '/errorPage', { code });
   });
+
+  server.use(validateCookie);
+  server.use(cacheMiddleware);
+  server.use(updateSpotifyToken);
 
   server.get('/', async (req, res) => {
     const { spotifyID = null } = res.locals;

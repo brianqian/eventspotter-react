@@ -1,5 +1,5 @@
 const logError = (err, req, res, next) => {
-  console.log('IN ERROR ⚠️ MIDDLEWARE. Headers sent?', res.headersSent);
+  console.log('LOGGING ERROR ⚠️');
   console.error(`Server Error`);
   console.error('Code: ', err.code);
   console.error('Source: ', err.source);
@@ -16,15 +16,15 @@ const handleError = (err, req, res, next) => {
     res.json({ data: [] });
   } else {
     res.status(err.code);
-    res.redirect(`/error`);
+    res.redirect(`/error?code=${err.code}`);
+    // console.log('err', err);
+    next(err);
   }
-  res.end();
 };
 
-const ifAsyncError = fn => {
-  console.log('⚠️IF ASYNC ERROR HIT⚠️');
+const catchAsyncError = fn => {
   return (req, res, next) => {
     Promise.resolve(fn(req, res, next)).catch(next);
   };
 };
-module.exports = { logError, ifAsyncError, handleError };
+module.exports = { logError, catchAsyncError, handleError };

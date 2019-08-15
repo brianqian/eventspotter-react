@@ -55,6 +55,7 @@ const getTokens = async params => {
   const encodedIDAndSecret = btoa(
     `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
   );
+  // throw new ServerError('asdfadfaf', 401, 'asd;kfjask;fjasf');
   let resp = await fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
     headers: {
@@ -63,6 +64,7 @@ const getTokens = async params => {
     },
     body: formattedParams
   });
+
   if (resp.status !== 200)
     throw new ServerError('spotify, getTokens', resp.status, resp.statusText);
   resp = await resp.json();

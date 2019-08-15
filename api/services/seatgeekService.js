@@ -2,8 +2,9 @@ const fetch = require('isomorphic-unfetch');
 const btoa = require('btoa');
 const format = require('../../utils/format');
 const ServerError = require('../ServerError');
+const { catchAsyncError } = require('../routes/middleware/errorMiddleware');
 
-const seatGeekFetch = async endpoint => {
+const seatGeekFetch = catchAsyncError(async endpoint => {
   const encodedClient = btoa(
     `${process.env.SEATGEEK_CLIENT_ID}:${process.env.SEATGEEK_CLIENT_SECRET}`
   );
@@ -15,9 +16,9 @@ const seatGeekFetch = async endpoint => {
   if (resp.status !== 200) throw new ServerError('seatgeek, fetch', resp.status, resp.statusText);
   const data = await resp.json();
   return data;
-};
+});
 
-const getEventsByArtists = async artistArray => {
+const getEventsByArtists = catchAsyncError(async artistArray => {
   const promiseArr = [];
   artistArray.forEach(artist => {
     promiseArr.push(
@@ -33,7 +34,7 @@ const getEventsByArtists = async artistArray => {
     return artist.events.map(event => format.parseSeatGeekEvents(event));
   });
   return result;
-};
+});
 
 module.exports = {
   seatGeekFetch,

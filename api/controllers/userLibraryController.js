@@ -26,7 +26,6 @@ module.exports = {
       [insertArray],
       err => {
         if (err) throw new Error('UserLibrary - setUserLibrary failed');
-        // console.log('INSERT LIB:', data);
       }
     );
   }

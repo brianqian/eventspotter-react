@@ -3,8 +3,9 @@ const cache = require('../../../cache');
 const { updateAccessToken } = require('../../services/spotifyService');
 const authController = require('../../controllers/authController');
 const ServerError = require('../../ServerError');
+const { catchAsyncError } = require('../middleware/errorMiddleware');
 
-const validateCookie = async (req, res, next) => {
+const validateCookie = catchAsyncError(async (req, res, next) => {
   console.log('🍪 🍪 🍪 🍪 🍪 🍪 🍪 🍪 🍪 🍪 🍪 🍪 🍪 ');
   console.log('COOKIE VALIDATION STARTING');
   if (!req.headers.cookie) return next();
@@ -12,12 +13,11 @@ const validateCookie = async (req, res, next) => {
   res.locals.spotifyID = decodedCookie && decodedCookie.spotifyID;
   console.log('SPOTIFYID ', res.locals.spotifyID);
   next();
-};
+});
 
 const requiresLogin = (req, res, next) => {
   console.log('✋************************✋');
   console.log('requiresLogin MIDDLEWARE HIT ');
-  console.log('REQ.PATH', req.path);
   console.log('✋*************************✋');
 
   const { spotifyID = null, accessToken = null } = res.locals;
@@ -30,8 +30,8 @@ const requiresLogin = (req, res, next) => {
   }
 };
 
-const updateSpotifyToken = async (req, res, next) => {
-  console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~');
+const updateSpotifyToken = catchAsyncError(async (req, res, next) => {
+  console.log('♻~~~~~~~~~~~~~~~~~~~~~~~~~~♻');
   console.log('UPDATING SPOTIFY TOKEN START');
   const { spotifyID = null } = res.locals;
   if (!spotifyID) return next();
@@ -44,8 +44,7 @@ const updateSpotifyToken = async (req, res, next) => {
     try {
       newTokens = await updateAccessToken(cachedUser.refreshToken);
     } catch (err) {
-      console.error('error cache middleware- get token', err);
-      return next();
+      return next(err);
     }
     const { accessToken, accessTokenExpiration } = newTokens;
     const updatedUser = cache.set(spotifyID, {
@@ -62,7 +61,7 @@ const updateSpotifyToken = async (req, res, next) => {
   console.log('~~~~~~~~~~~~~~~~~~~~~~~~`');
   console.log('PATH:', req.path);
   return next();
-};
+});
 
 module.exports = {
   validateCookie,
