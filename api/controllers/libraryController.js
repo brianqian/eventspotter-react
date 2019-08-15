@@ -1,10 +1,11 @@
 const connection = require('../db');
+const ServerError = require('../ServerError');
 
 module.exports = {
   getSong: songID => {
     return new Promise((resolve, reject) => {
       connection.query('SELECT * FROM library WHERE songID = ?', [songID], (err, data) => {
-        if (err) reject(new Error('Library - getSong failed'));
+        if (err) reject(new ServerError('Library - getSong failed'));
         console.log(data);
         resolve(data);
       });
@@ -32,7 +33,7 @@ module.exports = {
         'INSERT IGNORE INTO library (song_id, title, artist) VALUES ?',
         [insertArray],
         (err, data) => {
-          if (err) reject(new Error('Library - getSong failed'));
+          if (err) reject(new ServerError('Library - getSong failed'));
           console.log(
             'RETURNING FROM SET LIBRARY CONTROLLER',
             data,
@@ -60,7 +61,7 @@ module.exports = {
       'INSERT INTO library (acousticness, danceability, energy, instrumentalness, loudness, tempo, valence) VALUES ?',
       [insertArray],
       (err, data) => {
-        if (err) throw new Error('Library - setLibraryAdvanced failed');
+        if (err) throw new ServerError('Library - setLibraryAdvanced failed');
         return data;
       }
     );

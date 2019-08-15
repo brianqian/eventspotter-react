@@ -1,5 +1,6 @@
 const connection = require('../db');
 const format = require('../../utils/format');
+const ServerError = require('../ServerError');
 
 module.exports = {
   getUserLibrary: spotifyID => {
@@ -8,7 +9,8 @@ module.exports = {
         'SELECT * FROM library JOIN UserLibrary ON library.song_id = UserLibrary.song_id WHERE library.song_id IN (SELECT song_id FROM UserLibrary WHERE user_id = ?) ORDER BY date_added DESC;',
         [spotifyID],
         (err, data) => {
-          if (err) reject(new Error('UserLibrary - getUserLibrary failed'));
+          console.log('🛑🛑🛑🛑', err);
+          if (err) reject(new ServerError('UserLibrary - getUserLibrary failed'));
           data.forEach(item => {
             delete item.user_id;
           });
@@ -25,7 +27,7 @@ module.exports = {
       'INSERT IGNORE INTO UserLibrary (user_id, song_id, date_added) VALUES ?',
       [insertArray],
       err => {
-        if (err) throw new Error('UserLibrary - setUserLibrary failed');
+        if (err) throw new ServerError('UserLibrary - setUserLibrary failed');
       }
     );
   }

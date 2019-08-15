@@ -55,7 +55,6 @@ const getTokens = async params => {
   const encodedIDAndSecret = btoa(
     `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
   );
-  // throw new ServerError('asdfadfaf', 401, 'asd;kfjask;fjasf');
   let resp = await fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
     headers: {
@@ -73,22 +72,16 @@ const getTokens = async params => {
   return resp;
 };
 
-const updateAccessToken = refreshToken => {
-  return new Promise(async (resolve, reject) => {
-    const params = {
-      grant_type: 'refresh_token',
-      refresh_token: refreshToken
-    };
-    try {
-      const { access_token: accessToken } = await getTokens(params);
-      resolve({
-        accessToken,
-        accessTokenExpiration: Date.now() + 1000 * 60 * 55
-      });
-    } catch (err) {
-      reject(new Error(err));
-    }
-  });
+const updateAccessToken = async refreshToken => {
+  const params = {
+    grant_type: 'refresh_token',
+    refresh_token: refreshToken
+  };
+  const { access_token: accessToken } = await getTokens(params);
+  return {
+    accessToken,
+    accessTokenExpiration: Date.now() + 1000 * 60 * 55
+  };
 };
 
 const getTopArtists = async (accessToken, range = 'long') => {

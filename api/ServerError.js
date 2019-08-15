@@ -1,5 +1,5 @@
 class ServerError extends Error {
-  constructor(source, code = 404, message = 'Error!', ...params) {
+  constructor(source, code = 500, message = 'ServerError!', ...params) {
     super(...params);
     if (Error.captureStackTrace) Error.captureStackTrace(this, ServerError);
     this.message = message;

@@ -18,8 +18,7 @@ const StyledNav = styled.nav`
   justify-content: flex-end;
   width: 100vw;
   z-index: 1000;
-  position: absolute;
-  top: 0;
+
   a {
     color: ${props => props.theme.color.white};
     text-decoration: none;

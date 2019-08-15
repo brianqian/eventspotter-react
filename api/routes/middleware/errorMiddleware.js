@@ -9,16 +9,16 @@ const logError = (err, req, res, next) => {
 
 const handleError = (err, req, res, next) => {
   console.log('handling error');
-  // console.log('req', req);
 
+  // Handles errors from AJAX requests
   if (req.xhr || req.accepts(['html', 'json']) === 'json') {
     res.status(err.code);
     res.json({ data: [] });
+    // Handles server errors
   } else {
     res.status(err.code);
     res.redirect(`/error?code=${err.code}`);
-    // console.log('err', err);
-    next(err);
+    // next(err);
   }
 };
 

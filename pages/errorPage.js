@@ -37,8 +37,9 @@ function errorPage({ code }) {
 errorPage.getInitialProps = ({ req, res, query }) => {
   console.log('ERROR PAGE GIP. QUERY: ', query);
   console.log('res', res.statusCode);
-  const { code = 404 } = query;
-  return { code };
+  const { code } = query;
+  if (!code) console.log(code, 'ERROR PAGE ERRORED 😰');
+  return { code: query.code };
 };
 
 export default errorPage;

@@ -92,12 +92,8 @@ router.get('/', (req, res) => {
   });
 });
 
-router.get('/test', (req, res) => {
-  console.log('TEST ROUTE HIT 🐷🐷🐷🐷');
-  console.log('REQ ACCEPTS');
-  throw new ServerError('test', 401);
-});
-
-// router.route('/test').get(async (req, res) => {});
+// router.route('/test').get((req, res) => {
+//   throw new ServerError(req.path, 500, 'test route');
+// });
 
 module.exports = router;

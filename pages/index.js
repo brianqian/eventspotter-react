@@ -37,8 +37,8 @@ const BodyText = styled.p`
 `;
 const SignIn = styled.div`
   position: relative;
-  z-index: 2;
   right: 0;
+  z-index: 2;
 
   display: flex;
   align-items: center;
@@ -80,11 +80,10 @@ const Home = ({ user }) => {
         <EventSpotter>EventSpotter.</EventSpotter>
         <BodyText>Find your favorite Top Artists on Spotify and their upcoming events.</BodyText>
         <BodyText>
-          Sync your Spotify Account and get access to hidden Spotify metrics for your library.
+          Sync your Spotify Account and use Spotify's powerful audio analysis tools to see hidden
+          metrics.
         </BodyText>
-        <BodyText>
-          Sync your Spotify Account and get access to hidden Spotify metrics for your library.
-        </BodyText>
+        <BodyText>Get event information and ticket pricing</BodyText>
         <HeroImage src="../static/img/SpotifyExample-800.png" />
         {!user && (
           <SignIn>

@@ -37,6 +37,9 @@ app.prepare().then(() => {
   server.get('/_next/*', (req, res) => {
     handle(req, res);
   });
+  server.get('/static/*', (req, res) => {
+    handle(req, res);
+  });
   server.get('/error', (req, res) => {
     console.log('️ ⚠️ ⚠️️ ⚠️ ERROR SERVER ROUTE HIT ⚠️ ⚠️ ⚠️');
     console.log('res.status', res.statusCode);

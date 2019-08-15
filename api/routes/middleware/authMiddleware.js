@@ -7,7 +7,7 @@ const { catchAsyncError } = require('../middleware/errorMiddleware');
 
 const validateCookie = catchAsyncError(async (req, res, next) => {
   console.log('🍪 🍪 🍪 🍪 🍪 🍪 🍪 🍪 🍪 🍪 🍪 🍪 🍪 ');
-  console.log('COOKIE VALIDATION STARTING');
+  console.log(`COOKIE VALIDATION STARTING -- ${req.path}`);
   if (!req.headers.cookie) return next();
   const decodedCookie = await decodeCookie(req.headers.cookie);
   res.locals.spotifyID = decodedCookie && decodedCookie.spotifyID;
@@ -32,6 +32,7 @@ const requiresLogin = (req, res, next) => {
 
 const updateSpotifyToken = catchAsyncError(async (req, res, next) => {
   console.log('♻~~~~~~~~~~~~~~~~~~~~~~~~~~♻');
+  console.log('PATH:', req.path);
   console.log('UPDATING SPOTIFY TOKEN START');
   const { spotifyID = null } = res.locals;
   if (!spotifyID) return next();
@@ -40,12 +41,7 @@ const updateSpotifyToken = catchAsyncError(async (req, res, next) => {
   console.log(`TOKEN EXPIRED: ${tokenExpired}, ${Date.now()}`, cachedUser.accessTokenExpiration);
 
   if (tokenExpired) {
-    let newTokens;
-    try {
-      newTokens = await updateAccessToken(cachedUser.refreshToken);
-    } catch (err) {
-      return next(err);
-    }
+    const newTokens = await updateAccessToken(cachedUser.refreshToken);
     const { accessToken, accessTokenExpiration } = newTokens;
     const updatedUser = cache.set(spotifyID, {
       ...cachedUser,
@@ -58,8 +54,7 @@ const updateSpotifyToken = catchAsyncError(async (req, res, next) => {
     res.locals.accessToken = cachedUser.accessToken;
   }
   console.log('UPDATING SPOTIFY TOKEN END');
-  console.log('~~~~~~~~~~~~~~~~~~~~~~~~`');
-  console.log('PATH:', req.path);
+  console.log('♻~~~~~~~~~~~~~~~~~~~~~~~~♻`');
   return next();
 });
 
