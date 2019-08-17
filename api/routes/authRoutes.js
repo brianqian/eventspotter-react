@@ -8,8 +8,13 @@ const { catchAsyncError } = require('./middleware/errorMiddleware');
 const cache = require('../../cache');
 const format = require('../../utils/format');
 
+const HOSTNAME =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:3000'
+    : 'https://eventspotter-react.qianbrian.now.sh';
+
 router.get('/login', (req, res) => {
-  const redirectURI = encodeURIComponent(`http://localhost:3000/api/auth/spotifyLogin`);
+  const redirectURI = encodeURIComponent(`${HOSTNAME}/api/auth/spotifyLogin`);
   const scopes = encodeURIComponent(
     'user-read-private user-read-email user-library-read user-top-read'
   );
@@ -28,7 +33,7 @@ router.get(
      **********************************
      */
     console.log('***************NOW IN /spotifyLogin ROUTE');
-    const redirectURI = `http://localhost:3000/api/auth/spotifyLogin`;
+    const redirectURI = `${HOSTNAME}/api/auth/spotifyLogin`;
     const code = req.query.code || null;
     const params = {
       code,
@@ -72,7 +77,7 @@ router.get(
     }
 
     console.log('REDIRECTING TO LIBRARY FROM AUTH');
-    res.redirect(`http://localhost:3000/library`);
+    res.redirect(`${HOSTNAME}/library`);
   })
 );
 

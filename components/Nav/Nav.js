@@ -58,11 +58,8 @@ const Nav = () => {
       setUser(userInfo);
     };
     console.log('USE EFFECT RUNNING');
-    try {
-      getUserInfo();
-    } catch (err) {
-      Router.push(`/error?code=${err}`);
-    }
+
+    getUserInfo();
   }, []);
   return (
     <>

@@ -38,6 +38,7 @@ router.route('/all').get(
      * ATTAIN USER CREDENTIALS FOR FETCHING FROM SPOTIFY
      * ***************************************************
      */
+
     const { spotifyID, accessToken } = res.locals;
     const cachedUser = cache.get(spotifyID);
     let userLibrary = cachedUser.library;

@@ -31,20 +31,13 @@ Calendar.getInitialProps = async ({ req, err, query, res }) => {
   const artistList = (req && req.query) || query;
   const encodedArtists = querystring.encode(artistList);
 
-  try {
-    const resp = await HttpClient.request(`/api/calendar/generate_calendar?${encodedArtists}`);
-    const { data } = resp;
-    return { calendar: data };
-  } catch (error) {
-    if (res) {
-      res.writeHead(error.message, {
-        Location: `/error?code=${error.message}`
-      });
-      res.end();
-    } else {
-      Router.push(`/error?code=${error.message}`);
-    }
-  }
+  const resp = await HttpClient.request(
+    `/api/calendar/generate_calendar?${encodedArtists}`,
+    { Accept: 'application/json' },
+    res
+  );
+  const { data } = resp;
+  return { calendar: data };
 };
 
 export default Calendar;

@@ -40,23 +40,14 @@ LibraryPage.getInitialProps = async ({ req, err, res, query }) => {
   if (err) console.log('server error', err);
   const cookie = req ? req.headers.cookie : document.cookie;
   const { filterBy = 'all' } = query;
-  try {
-    const resp = await HttpClient.request(`/api/library/${filterBy}`, {
-      cookie,
-      Accept: 'application/json'
-    });
-    const { data } = resp;
-    return { data, filterBy };
-  } catch (error) {
-    if (res) {
-      res.writeHead(error.message, {
-        Location: `/error?code=${error.message}`
-      });
-      res.end();
-    } else {
-      Router.push(`/error?code=${error.message}`);
-    }
-  }
+
+  const resp = await HttpClient.request(
+    `/api/library/${filterBy}`,
+    { cookie, Accept: 'application/json' },
+    res
+  );
+  const { data } = resp;
+  return { data, filterBy };
 };
 
 export default LibraryPage;
