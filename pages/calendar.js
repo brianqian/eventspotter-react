@@ -47,7 +47,6 @@ Calendar.getInitialProps = async ({ req, err, query }) => {
   console.log('resp 🐷', resp.status, resp.statusText);
   if (resp.status !== 200) return { calendar: [], error: { code: resp.status } };
   const { data = [] } = await resp.json();
-  // Todo: trycatch, statuscode
   return { calendar: data };
 };
 

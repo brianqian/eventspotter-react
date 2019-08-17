@@ -76,10 +76,6 @@ router.get(
   })
 );
 
-router.get('/logout', (req, res) => {
-  res.clearCookie('userInfo');
-  res.redirect('/');
-});
 router.get('/', (req, res) => {
   const { spotifyID = null } = res.locals;
   if (!spotifyID) return res.json({ spotifyID: '', displayName: '', imgURL: '' });
@@ -92,8 +88,8 @@ router.get('/', (req, res) => {
   });
 });
 
-// router.route('/test').get((req, res) => {
-//   throw new ServerError(req.path, 500, 'test route');
-// });
+router.route('/test').get((req, res) => {
+  throw new ServerError(req.path, 500, 'test route');
+});
 
 module.exports = router;

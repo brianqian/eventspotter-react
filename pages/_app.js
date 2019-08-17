@@ -28,8 +28,9 @@ Router.events.on('routeChangeComplete', () => NProgress.done());
 Router.events.on('routeChangeError', () => NProgress.done());
 
 export default class MyApp extends App {
-  static async getInitialProps({ Component, ctx, ctx: { req } }) {
+  static async getInitialProps({ Component, ctx, ctx: { req, res } }) {
     const cookie = req ? req.headers.cookie : document.cookie;
+
     // Checks if cookie exists to display Nav.
     // Navigating to unauthorized routes with an invalid cookie will be handled serverside
 

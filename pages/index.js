@@ -72,7 +72,7 @@ const HeroImage = styled.img`
   z-index: 1;
 `;
 
-const Home = ({ user }) => {
+const Home = ({ cookieExists }) => {
   return (
     <Container>
       <Head title="Home" />
@@ -85,7 +85,7 @@ const Home = ({ user }) => {
         </BodyText>
         <BodyText>Get event information and ticket pricing</BodyText>
         <HeroImage src="../static/img/SpotifyExample-800.png" />
-        {!user && (
+        {!cookieExists && (
           <SignIn>
             <Link prefetch href="http://localhost:3000/api/auth/login">
               <a>LOGIN WITH SPOTIFY</a>
@@ -95,6 +95,13 @@ const Home = ({ user }) => {
       </IntroDiv>
     </Container>
   );
+};
+
+Home.getInitialProps = ({ req, res }) => {
+  // When cookie is server side rendered, it's
+  const cookie = req ? req.headers.cookie : document.cookie;
+  const cookieExists = cookie && cookie.includes('userInfo');
+  return { cookieExists };
 };
 
 export default Home;

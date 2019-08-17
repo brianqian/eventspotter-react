@@ -74,6 +74,11 @@ app.prepare().then(() => {
     app.render(req, res, '/libraryPage');
   });
 
+  server.get('/logout', (req, res) => {
+    res.clearCookie('userInfo');
+    res.redirect('/');
+  });
+
   server.use('/api', routes);
   server.use(logError);
   server.use(handleError);

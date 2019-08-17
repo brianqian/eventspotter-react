@@ -46,7 +46,7 @@ LibraryPage.getInitialProps = async ({ req, err, res, query }) => {
 
   const resp = await fetch(`http://localhost:3000/api/library/${filterBy}`, {
     credentials: 'include',
-    headers: { cookie }
+    headers: { cookie, Accept: 'application/json' }
   });
   if (resp.status !== 200) return { data: [], error: { code: resp.status }, filterBy };
   const { data } = await resp.json();

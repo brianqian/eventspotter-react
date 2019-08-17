@@ -4,9 +4,7 @@ const Container = styled.div`
   width: 200px;
   color: ${props => props.theme.color.white};
   position: relative;
-  :hover {
-    height: 100%;
-  }
+  height: 50px;
 `;
 
 const OptionContainer = styled.div`
@@ -22,21 +20,29 @@ const OptionContainer = styled.div`
   ${Container}:hover & {
     border: 1px solid ${props => props.theme.color.green};
     max-height: ${props => props.length * 40}px;
-    /* height: auto; */
   }
 `;
 
 const Option = styled.div`
-  /* width: 200px; */
   height: 30px;
   display: block;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   z-index: 200;
+  &.dropdown_first_item {
+    height: 50px;
+  }
   &:hover {
     background-color: hsla(141, 25%, 12%, 1);
   }
   a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
     :hover {
       color: ${props => props.theme.color.green};
     }
