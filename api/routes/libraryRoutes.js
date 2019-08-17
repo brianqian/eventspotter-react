@@ -64,7 +64,8 @@ router.route('/all').get(
     /** ********************
      * UPDATE USER LIBRARY
      * TODO: If the very first song is deleted, the entire library is rebuilt.
-     * Make a workaround that checks for differences
+     * Make a workaround that checks for differences.
+     * Possible turn this into a middleware function.
      ********************* */
     // Attempt partial update if possible;
     console.log('CHECKING FOR PARTIAL UPDATE');

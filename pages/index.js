@@ -98,7 +98,6 @@ const Home = ({ cookieExists }) => {
 };
 
 Home.getInitialProps = ({ req, res }) => {
-  // When cookie is server side rendered, it's
   const cookie = req ? req.headers.cookie : document.cookie;
   const cookieExists = cookie && cookie.includes('userInfo');
   return { cookieExists };

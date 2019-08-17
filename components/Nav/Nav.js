@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import fetch from 'isomorphic-unfetch';
+import Router from 'next/router';
 import Link from 'next/link';
 import useModal from '../../utils/hooks/useModal';
 import UserSettings from '../UserSettingsModal/UserSettings';
 import Dropdown from '../NavDropdown/NavDropdown';
+import HttpClient from '../../HttpClient';
 
 const StyledNav = styled.nav`
   background-color: ${props => props.theme.color.background};
@@ -38,7 +39,7 @@ const StyledNav = styled.nav`
     }
   }
 `;
-const Welcome = styled.div`
+const UserProfile = styled.div`
   color: ${props => props.theme.color.white};
   display: flex;
   align-items: center;
@@ -53,16 +54,15 @@ const Nav = () => {
   const [user, setUser] = useState({ spotifyID: '', imgURL: '', displayName: '' });
   useEffect(() => {
     const getUserInfo = async () => {
-      const resp = await fetch('http://localhost:3000/api/auth', {
-        credentials: 'include',
-        headers: {
-          Accept: 'application/json'
-        }
-      });
-      // console.log('IN GET USER INFO USEFFECT', await resp.json());
-      if (resp.status === 200) setUser(await resp.json());
+      const userInfo = await HttpClient.request('/api/auth', { Accept: 'application/json' });
+      setUser(userInfo);
     };
-    getUserInfo();
+    console.log('USE EFFECT RUNNING');
+    try {
+      getUserInfo();
+    } catch (err) {
+      Router.push(`/error?code=${err}`);
+    }
   }, []);
   return (
     <>
@@ -89,7 +89,7 @@ const Nav = () => {
             <a>My Library</a>
           </Link>
         </Dropdown>
-        <Welcome>
+        <UserProfile>
           <Dropdown>
             <img src={user.imgURL} alt="" />
             <div onClick={toggleModal}>User Settings</div>
@@ -97,7 +97,7 @@ const Nav = () => {
               <a>Logout</a>
             </Link>
           </Dropdown>
-        </Welcome>
+        </UserProfile>
       </StyledNav>
 
       <UserSettings isShowing={modalIsOpen} hide={toggleModal} />

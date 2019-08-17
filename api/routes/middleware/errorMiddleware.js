@@ -4,6 +4,7 @@ const logError = (err, req, res, next) => {
   console.error('Code: ', err.code);
   console.error('Source: ', err.source);
   // console.error('Stack Trace: ', err.stack);
+  res.status(err.code);
   next(err);
 };
 
@@ -13,11 +14,9 @@ const handleError = (err, req, res, next) => {
   // Handles errors from AJAX requests
   if (req.xhr || req.accepts(['html', 'json']) === 'json') {
     res.status(err.code);
-    res.json({ data: [] });
     // Handles server errors
   } else {
     res.status(err.code);
-    res.redirect(`/error?code=${err.code}`);
     // next(err);
   }
 };

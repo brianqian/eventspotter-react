@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import Router from 'next/router';
 import Head from 'next/head';
 import Sidebar from '../components/MusicLibrary/MusicSidebar';
-import useFilterView from '../utils/hooks/useFilterView';
 import ReactTable from '../components/MusicLibrary/LibraryTable';
+import HttpClient from '../HttpClient';
 
 const Container = styled.div`
   display: flex;
@@ -24,13 +24,11 @@ const MainDisplay = styled.main`
 `;
 
 function LibraryPage({ data = [], error, filterBy }) {
-  if (error) Router.push(`/error?code=${error.code}`);
   return (
     <Container>
       <Head>
         <title>EventSpotter - Library</title>
       </Head>
-      {/* <StyledSidebar setFilterBy={setFilterBy} filterBy={filterBy} /> */}
       <MainDisplay>
         <ReactTable library={data} filterBy={filterBy} />
       </MainDisplay>
@@ -40,18 +38,25 @@ function LibraryPage({ data = [], error, filterBy }) {
 
 LibraryPage.getInitialProps = async ({ req, err, res, query }) => {
   if (err) console.log('server error', err);
-  console.log('LIB PAGE QUERY 🍐🍐🍐🍐🍐', query);
   const cookie = req ? req.headers.cookie : document.cookie;
   const { filterBy = 'all' } = query;
-
-  const resp = await fetch(`http://localhost:3000/api/library/${filterBy}`, {
-    credentials: 'include',
-    headers: { cookie, Accept: 'application/json' }
-  });
-  if (resp.status !== 200) return { data: [], error: { code: resp.status }, filterBy };
-  const { data } = await resp.json();
-  console.log('front end*************', data[0], data.length);
-  return { data, filterBy };
+  try {
+    const resp = await HttpClient.request(`/api/library/${filterBy}`, {
+      cookie,
+      Accept: 'application/json'
+    });
+    const { data } = resp;
+    return { data, filterBy };
+  } catch (error) {
+    if (res) {
+      res.writeHead(error.message, {
+        Location: `/error?code=${error.message}`
+      });
+      res.end();
+    } else {
+      Router.push(`/error?code=${error.message}`);
+    }
+  }
 };
 
 export default LibraryPage;

@@ -1,9 +1,9 @@
 import styled from 'styled-components';
-import fetch from 'isomorphic-unfetch';
 import Router from 'next/router';
 import Head from 'next/head';
 import querystring from 'querystring';
 import CalendarArtistCard from '../components/CalendarArtistCard/CalendarArtistsCard';
+import HttpClient from '../HttpClient';
 
 const Container = styled.div`
   background-color: ${props => props.theme.color.background};
@@ -14,7 +14,6 @@ const Container = styled.div`
 `;
 
 const Calendar = ({ calendar, error }) => {
-  if (error) Router.push(`/error?code=${error.code}`);
   return (
     <Container>
       <Head>
@@ -27,27 +26,25 @@ const Calendar = ({ calendar, error }) => {
   );
 };
 
-Calendar.getInitialProps = async ({ req, err, query }) => {
+Calendar.getInitialProps = async ({ req, err, query, res }) => {
   if (err) console.log('server error', err);
-  console.log('QUERY', req && req.query, query);
   const artistList = (req && req.query) || query;
-  console.log('ARTIST LIST', artistList);
   const encodedArtists = querystring.encode(artistList);
-  console.log('ENCODED ARTIST', encodedArtists);
 
-  const resp = await fetch(
-    `http://localhost:3000/api/calendar/generate_calendar?${encodedArtists}`,
-    {
-      headers: {
-        Accept: 'application/json'
-      }
+  try {
+    const resp = await HttpClient.request(`/api/calendar/generate_calendar?${encodedArtists}`);
+    const { data } = resp;
+    return { calendar: data };
+  } catch (error) {
+    if (res) {
+      res.writeHead(error.message, {
+        Location: `/error?code=${error.message}`
+      });
+      res.end();
+    } else {
+      Router.push(`/error?code=${error.message}`);
     }
-  );
-
-  console.log('resp 🐷', resp.status, resp.statusText);
-  if (resp.status !== 200) return { calendar: [], error: { code: resp.status } };
-  const { data = [] } = await resp.json();
-  return { calendar: data };
+  }
 };
 
 export default Calendar;
