@@ -4,19 +4,19 @@ const logError = (err, req, res, next) => {
   console.error('Code: ', err.code);
   console.error('Source: ', err.source);
   // console.error('Stack Trace: ', err.stack);
-  res.status(err.code);
+  console.error('Path:', req.path);
   next(err);
 };
 
 const handleError = (err, req, res, next) => {
-  console.log('handling error');
-
   // Handles errors from AJAX requests
   if (req.xhr || req.accepts(['html', 'json']) === 'json') {
     res.status(err.code);
     // Handles server errors
   } else {
     res.status(err.code);
+    res.redirect(`/error?code=${err.code}`);
+    res.end();
     // next(err);
   }
 };

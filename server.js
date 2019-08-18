@@ -55,10 +55,8 @@ app.prepare().then(() => {
   server.use(updateSpotifyToken);
 
   server.get('/', async (req, res) => {
-    const { spotifyID = null } = res.locals;
-    console.log('SPOTIFY ID IN SERVER', spotifyID);
     // return ssrCache({ req, res, pagePath: '/' });
-    app.render(req, res, '/', { spotifyID });
+    app.render(req, res, '/');
   });
 
   server.get('/calendar', requiresLogin, async (req, res) => {
@@ -83,7 +81,7 @@ app.prepare().then(() => {
 
   server.use('/api', routes);
   server.use(logError);
-  // server.use(handleError);
+  server.use(handleError);
   server.get('*', (req, res) => handle(req, res));
 
   server.listen(port, err => {

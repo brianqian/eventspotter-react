@@ -24,7 +24,7 @@ const requiresLogin = (req, res, next) => {
   console.log('RES.LOCALS IN requiresLogin MIDDLEWARE', res.locals);
   if (!spotifyID || !accessToken) {
     console.log('🚫 🚫 🚫 ACCESS DENIED -- REROUTING 🚫 🚫 🚫');
-    throw new ServerError(req.path, 401, `Not Authorized`);
+    next(new ServerError(req.path, 401, `Not Authorized`));
   } else {
     next();
   }
