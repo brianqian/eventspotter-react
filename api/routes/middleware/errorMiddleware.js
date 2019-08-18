@@ -11,7 +11,7 @@ const logError = (err, req, res, next) => {
 const handleError = (err, req, res, next) => {
   // Handles errors from AJAX requests
   if (req.xhr || req.accepts(['html', 'json']) === 'json') {
-    res.status(err.code);
+    res.status(err.code).end();
     // Handles server errors
   } else {
     res.status(err.code);

@@ -86,6 +86,7 @@ app.prepare().then(() => {
 
   server.listen(port, err => {
     if (err) throw err;
+    console.log('Mode:', process.env.NODE_ENV);
     console.log(`> Ready on http://localhost:${port}`);
   });
 });
