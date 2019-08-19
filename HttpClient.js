@@ -1,6 +1,3 @@
-// import fetch from 'isomorphic-unfetch';
-// import Router from 'next/router';
-
 const fetch = require('isomorphic-unfetch');
 const Router = require('next/router');
 

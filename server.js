@@ -2,8 +2,6 @@ const cacheableResponse = require('cacheable-response');
 const express = require('express');
 const next = require('next');
 const morgan = require('morgan');
-// const routes = require('./api/routes');
-// const { logError, handleError } = require('./api/routes/middleware/errorMiddleware');
 const HttpClient = require('./HttpClient');
 
 const port = parseInt(process.env.PORT, 10) || 3000;
@@ -81,10 +79,6 @@ app.prepare().then(() => {
     res.cookie('userInfo', encodedToken, { maxAge: 1000 * 60 * 60 * 24 * 365 });
     res.redirect('/');
   });
-
-  // server.use('/api', routes);
-  // server.use(logError);
-  // server.use(handleError);
   server.get('*', (req, res) => {
     res.redirect(`/error?code=404`);
     res.end();

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Router from 'next/router';
 import Link from 'next/link';
 import useModal from '../../utils/hooks/useModal';
 import UserSettings from '../UserSettingsModal/UserSettings';

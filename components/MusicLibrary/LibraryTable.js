@@ -77,7 +77,7 @@ function Table({ columns, data }) {
   );
 }
 
-function AllSongsLibrary({ library, filterBy, formatArtistsForQuery }) {
+function AllSongsLibrary({ library, filterBy }) {
   const columnIndex = {
     all: [
       {
