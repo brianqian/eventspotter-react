@@ -1,18 +1,10 @@
 const cacheableResponse = require('cacheable-response');
 const express = require('express');
 const next = require('next');
-const cookieParser = require('cookie-parser');
-const cors = require('cors');
 const morgan = require('morgan');
-const routes = require('./api/routes');
-const cacheMiddleware = require('./api/routes/middleware/cacheMiddleware');
-const { logError, handleError } = require('./api/routes/middleware/errorMiddleware');
-
-const {
-  validateCookie,
-  updateSpotifyToken,
-  requiresLogin
-} = require('./api/routes/middleware/authMiddleware');
+// const routes = require('./api/routes');
+// const { logError, handleError } = require('./api/routes/middleware/errorMiddleware');
+const HttpClient = require('./HttpClient');
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== 'production';
@@ -20,19 +12,17 @@ const app = next({ dev });
 
 const handle = app.getRequestHandler();
 
-const ssrCache = cacheableResponse({
-  ttl: 1000 * 60 * 60, // 1hour
-  get: async ({ req, res, pagePath, queryParams }) => ({
-    data: await app.renderToHTML(req, res, pagePath, queryParams)
-  }),
-  send: ({ data, res }) => res.send(data)
-});
+// const ssrCache = cacheableResponse({
+//   ttl: 1000 * 60 * 60, // 1hour
+//   get: async ({ req, res, pagePath, queryParams }) => ({
+//     data: await app.renderToHTML(req, res, pagePath, queryParams)
+//   }),
+//   send: ({ data, res }) => res.send(data)
+// });
 
 app.prepare().then(() => {
   const server = express();
   server.use(morgan('dev'));
-  server.use(cookieParser());
-  server.use(cors());
 
   server.get('/_next/*', (req, res) => {
     handle(req, res);
@@ -44,34 +34,23 @@ app.prepare().then(() => {
 
   server.get('/error', (req, res) => {
     console.log('️ ⚠️ ⚠️️ ⚠️ ERROR SERVER ROUTE HIT ⚠️ ⚠️ ⚠️');
-    console.log('res.status', res.statusCode);
     const { code } = req.query;
     res.status(code);
     app.render(req, res, '/errorPage', { code });
   });
 
-  server.use(validateCookie);
-  server.use(cacheMiddleware);
-  server.use(updateSpotifyToken);
-
   server.get('/', async (req, res) => {
     // return ssrCache({ req, res, pagePath: '/' });
-    app.render(req, res, '/');
+    app.render(req, res, '/index');
   });
 
-  server.get('/calendar', requiresLogin, async (req, res) => {
-    console.log(' CALENDAR HIT IN SERVER 🐷');
+  server.get('/calendar', async (req, res) => {
     app.render(req, res, '/calendar');
   });
 
-  server.get('/library', requiresLogin, (req, res) => {
+  server.get('/library', (req, res) => {
     const filterBy = req.query.filterBy || 'all';
     app.render(req, res, '/libraryPage', { filterBy });
-  });
-
-  server.get('/test', (req, res) => {
-    res.cookie('test', 'test');
-    app.render(req, res, '/libraryPage');
   });
 
   server.get('/logout', (req, res) => {
@@ -79,14 +58,42 @@ app.prepare().then(() => {
     res.redirect('/');
   });
 
-  server.use('/api', routes);
-  server.use(logError);
-  server.use(handleError);
+  server.get('/login', (req, res) => {
+    const HOSTNAME =
+      process.env.NODE_ENV === 'development'
+        ? 'http://localhost:3000'
+        : 'https://eventspotter-react.qianbrian.now.sh';
+    const redirectURI = encodeURIComponent(`${HOSTNAME}/spotifyLogin`);
+    const scopes = encodeURIComponent(
+      'user-read-private user-read-email user-library-read user-top-read'
+    );
+    res.redirect(
+      `https://accounts.spotify.com/authorize?response_type=code&client_id=${
+        process.env.SPOTIFY_CLIENT_ID
+      }&scope=${scopes}&redirect_uri=${redirectURI}`
+    );
+  });
+
+  server.get('/spotifyLogin', async (req, res) => {
+    const { code } = req.query;
+    const { encodedToken } = await HttpClient.request(`/api/auth/token?code=${code}`, null, res);
+    console.log(encodedToken);
+    res.cookie('userInfo', encodedToken, { maxAge: 1000 * 60 * 60 * 24 * 365 });
+    res.redirect('/');
+  });
+
+  // server.use('/api', routes);
+  // server.use(logError);
+  // server.use(handleError);
+  server.get('*', (req, res) => {
+    res.redirect(`/error?code=404`);
+    res.end();
+  });
   server.get('*', (req, res) => handle(req, res));
 
   server.listen(port, err => {
     if (err) throw err;
     console.log('Mode:', process.env.NODE_ENV);
-    console.log(`> Ready on http://localhost:${port}`);
+    console.log(`> Frontend ready on port:${port}`);
   });
 });

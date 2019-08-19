@@ -1,6 +1,7 @@
 # EventSpotter
 
 The sequel to my first web development project found [here](https://github.com/brianqian/SpotifyEvents).
+This repo is being reformatted to be a frontend only project with the backend hosted separately, [here](https://github.com/brianqian/eventspotter-backend). Besides it being good practice, the real reason can be found below in NextJS Learning Points.
 
 Eventspotter is an app that allows its users to search for concert tickets and tours according to their top artists on Spotify. After connecting to a Spotify account, the app will generate the user's music library and be able to see a calendar of dates and ticket prices in a user-defined search radius. Users will also be able to see a map of these artists' tours.
 
@@ -90,6 +91,10 @@ Top artists are retrieved from Spotify and then cross checked with SeatGeek's AP
 ## React
 
 - Each hook maintains its own state when it's called. When a state variable is destructured from `useState` it can only be modified by its "setState" partner. This became an issue in a component (which has since been removed) recreated below. The `LibraryComponent` received props from `Library Page` which could send a varying library depending on certain parameters. When LibraryComponent re-rendered, `library` would not be updated with the new values.
+
+## NextJS
+
+- As of the current version of Next (9.0.3), does not support API routing along with support for middleware. Next@9.0.3 added support for API routing which extends Node's Request and Response objects along with some basic functionality like support for `res.json` and `res.cookie` but many of the features are not built out. I'm taking this opportunity to separate my project into a [backend](https://github.com/brianqian/eventspotter-backend) and frontend repo.
 
 ```javascript
 //useFetch.js

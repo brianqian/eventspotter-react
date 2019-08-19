@@ -54,7 +54,7 @@ const Nav = () => {
   const [user, setUser] = useState({ spotifyID: '', imgURL: '', displayName: '' });
   useEffect(() => {
     const getUserInfo = async () => {
-      const userInfo = await HttpClient.request('/api/auth', { Accept: 'application/json' });
+      const userInfo = await HttpClient.request('/api/auth');
       setUser(userInfo);
     };
     console.log('USE EFFECT RUNNING');
@@ -64,9 +64,6 @@ const Nav = () => {
   return (
     <>
       <StyledNav authenticated={user.spotifyID}>
-        <Link prefetch href="/api/auth/test">
-          <a>TEST</a>
-        </Link>
         <Link prefetch href="/">
           <a>Home</a>
         </Link>

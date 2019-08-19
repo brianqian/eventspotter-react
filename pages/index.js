@@ -87,7 +87,7 @@ const Home = ({ cookieExists }) => {
         <HeroImage src="../static/img/SpotifyExample-800.png" />
         {!cookieExists && (
           <SignIn>
-            <Link prefetch href="/api/auth/login">
+            <Link prefetch href="/login">
               <a>LOGIN WITH SPOTIFY</a>
             </Link>
           </SignIn>

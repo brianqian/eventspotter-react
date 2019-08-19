@@ -13,7 +13,7 @@ const Container = styled.div`
   padding: 1rem;
 `;
 
-const Calendar = ({ calendar, error }) => {
+const Calendar = ({ calendar }) => {
   return (
     <Container>
       <Head>
@@ -29,14 +29,14 @@ const Calendar = ({ calendar, error }) => {
 Calendar.getInitialProps = async ({ req, err, query, res }) => {
   if (err) console.log('server error', err);
   const artistList = (req && req.query) || query;
+  const cookie = req ? req.headers.cookie : document.cookie;
   const encodedArtists = querystring.encode(artistList);
 
-  const resp = await HttpClient.request(
+  const { data } = await HttpClient.request(
     `/api/calendar/generate_calendar?${encodedArtists}`,
-    { Accept: 'application/json' },
+    cookie,
     res
   );
-  const { data } = resp;
   return { calendar: data };
 };
 

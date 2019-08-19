@@ -23,7 +23,7 @@ const MainDisplay = styled.main`
   overflow: auto;
 `;
 
-function LibraryPage({ data = [], error, filterBy }) {
+function LibraryPage({ data, filterBy }) {
   return (
     <Container>
       <Head>
@@ -40,13 +40,8 @@ LibraryPage.getInitialProps = async ({ req, err, res, query }) => {
   if (err) console.log('server error', err);
   const cookie = req ? req.headers.cookie : document.cookie;
   const { filterBy = 'all' } = query;
-
-  const resp = await HttpClient.request(
-    `/api/library/${filterBy}`,
-    { cookie, Accept: 'application/json' },
-    res
-  );
-  const { data } = resp;
+  const resp = await HttpClient.request(`/api/library/${filterBy}`, cookie, res);
+  const { data = [] } = resp;
   return { data, filterBy };
 };
 

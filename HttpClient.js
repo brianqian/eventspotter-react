@@ -1,24 +1,31 @@
-import fetch from 'isomorphic-unfetch';
-import Router from 'next/router';
+// import fetch from 'isomorphic-unfetch';
+// import Router from 'next/router';
+
+const fetch = require('isomorphic-unfetch');
+const Router = require('next/router');
 
 const HOSTNAME =
   process.env.NODE_ENV === 'development'
-    ? 'http://localhost:3000'
+    ? 'http://localhost:3001'
     : 'https://eventspotter-react.qianbrian.now.sh';
 
 module.exports = {
-  request: async (endpoint, headers, res) => {
+  request: async (endpoint, cookie, res) => {
     const resp = await fetch(`${HOSTNAME}${endpoint}`, {
       credentials: 'include',
-      headers: headers || {}
+      headers: {
+        Accept: 'application/json',
+        cookie
+      }
     });
     if (resp.status === 200) return resp.json();
+    console.error('HTTP REQUEST ERROR: ', resp.status, resp.statusText);
     if (res) {
-      res.writeHead(resp.status, {
-        Location: `/error?code=${resp.status}`
-      });
+      console.log('🚫 SSR 🚫');
+      res.redirect(`/error?code=${resp.status}`);
       res.end();
     } else {
+      console.log('🚫 CLIENT 🚫');
       Router.push(`/error?code=${resp.status}`);
     }
   }
