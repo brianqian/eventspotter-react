@@ -29,7 +29,10 @@ function errorPage({ code }) {
         <title>Error -{code}</title>
       </Head>
 
-      {code ? <ErrorMessage>{Error[code]()}</ErrorMessage> : <div>Something went wrong!</div>}
+      <ErrorMessage>
+        {' '}
+        <div>Something went wrong!</div>
+      </ErrorMessage>
     </Container>
   );
 }

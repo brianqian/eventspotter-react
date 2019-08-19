@@ -2,7 +2,8 @@ const cacheableResponse = require('cacheable-response');
 const express = require('express');
 const next = require('next');
 const morgan = require('morgan');
-const HttpClient = require('./HttpClient');
+// const HttpClient = require('./HttpClient');
+const NodeClient = require('./utils/NodeClient');
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== 'production';
@@ -42,6 +43,11 @@ app.prepare().then(() => {
     app.render(req, res, '/index');
   });
 
+  server.get('/nav', async (req, res) => {
+    const userInfo = await NodeClient.request('/api/auth', req.headers.cookie, res);
+    res.json({ userInfo });
+  });
+
   server.get('/calendar', async (req, res) => {
     app.render(req, res, '/calendar');
   });
@@ -57,14 +63,16 @@ app.prepare().then(() => {
   });
 
   server.get('/login', (req, res) => {
-    const HOSTNAME =
-      process.env.NODE_ENV === 'development'
-        ? 'http://localhost:3000'
-        : 'https://eventspotter-react.qianbrian.now.sh';
+    // const HOSTNAME =
+    //   process.env.NODE_ENV === 'development'
+    //     ? 'http://localhost:3000'
+    //     : 'https://eventspotter-react.qianbrian.now.sh';
+    const HOSTNAME = 'http://localhost:3000';
     const redirectURI = encodeURIComponent(`${HOSTNAME}/spotifyLogin`);
     const scopes = encodeURIComponent(
       'user-read-private user-read-email user-library-read user-top-read'
     );
+    console.log('LOGIN ROUT HIT');
     res.redirect(
       `https://accounts.spotify.com/authorize?response_type=code&client_id=${
         process.env.SPOTIFY_CLIENT_ID
@@ -73,14 +81,20 @@ app.prepare().then(() => {
   });
 
   server.get('/spotifyLogin', async (req, res) => {
-    const { code } = req.query;
-    const { encodedToken } = await HttpClient.request(`/api/auth/token?code=${code}`, null, res);
-    console.log(encodedToken);
-    res.cookie('userInfo', encodedToken, { maxAge: 1000 * 60 * 60 * 24 * 365 });
+    // const { code = null } = req.query;
+
+    // const { encodedToken = null } = await NodeClient.request(
+    //   `/api/auth/token?code=${code}`,
+    //   req.headers.cookie,
+    //   res
+    // );
+    // console.log(encodedToken);
+    // res.cookie('userInfo', encodedToken, { maxAge: 1000 * 60 * 60 * 24 * 365 });
     res.redirect('/');
   });
   server.get('*', (req, res) => {
     res.redirect(`/error?code=404`);
+
     res.end();
   });
   server.get('*', (req, res) => handle(req, res));

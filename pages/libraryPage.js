@@ -1,11 +1,10 @@
 // import ReactTable from 'react-table';
 import React from 'react';
 import styled from 'styled-components';
-import Router from 'next/router';
 import Head from 'next/head';
 import Sidebar from '../components/MusicLibrary/MusicSidebar';
 import ReactTable from '../components/MusicLibrary/LibraryTable';
-import HttpClient from '../HttpClient';
+import HttpClient from '../utils/HttpClient';
 
 const Container = styled.div`
   display: flex;

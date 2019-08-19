@@ -1,5 +1,5 @@
 {
-  "name": "create-next-example-app",
+  "name": "eventspotter-frontend",
   "scripts": {
     "dev": "concurrently --names \"FRONTEND,BACKEND\" -c \"blue,red\" --prefix \"{name} \" \"NODE_ENV=development node server.js\" \"cd ../eventspotter-backend && NODE_ENV=development nodemon server.js\" ",
     "dev:node": "concurrently \"NODE_ENV=development node server.js\" \"cd ../eventspotter-backend && node server.js\" ",

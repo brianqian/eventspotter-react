@@ -4,7 +4,8 @@ import Link from 'next/link';
 import useModal from '../../utils/hooks/useModal';
 import UserSettings from '../UserSettingsModal/UserSettings';
 import Dropdown from '../NavDropdown/NavDropdown';
-import HttpClient from '../../HttpClient';
+import HttpClient from '../../utils/HttpClient';
+import fetch from 'isomorphic-unfetch';
 
 const StyledNav = styled.nav`
   background-color: ${props => props.theme.color.background};
@@ -53,7 +54,10 @@ const Nav = () => {
   const [user, setUser] = useState({ spotifyID: '', imgURL: '', displayName: '' });
   useEffect(() => {
     const getUserInfo = async () => {
-      const userInfo = await HttpClient.request('/api/auth');
+      const resp = await fetch('/nav');
+      const { userInfo } = await resp.json();
+
+      console.log('userinfo retrieved', userInfo);
       setUser(userInfo);
     };
     console.log('USE EFFECT RUNNING');

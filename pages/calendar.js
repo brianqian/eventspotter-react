@@ -3,7 +3,7 @@ import Router from 'next/router';
 import Head from 'next/head';
 import querystring from 'querystring';
 import CalendarArtistCard from '../components/CalendarArtistCard/CalendarArtistsCard';
-import HttpClient from '../HttpClient';
+import HttpClient from '../utils/HttpClient';
 
 const Container = styled.div`
   background-color: ${props => props.theme.color.background};
