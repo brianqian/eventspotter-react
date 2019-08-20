@@ -2,6 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Head from 'next/head';
+import fetch from 'isomorphic-unfetch';
 import Sidebar from '../components/MusicLibrary/MusicSidebar';
 import ReactTable from '../components/MusicLibrary/LibraryTable';
 import HttpClient from '../utils/HttpClient';

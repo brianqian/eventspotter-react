@@ -54,7 +54,7 @@ const Nav = () => {
   const [user, setUser] = useState({ spotifyID: '', imgURL: '', displayName: '' });
   useEffect(() => {
     const getUserInfo = async () => {
-      const resp = await fetch('/nav');
+      const resp = await fetch('/api/auth/user_info');
       const { userInfo } = await resp.json();
       console.log('userinfo retrieved', userInfo);
       setUser(userInfo);

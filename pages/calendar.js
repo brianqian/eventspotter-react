@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Router from 'next/router';
 import Head from 'next/head';
 import querystring from 'querystring';
 import CalendarArtistCard from '../components/CalendarArtistCard/CalendarArtistsCard';

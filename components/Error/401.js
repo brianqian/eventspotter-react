@@ -5,12 +5,10 @@ function Error401() {
     <>
       <h1>User Account Error!</h1>
       <p>
-        Click
-        {' '}
-        <Link prefetch href="/api/auth/login">
+        Click{' '}
+        <Link href="/api/auth/login">
           <a>here</a>
-        </Link>
-        {' '}
+        </Link>{' '}
         to try logging in again!
       </p>
       <Link prefetch href="/">
