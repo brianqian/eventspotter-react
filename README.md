@@ -44,7 +44,7 @@ Top artists are retrieved from Spotify and then cross checked with SeatGeek's AP
 - User's info and library are saved in an LRU cache limited to the last 50 users.
 - On first login the user is either retrieved or added to the LRU cache and their library is loaded from the cache.
 - On later logins if the user is not
-- In the background the server will make an API request checking the user's library against the cache. If new songs are added, the cache is rebuilt and
+- In the background the server will make an API request checking the user's library against the cache. If the last saved song in the cache can be found within the last 50 songs, the new songs are added to the cache. Otherwise the entire cache is rebuilt
 
 ## Tables
 

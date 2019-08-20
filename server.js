@@ -63,11 +63,11 @@ app.prepare().then(() => {
   });
 
   server.get('/login', (req, res) => {
-    // const HOSTNAME =
-    //   process.env.NODE_ENV === 'development'
-    //     ? 'http://localhost:3000'
-    //     : 'https://eventspotter-react.qianbrian.now.sh';
-    const HOSTNAME = 'http://localhost:3000';
+    const HOSTNAME =
+      process.env.NODE_ENV === 'development'
+        ? 'http://localhost:3000'
+        : 'https://eventspotter-react.qianbrian.now.sh';
+
     const redirectURI = encodeURIComponent(`${HOSTNAME}/spotifyLogin`);
     const scopes = encodeURIComponent(
       'user-read-private user-read-email user-library-read user-top-read'

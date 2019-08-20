@@ -1,12 +1,6 @@
 import fetch from 'isomorphic-unfetch';
 import Router from 'next/router';
 
-// first link should be 'http://localhost:3001'
-// const HOSTNAME =
-//   process.env.NODE_ENV === 'development'
-//     ? 'http://localhost:3001'
-//     : 'https://eventspotter-backend.herokuapp.com';
-
 const HOSTNAME = 'https://eventspotter-backend.herokuapp.com';
 export default {
   request: async (endpoint, cookie, res) => {

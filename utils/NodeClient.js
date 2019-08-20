@@ -1,10 +1,5 @@
 const fetch = require('isomorphic-unfetch');
 
-// first link should be 'http://localhost:3001'
-// const HOSTNAME =
-//   process.env.NODE_ENV === 'development'
-//     ? 'http://localhost:3001'
-//     : 'https://eventspotter-backend.herokuapp.com';
 const HOSTNAME = 'https://eventspotter-backend.herokuapp.com';
 
 module.exports = {
