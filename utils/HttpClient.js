@@ -1,5 +1,5 @@
-const fetch = require('isomorphic-unfetch');
-const Router = require('next/router');
+import fetch from 'isomorphic-unfetch';
+import Router from 'next/router';
 
 // first link should be 'http://localhost:3001'
 // const HOSTNAME =
@@ -8,13 +8,13 @@ const Router = require('next/router');
 //     : 'https://eventspotter-backend.herokuapp.com';
 
 const HOSTNAME = 'https://eventspotter-backend.herokuapp.com';
-module.exports = {
+export default {
   request: async (endpoint, cookie, res) => {
     const resp = await fetch(`${HOSTNAME}${endpoint}`, {
       credentials: 'include',
       headers: {
         Accept: 'application/json',
-        cookie
+        'x-cookie': cookie
       }
     });
     if (resp.status === 200) return resp.json();

@@ -13,7 +13,7 @@ module.exports = {
       credentials: 'include',
       headers: {
         Accept: 'application/json',
-        cookie
+        'x-cookie': cookie
       }
     });
     if (resp.status === 200) return resp.json();
