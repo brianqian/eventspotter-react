@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import Head from 'next/head';
-import Error from '../components/Error';
+// import Error401 from '../components/Error/401';
+// import Error404 from '../components/Error/404';
+// import * as Error500 from '../components/Error/500'
 
 const Container = styled.div`
   background-color: ${props => props.theme.color.background};
@@ -30,8 +32,7 @@ function errorPage({ code }) {
       </Head>
 
       <ErrorMessage>
-        {' '}
-        <div>Something went wrong!</div>
+        <div>something went wrong</div>
       </ErrorMessage>
     </Container>
   );

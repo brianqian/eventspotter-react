@@ -56,7 +56,6 @@ const Nav = () => {
     const getUserInfo = async () => {
       const resp = await fetch('/nav');
       const { userInfo } = await resp.json();
-
       console.log('userinfo retrieved', userInfo);
       setUser(userInfo);
     };

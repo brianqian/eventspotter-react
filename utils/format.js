@@ -1,5 +1,3 @@
-const jwt = require('jsonwebtoken');
-
 const JSONToURL = object => {
   return Object.keys(object)
     .map(key => {
@@ -57,20 +55,6 @@ const cookieToString = (cookie, cookieName) => {
   return result;
 };
 
-const decodeCookie = async cookie => {
-  if (!cookie) return null;
-
-  // console.log('IN DECODE COOKIE************. DECODING', cookie);
-  const encodedToken =
-    typeof cookie === 'string' ? cookieToString(cookie, 'userInfo') : cookie.userInfo;
-  if (!encodedToken) return null;
-  const result = await jwt.verify(encodedToken, process.env.JWT_SECRET_KEY);
-  if (!result) return null;
-  // console.log('***********END DECODE COOKIE: ', userInfo);
-
-  return result.userInfo;
-};
-
 const formatArtistsToArray = (data, filterBy) => {
   if (!data.length) return [];
   let formattedArtists;
@@ -117,7 +101,6 @@ const format = {
   spotifyLibraryToCache,
   dbLibraryToCache,
   cookieToString,
-  decodeCookie,
   parseSeatGeekEvents,
   formatArtistsToArray
 };
