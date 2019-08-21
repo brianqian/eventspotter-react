@@ -6,7 +6,7 @@ export default async (req, res) => {
 
   const { encodedToken = null } = await NodeClient.request(
     `/api/auth/token?code=${code}`,
-    req.headers.cookie,
+    req,
     res
   );
   console.log(encodedToken);

@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Head from 'next/head';
-import fetch from 'isomorphic-unfetch';
+import { getCookieFromCookies } from '../utils/format';
 import Sidebar from '../components/MusicLibrary/MusicSidebar';
 import ReactTable from '../components/MusicLibrary/LibraryTable';
 import HttpClient from '../utils/HttpClient';
@@ -38,7 +38,7 @@ function LibraryPage({ data, filterBy }) {
 
 LibraryPage.getInitialProps = async ({ req, err, res, query }) => {
   if (err) console.log('server error', err);
-  const cookie = req ? req.headers.cookie : document.cookie;
+  const cookie = getCookieFromCookies(req ? req.headers.cookie : document.cookie, 'userInfo');
   const { filterBy = 'all' } = query;
   const resp = await HttpClient.request(`/api/library/${filterBy}`, cookie, res);
   const { data = [] } = resp;

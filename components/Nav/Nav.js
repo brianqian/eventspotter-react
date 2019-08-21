@@ -1,11 +1,10 @@
+import fetch from 'isomorphic-unfetch';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import useModal from '../../utils/hooks/useModal';
 import UserSettings from '../UserSettingsModal/UserSettings';
 import Dropdown from '../NavDropdown/NavDropdown';
-import HttpClient from '../../utils/HttpClient';
-import fetch from 'isomorphic-unfetch';
 
 const StyledNav = styled.nav`
   background-color: ${props => props.theme.color.background};
@@ -57,7 +56,7 @@ const Nav = () => {
       const resp = await fetch('/api/auth/user_info');
       const { userInfo } = await resp.json();
       console.log('userinfo retrieved', userInfo);
-      setUser(userInfo);
+      if (userInfo) setUser(userInfo);
     };
     console.log('USE EFFECT RUNNING');
 

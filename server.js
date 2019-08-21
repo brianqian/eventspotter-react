@@ -43,11 +43,6 @@ app.prepare().then(() => {
     app.render(req, res, '/index');
   });
 
-  // server.get('/nav', async (req, res) => {
-  //   const userInfo = await NodeClient.request('/api/auth', req.headers.cookie, res);
-  //   res.json({ userInfo });
-  // });
-
   server.get('/calendar', async (req, res) => {
     app.render(req, res, '/calendar');
   });
@@ -61,37 +56,6 @@ app.prepare().then(() => {
     res.clearCookie('userInfo');
     res.redirect('/');
   });
-
-  // server.get('/login', (req, res) => {
-  //   const HOSTNAME =
-  //     process.env.NODE_ENV === 'development'
-  //       ? 'http://localhost:3000'
-  //       : 'https://eventspotter-react.qianbrian.now.sh';
-
-  //   const redirectURI = encodeURIComponent(`${HOSTNAME}/spotifyLogin`);
-  //   const scopes = encodeURIComponent(
-  //     'user-read-private user-read-email user-library-read user-top-read'
-  //   );
-  //   console.log('LOGIN ROUT HIT');
-  //   res.redirect(
-  //     `https://accounts.spotify.com/authorize?response_type=code&client_id=${
-  //       process.env.SPOTIFY_CLIENT_ID
-  //     }&scope=${scopes}&redirect_uri=${redirectURI}`
-  //   );
-  // });
-
-  // server.get('/spotifyLogin', async (req, res) => {
-  //   const { code = null } = req.query;
-
-  //   const { encodedToken = null } = await NodeClient.request(
-  //     `/api/auth/token?code=${code}`,
-  //     req.headers.cookie,
-  //     res
-  //   );
-  //   console.log(encodedToken);
-  //   res.cookie('userInfo', encodedToken, { maxAge: 1000 * 60 * 60 * 24 * 365 });
-  //   res.redirect('/');
-  // });
   server.get('*', (req, res) => handle(req, res));
 
   server.listen(port, err => {

@@ -46,7 +46,7 @@ const dbLibraryToCache = library => {
   }));
 };
 
-const cookieToString = (cookie, cookieName) => {
+const getCookieFromCookies = (cookie, cookieName) => {
   if (!cookie || !cookie.includes(cookieName)) return null;
   const startIndex = cookie.indexOf(cookieName);
   const endIndex = cookie.indexOf(';', startIndex);
@@ -100,7 +100,7 @@ const format = {
   dbProfileToCache,
   spotifyLibraryToCache,
   dbLibraryToCache,
-  cookieToString,
+  getCookieFromCookies,
   parseSeatGeekEvents,
   formatArtistsToArray
 };

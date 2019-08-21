@@ -3,6 +3,7 @@ import Head from 'next/head';
 import querystring from 'querystring';
 import CalendarArtistCard from '../components/CalendarArtistCard/CalendarArtistsCard';
 import HttpClient from '../utils/HttpClient';
+import { getCookieFromCookies } from '../utils/format';
 
 const Container = styled.div`
   background-color: ${props => props.theme.color.background};
@@ -28,7 +29,7 @@ const Calendar = ({ calendar }) => {
 Calendar.getInitialProps = async ({ req, err, query, res }) => {
   if (err) console.log('server error', err);
   const artistList = (req && req.query) || query;
-  const cookie = req ? req.headers.cookie : document.cookie;
+  const cookie = getCookieFromCookies(req ? req.headers.cookie : document.cookie, 'userInfo');
   const encodedArtists = querystring.encode(artistList);
 
   const { data } = await HttpClient.request(

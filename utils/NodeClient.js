@@ -3,7 +3,8 @@ const fetch = require('isomorphic-unfetch');
 const HOSTNAME = 'https://eventspotter-backend.herokuapp.com';
 
 module.exports = {
-  request: async (endpoint, cookie, res) => {
+  request: async (endpoint, req, res) => {
+    const cookie = req.cookies && req.cookies.userInfo;
     const resp = await fetch(`${HOSTNAME}${endpoint}`, {
       credentials: 'include',
       headers: {
@@ -11,10 +12,10 @@ module.exports = {
         'x-cookie': cookie
       }
     });
+    console.log('ENDPOINT: ', endpoint);
+    console.log('req.path: ', req.path);
     if (resp.status === 200) return resp.json();
-    console.error('HTTP REQUEST ERROR: ', resp.status, resp.statusText);
-    console.error('ENDPOINT: ', endpoint);
-    res.redirect(`/error?code=${resp.status}`);
-    res.end();
+    console.error('HTTP REQUEST ERROR: ', resp.status);
+    throw new Error(resp.status);
   }
 };
