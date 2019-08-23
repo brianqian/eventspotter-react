@@ -12,7 +12,7 @@ const request = async (endpoint, token, res) => {
     credentials: 'include',
     headers: {
       Accept: 'application/json',
-      'x-token': token
+      'x-token': token || ''
     }
   });
   if (resp.status === 200) return resp.json();

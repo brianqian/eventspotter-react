@@ -1,15 +1,14 @@
-import NodeClient from '../../../utils/NodeClient';
+import HttpClient from '../../../utils/HttpClient';
 
 export default async (req, res) => {
-  console.log('SPOTIFY LOGIN ROUTE HIT');
   const { code = null } = req.query;
-  console.log(req.cookies);
-  const { encodedToken = null } = await NodeClient.request(
+  const token = req.cookies && req.cookies.userInfo;
+  console.log('TCL: token', token);
+  const { encodedToken = null } = await HttpClient.request(
     `/api/auth/token?code=${code}`,
-    req,
+    token,
     res
   );
-  console.log(encodedToken);
   res.cookie('userInfo', encodedToken, { maxAge: 1000 * 60 * 60 * 24 * 365 });
   res.redirect('/');
 };

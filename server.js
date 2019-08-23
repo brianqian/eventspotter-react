@@ -3,8 +3,6 @@ const cacheableResponse = require('cacheable-response');
 const express = require('express');
 const next = require('next');
 const morgan = require('morgan');
-// const HttpClient = require('./HttpClient');
-const NodeClient = require('./utils/NodeClient');
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== 'production';
@@ -59,6 +57,8 @@ app.prepare().then(() => {
     res.clearCookie('userInfo');
     res.redirect('/');
   });
+
+  server.get('*', (req, res) => res.redirect(`/error?code=404`));
   server.get('*', (req, res) => handle(req, res));
 
   server.listen(port, err => {

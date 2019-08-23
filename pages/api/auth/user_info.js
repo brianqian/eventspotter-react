@@ -1,6 +1,4 @@
-// import NodeClient from '../../../utils/NodeClient';
 import HttpClient from '../../../utils/HttpClient';
-// import { getCookieFromCookies } from '../../../utils/format';
 
 export default async (req, res) => {
   console.log('USER INFO ROUTE HIT');
