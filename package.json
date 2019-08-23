@@ -2,8 +2,8 @@
   "name": "eventspotter-frontend",
   "scripts": {
     "dev": "concurrently --names \"FRONTEND,BACKEND\" -c \"blue,red\" --prefix \"{name} \" \"npm run dev:frontend\" \"npm run dev:backend\" ",
-    "dev:frontend": "NODE_ENV=development nodemon server.js",
-    "dev:backend": "cd ../eventspotter-backend && NODE_ENV=development nodemon server.js",
+    "dev:frontend": "NODE_ENV=development FRONTEND_HOST=http://localhost:3000 nodemon server.js",
+    "dev:backend": "cd ../eventspotter-backend && NODE_ENV=development FRONTEND_HOST=http://localhost:3000 nodemon server.js",
     "dev:test": "concurrently \"npm run dev\" \"npm run test:watch\" ",
     "build": "next build",
     "start": "NODE_ENV=production node server.js",

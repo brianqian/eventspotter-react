@@ -3,7 +3,7 @@ import Router from 'next/router';
 
 const HOSTNAME =
   process.env.NODE_ENV === 'development'
-    ? 'https://eventspotter-backend.herokuapp.com'
+    ? 'http://localhost:3001'
     : 'https://eventspotter-backend.herokuapp.com';
 
 const request = async (endpoint, token, res) => {
