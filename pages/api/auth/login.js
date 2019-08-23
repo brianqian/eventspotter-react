@@ -2,6 +2,7 @@ const HOSTNAME =
   process.env.NODE_ENV === 'development'
     ? 'http://localhost:3000'
     : 'https://eventspotter-react.qianbrian.now.sh';
+// :'http://localhost:3000';
 
 const redirectURI = encodeURIComponent(`${HOSTNAME}/api/auth/spotify_login`);
 const scopes = encodeURIComponent(

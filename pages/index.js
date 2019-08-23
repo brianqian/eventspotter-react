@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 import Head from '../components/head';
+import Router from 'next/router';
 
 const Container = styled.div`
   background-color: ${props => props.theme.color.background};
@@ -73,6 +74,17 @@ const HeroImage = styled.img`
 `;
 
 const Home = ({ cookieExists }) => {
+  const HOSTNAME =
+    process.env.NODE_ENV === 'development'
+      ? 'http://localhost:3000'
+      : 'https://eventspotter-react.qianbrian.now.sh';
+  // : 'http://localhost:3000';
+
+  const redirectURI = encodeURIComponent(`${HOSTNAME}/api/auth/spotify_login`);
+  const scopes = encodeURIComponent(
+    'user-read-private user-read-email user-library-read user-top-read'
+  );
+  console.log('RUNNING IN DEVELOPMENT:PRODUCTION', process.env.NODE_ENV);
   return (
     <Container>
       <Head title="Home" />
@@ -87,7 +99,11 @@ const Home = ({ cookieExists }) => {
         <HeroImage src="../static/img/SpotifyExample-800.png" />
         {!cookieExists && (
           <SignIn>
-            <Link href="/api/auth/login">
+            <Link
+              href={`https://accounts.spotify.com/authorize?response_type=code&client_id=${
+                process.env.SPOTIFY_CLIENT_ID
+              }&scope=${scopes}&redirect_uri=${redirectURI}`}
+            >
               <a>LOGIN WITH SPOTIFY</a>
             </Link>
           </SignIn>

@@ -57,18 +57,12 @@ const Nav = () => {
       const resp = await fetch('/api/auth/user_info', {
         credentials: 'include'
       });
-      if (resp.status !== 200) throw new Error(resp.status);
       const { userInfo = null } = await resp.json();
       console.log('userinfo retrieved', userInfo);
       if (userInfo) setUser(userInfo);
     };
     console.log('USE EFFECT RUNNING');
-    try {
-      getUserInfo();
-    } catch (err) {
-      console.error('Error retrieving user', err.message);
-      setUser({ spotifyID: '', imgURL: '', displayName: '' });
-    }
+    getUserInfo();
   }, []);
   return (
     <>

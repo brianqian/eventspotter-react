@@ -58,7 +58,6 @@ app.prepare().then(() => {
     res.redirect('/');
   });
 
-  server.get('*', (req, res) => res.redirect(`/error?code=404`));
   server.get('*', (req, res) => handle(req, res));
 
   server.listen(port, err => {
