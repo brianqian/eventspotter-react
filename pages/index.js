@@ -77,7 +77,7 @@ const Home = ({ cookieExists }) => {
   const HOSTNAME =
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:3000'
-      : 'https://eventspotter-react.qianbrian.now.sh';
+      : 'https://eventspotter.herokuapp.com/';
   // : 'http://localhost:3000';
 
   const redirectURI = encodeURIComponent(`${HOSTNAME}/api/auth/spotify_login`);
