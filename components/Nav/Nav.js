@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-unfetch';
+import HttpClient from '../../utils/HttpClient';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
@@ -53,8 +54,10 @@ const Nav = () => {
   const [user, setUser] = useState({ spotifyID: '', imgURL: '', displayName: '' });
   useEffect(() => {
     const getUserInfo = async () => {
-      const resp = await fetch('/api/auth/user_info');
-      const { userInfo } = await resp.json();
+      const resp = await fetch('/api/auth/user_info', {
+        credentials: 'include'
+      });
+      const { userInfo = null } = await resp.json();
       console.log('userinfo retrieved', userInfo);
       if (userInfo) setUser(userInfo);
     };

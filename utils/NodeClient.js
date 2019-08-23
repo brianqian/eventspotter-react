@@ -5,6 +5,8 @@ const HOSTNAME = 'https://eventspotter-backend.herokuapp.com';
 module.exports = {
   request: async (endpoint, req, res) => {
     const cookie = req.cookies && req.cookies.userInfo;
+    console.log('in nodeclient cookie', req.cookies);
+    console.log('req.headers in nodeclient', req.headers);
     const resp = await fetch(`${HOSTNAME}${endpoint}`, {
       credentials: 'include',
       headers: {

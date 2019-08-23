@@ -1,3 +1,4 @@
+const cors = require('cors');
 const cacheableResponse = require('cacheable-response');
 const express = require('express');
 const next = require('next');
@@ -21,7 +22,9 @@ const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
   const server = express();
+
   server.use(morgan('dev'));
+  server.use(cors({ origin: true, credentials: true }));
 
   server.get('/_next/*', (req, res) => {
     handle(req, res);

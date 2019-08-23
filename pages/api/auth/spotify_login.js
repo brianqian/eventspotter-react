@@ -3,7 +3,7 @@ import NodeClient from '../../../utils/NodeClient';
 export default async (req, res) => {
   console.log('SPOTIFY LOGIN ROUTE HIT');
   const { code = null } = req.query;
-
+  console.log(req.cookies);
   const { encodedToken = null } = await NodeClient.request(
     `/api/auth/token?code=${code}`,
     req,

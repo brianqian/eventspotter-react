@@ -1,3 +1,4 @@
+import Router from 'next/router';
 import styled from 'styled-components';
 import Head from 'next/head';
 import querystring from 'querystring';
@@ -29,12 +30,19 @@ const Calendar = ({ calendar }) => {
 Calendar.getInitialProps = async ({ req, err, query, res }) => {
   if (err) console.log('server error', err);
   const artistList = (req && req.query) || query;
-  const cookie = getCookieFromCookies(req ? req.headers.cookie : document.cookie, 'userInfo');
+  const token = getCookieFromCookies(req ? req.headers.cookie : document.cookie, 'userInfo');
+  if (!token) {
+    if (!res) {
+      Router.push(`/error?code=401`);
+      return { calendar: [] };
+    }
+    return res.redirect(`/error?code=401`);
+  }
   const encodedArtists = querystring.encode(artistList);
 
   const { data } = await HttpClient.request(
     `/api/calendar/generate_calendar?${encodedArtists}`,
-    cookie,
+    token,
     res
   );
   return { calendar: data };

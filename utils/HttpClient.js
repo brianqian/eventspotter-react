@@ -6,12 +6,13 @@ const HOSTNAME =
     ? 'https://eventspotter-backend.herokuapp.com'
     : 'https://eventspotter-backend.herokuapp.com';
 
-const request = async (endpoint, cookie, res) => {
+const request = async (endpoint, token, res) => {
+  console.log('TCL: HTTPCLIENT.request -> token', token);
   const resp = await fetch(`${HOSTNAME}${endpoint}`, {
     credentials: 'include',
     headers: {
       Accept: 'application/json',
-      'x-cookie': cookie
+      'x-token': token
     }
   });
   if (resp.status === 200) return resp.json();
