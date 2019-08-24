@@ -74,17 +74,12 @@ const HeroImage = styled.img`
 `;
 
 const Home = ({ cookieExists }) => {
-  const HOSTNAME =
-    process.env.NODE_ENV === 'development'
-      ? 'http://localhost:3000'
-      : 'https://eventspotter.herokuapp.com/';
-  // : 'http://localhost:3000';
-
-  const redirectURI = encodeURIComponent(`${HOSTNAME}/api/auth/spotify_login`);
+  const redirectURI = encodeURIComponent(`${process.env.FRONTEND_HOST}/api/auth/spotify_login`);
   const scopes = encodeURIComponent(
     'user-read-private user-read-email user-library-read user-top-read'
   );
   console.log('RUNNING IN DEVELOPMENT:PRODUCTION', process.env.NODE_ENV);
+  console.log('REDIRECT URI', redirectURI);
   return (
     <Container>
       <Head title="Home" />

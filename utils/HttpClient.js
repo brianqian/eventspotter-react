@@ -8,6 +8,7 @@ const HOSTNAME =
 
 const request = async (endpoint, token, res) => {
   console.log('TCL: HTTPCLIENT.request -> token', token);
+  console.log('TCL: request -> HOSTNAME', HOSTNAME, process.env.NODE_ENV);
   const resp = await fetch(`${HOSTNAME}${endpoint}`, {
     credentials: 'include',
     headers: {

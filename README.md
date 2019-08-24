@@ -1,7 +1,9 @@
 # EventSpotter
 
+Deployed site: https://eventspotter.herokuapp.com
+The backend is hosted on Heroku so it might take a few seconds to spin up. The code for the backend can be found [here](https://github.com/brianqian/eventspotter-backend).
+
 The sequel to my first web development project found [here](https://github.com/brianqian/SpotifyEvents).
-This repo is being reformatted to be a frontend only project with the backend hosted separately, [here](https://github.com/brianqian/eventspotter-backend). Besides it being good practice, the real reason can be found below in NextJS Learning Points.
 
 Eventspotter is an app that allows its users to search for concert tickets and tours according to their top artists on Spotify. After connecting to a Spotify account, the app will generate the user's music library and be able to see a calendar of dates and ticket prices in a user-defined search radius. Users will also be able to see a map of these artists' tours.
 
@@ -16,7 +18,7 @@ SeatGeek API
 
 ## Features
 
-This project uses Next.js to handle routing and server-side rendering (SSR) and styled-components for CSS. The site is built with functional components and Hooks. In order to prevent hitting rate limits on the Spotify API (each user library requires 1 request per 50 songs), user libraries and songs are saved in the database. To further reduce the amount of calls to the database, I built a custom LRU-cache class to save the most recent 50 users in server memory which stores the user's library. In order to keep the users fresh, a middleware function retrieves the user from the cache and will also use a Spotify refresh token to update the access token if necessary.
+This project uses NextJS to handle routing and server-side rendering (SSR) and styled-components for CSS. The site is built with functional components and Hooks. In order to prevent hitting rate limits on the Spotify API (each user library requires 1 request per 50 songs), user libraries and songs are saved in the database. To further reduce the amount of calls to the database, I built a custom LRU-cache class to save the most recent 50 users in server memory which stores the user's library. In order to keep the users fresh, a middleware function retrieves the user from the cache and will also use a Spotify refresh token to update the access token if necessary.
 
 Top artists are retrieved from Spotify and then cross checked with SeatGeek's API to provide a list of current concerts.
 
@@ -46,40 +48,31 @@ Top artists are retrieved from Spotify and then cross checked with SeatGeek's AP
 - On later logins if the user is not
 - In the background the server will make an API request checking the user's library against the cache. If the last saved song in the cache can be found within the last 50 songs, the new songs are added to the cache. Otherwise the entire cache is rebuilt
 
-## Tables
+# Challenges & Learning Points
 
-### User Table
+## Server Side Rendering (isomorphic code)
 
-- Spotify ID
-- Display Name
-- ImageURL
-- Access Token
-- Refresh token
-- Access Token Expiration
-- Total Songs
+- With NextJS, pages are rendered server side on a fresh request and rendered client side when using the native `Router`. This makes things like retrieving cookies problematic because sometimes the cookie needs to be retrieved from the request, and other times by the `document` object. In NextJS context this can be resolved with a conditional like this:
 
-### User Settings
+```Javascript
+const cookie = req ? req.headers.cookie : document.cookie,
+```
 
-- userID
-- Location
-- Search Radius
-- Widths/Sort settings on columns
+- The fetch API is also only available client-side but this is easily fixed using the `isomorphic-unfetch` node package which uses `node-fetch` when the page is server side rendered.
 
-### Library
+- Error handling also needs to be adjusted to either use `res.redirect`/`res.writeHead()` or NextJS's `Router.push()` as seen here:
 
-- Title
-- SongID
-- userID
-- Artist
-- DateAdded
-- acousticness
-- danceability
-- energy
-- instrumentalness
-- loudness
-- valence
+```Javascript
+//HttpClient.js
 
-# Learning Notes
+  if (res) {
+    console.log('🚫 SSR 🚫');
+    res.redirect(`/error?code=${resp.status}`);
+    res.end();
+  } else {
+    Router.push(`/error?code=${resp.status}`);
+  }
+```
 
 ## Node
 
@@ -88,13 +81,21 @@ Top artists are retrieved from Spotify and then cross checked with SeatGeek's AP
 - While the HTTP response can end with an express command, more work can be done in the callback until a `return` is reached.
 - For a custom error handler to be recognized by Node, you need all 4 parameters, `(err,res,req,next)`, in the function definition.
 
+## NextJS
+
+- As of the current version of Next (9.0.3), does not support API routing **and** support for middleware. Next@9.0.3 added support for API routing which extends Node's Request and Response objects along with some basic functionality like support for `res.json` and `res.cookie` but middleware support is not built out. I'm taking this opportunity to separate my project into a [backend](https://github.com/brianqian/eventspotter-backend) and frontend repo.
+
+## Javascript
+
+- Destructured variables can have default values in order to better handle errors.
+- The Fetch API's option to include credentials or have credentials be same-origin is a distinction from sending cookies to the same domain. Cookies cannot be sent from one domain to another.
+- JWT's are less optimal for session ID's versus using a session store in the database
+
 ## React
 
 - Each hook maintains its own state when it's called. When a state variable is destructured from `useState` it can only be modified by its "setState" partner. This became an issue in a component (which has since been removed) recreated below. The `LibraryComponent` received props from `Library Page` which could send a varying library depending on certain parameters. When LibraryComponent re-rendered, `library` would not be updated with the new values.
 
-## NextJS
-
-- As of the current version of Next (9.0.3), does not support API routing along with support for middleware. Next@9.0.3 added support for API routing which extends Node's Request and Response objects along with some basic functionality like support for `res.json` and `res.cookie` but many of the features are not built out. I'm taking this opportunity to separate my project into a [backend](https://github.com/brianqian/eventspotter-backend) and frontend repo.
+_The below examples are no longer used_
 
 ```javascript
 //useFetch.js
@@ -126,12 +127,10 @@ const LibraryComponent = ({data})=>{
 
 ```
 
-## Javascript
-
-- Destructured variables can have default values
-
 # System Design & Responsibility
 
 - Typescript would have been extremely useful in this project
 - Data shape varies when it's passed to and from the database, cache, front-end, external API's, routes, etc.
 - The shape needs to be formatted and where the shaping of data happens should be consistent.
+- Where errors are handled also need to be considered and how routing works when errors are caught need to be considered.
+- Server side

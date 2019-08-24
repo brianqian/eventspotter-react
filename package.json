@@ -1,10 +1,10 @@
 {
   "name": "eventspotter-frontend",
   "scripts": {
-    "dev": "concurrently --names \"FRONTEND,BACKEND\" -c \"blue,red\" --prefix \"{name} \" \"npm run dev:frontend\" \"npm run dev:backend\" ",
-    "dev:frontend": "NODE_ENV=development nodemon server.js",
-    "dev:backend": "cd ../eventspotter-backend && NODE_ENV=development nodemon server.js",
-    "dev:test": "concurrently \"npm run dev\" \"npm run test:watch\" ",
+    "dev": "concurrently --names \"FRONTEND,BACKEND\" -c \"blue,red\" --prefix \"{name} \" \"npm run dev:fe\" \"npm run dev:be\" ",
+    "dev:fe": "NODE_ENV=development FRONTEND_HOST=http://localhost:3000 nodemon server.js",
+    "dev:be": "cd ../eventspotter-backend && npm run start:dev",
+    "staging": "NODE_ENV=staging FRONTEND_HOST=http://localhost:3000 nodemon server.js",
     "build": "next build",
     "start": "NODE_ENV=production node server.js",
     "test": "jest",
