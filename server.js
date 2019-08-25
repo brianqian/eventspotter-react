@@ -1,4 +1,3 @@
-const cors = require('cors');
 const cacheableResponse = require('cacheable-response');
 const express = require('express');
 const next = require('next');
@@ -10,19 +9,18 @@ const app = next({ dev });
 
 const handle = app.getRequestHandler();
 
-// const ssrCache = cacheableResponse({
-//   ttl: 1000 * 60 * 60, // 1hour
-//   get: async ({ req, res, pagePath, queryParams }) => ({
-//     data: await app.renderToHTML(req, res, pagePath, queryParams)
-//   }),
-//   send: ({ data, res }) => res.send(data)
-// });
+const ssrCache = cacheableResponse({
+  ttl: 1000 * 60 * 60, // 1hour
+  get: async ({ req, res, pagePath, queryParams }) => ({
+    data: await app.renderToHTML(req, res, pagePath, queryParams)
+  }),
+  send: ({ data, res }) => res.send(data)
+});
 
 app.prepare().then(() => {
   const server = express();
 
   server.use(morgan('dev'));
-  server.use(cors({ origin: true, credentials: true }));
 
   server.get('/_next/*', (req, res) => {
     handle(req, res);
@@ -33,19 +31,16 @@ app.prepare().then(() => {
   });
 
   server.get('/error', (req, res) => {
-    console.log('️ ⚠️ ⚠️️ ⚠️ ERROR SERVER ROUTE HIT ⚠️ ⚠️ ⚠️');
     const { code } = req.query;
-    res.status(code);
     app.render(req, res, '/errorPage', { code });
   });
 
   server.get('/', async (req, res) => {
-    // return ssrCache({ req, res, pagePath: '/' });
     app.render(req, res, '/index');
   });
 
   server.get('/calendar', async (req, res) => {
-    app.render(req, res, '/calendar');
+    return ssrCache({ req, res, pagePath: '/calendar' });
   });
 
   server.get('/library', (req, res) => {

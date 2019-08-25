@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import Head from 'next/head';
-// import Error401 from '../components/Error/401';
-// import Error404 from '../components/Error/404';
-// import * as Error500 from '../components/Error/500'
+import Error401 from '../components/Error/401';
+import Error404 from '../components/Error/404';
+import Error500 from '../components/Error/500';
 
 const Container = styled.div`
   background-color: ${props => props.theme.color.background};
@@ -25,6 +25,16 @@ const ErrorMessage = styled.div`
 `;
 
 function errorPage({ code }) {
+  const ErrorComponent = () => {
+    switch (code) {
+      case '401':
+        return <Error401 />;
+      case '500':
+        return <Error500 />;
+      default:
+        return <Error404 />;
+    }
+  };
   return (
     <Container>
       <Head>
@@ -32,7 +42,7 @@ function errorPage({ code }) {
       </Head>
 
       <ErrorMessage>
-        <div>something went wrong</div>
+        <ErrorComponent />
       </ErrorMessage>
     </Container>
   );
@@ -40,10 +50,8 @@ function errorPage({ code }) {
 
 errorPage.getInitialProps = ({ req, res, query }) => {
   console.log('ERROR PAGE GIP. QUERY: ', query);
-  console.log('res', res.statusCode);
   const { code } = query;
-  if (!code) console.log(code, 'ERROR PAGE ERRORED 😰');
-  return { code: query.code };
+  return { code };
 };
 
 export default errorPage;

@@ -30,6 +30,9 @@ const StyledNav = styled.nav`
     :hover {
       text-decoration: underline;
     }
+    &.active {
+      color: green;
+    }
   }
   > * {
     margin: 0 3rem;
@@ -70,22 +73,14 @@ const Nav = () => {
         <Link prefetch href="/">
           <a>Home</a>
         </Link>
+        <Link prefetch href="/libraryPage?filterBy=all" as="/library?filterBy=all">
+          <a>My Library</a>
+        </Link>
 
-        <Dropdown>
-          <Link prefetch href="/libraryPage?filterBy=all" as="/library?filterBy=all">
-            <a>My Library</a>
-          </Link>
-          <Link
-            prefetch
-            href="/libraryPage?filterBy=top_artists"
-            as="/library?filterBy=top_artists"
-          >
-            <a>Top Artists</a>
-          </Link>
-          <Link prefetch href="/libraryPage" as="/library">
-            <a>My Library</a>
-          </Link>
-        </Dropdown>
+        <Link prefetch href="/libraryPage?filterBy=top_artists" as="/library?filterBy=top_artists">
+          <a>Top Artists</a>
+        </Link>
+
         <UserProfile>
           <Dropdown>
             <img src={user.imgURL} alt="" />

@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 import Head from '../components/head';
-import Router from 'next/router';
 
 const Container = styled.div`
   background-color: ${props => props.theme.color.background};
@@ -24,7 +23,7 @@ const IntroDiv = styled.div`
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
-const EventSpotter = styled.h1`
+const BodyTitle = styled.h1`
   font-family: 'Open Sans', sans-serif;
   font-size: 80px;
   font-display: swap;
@@ -33,8 +32,11 @@ const EventSpotter = styled.h1`
 `;
 
 const BodyText = styled.p`
-  font-size: 24px;
+  font-size: 20px;
   z-index: 2;
+  line-height: 1.5;
+  max-width: 650px;
+  margin-bottom: 1.5rem;
 `;
 const SignIn = styled.div`
   position: relative;
@@ -84,13 +86,17 @@ const Home = ({ cookieExists }) => {
     <Container>
       <Head title="Home" />
       <IntroDiv>
-        <EventSpotter>EventSpotter.</EventSpotter>
-        <BodyText>Find your favorite Top Artists on Spotify and their upcoming events.</BodyText>
+        <BodyTitle>EventSpotter.</BodyTitle>
         <BodyText>
-          Sync your Spotify Account and use Spotify's powerful audio analysis tools to see hidden
-          metrics.
+          Find your favorite Top Artists on Spotify, their events, and competitive pricing using
+          Seatgeek's ticketing API. After logging in with your Spotify account, get instant access
+          to your library and Spotify's hidden audio analytics.{' '}
         </BodyText>
-        <BodyText>Get event information and ticket pricing</BodyText>
+        <BodyText>
+          Pick your happiest and most danceable artists and find when they're coming to town.{' '}
+        </BodyText>
+        <BodyText>Build a map of your artists' tours to see where they'll be </BodyText>
+        {/* <HeroImage src="../static/img/concert-stock-800.jpg" /> */}
         <HeroImage src="../static/img/SpotifyExample-800.png" />
         {!cookieExists && (
           <SignIn>
