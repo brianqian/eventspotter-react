@@ -45,12 +45,11 @@ Top artists are retrieved from Spotify and then cross checked with SeatGeek's AP
 
 - User's info and library are saved in an LRU cache limited to the last 50 users.
 - On first login the user is either retrieved or added to the LRU cache and their library is loaded from the cache.
-- On later logins if the user is not
-- In the background the server will make an API request checking the user's library against the cache. If the last saved song in the cache can be found within the last 50 songs, the new songs are added to the cache. Otherwise the entire cache is rebuilt
+- In the background the server will make an API request checking the user's library against the cache. If the last saved song in the cache can be found within the last 50 songs on Spotify, the new songs are added to the cache instead of refetching the whole library.
 
 # Challenges & Learning Points
 
-## Server Side Rendering (isomorphic code)
+## Server Side Rendering (isomorphic code) / NextJS
 
 - With NextJS, pages are rendered server side on a fresh request and rendered client side when using the native `Router`. This makes things like retrieving cookies problematic because sometimes the cookie needs to be retrieved from the request, and other times by the `document` object. In NextJS context this can be resolved with a conditional like this:
 
@@ -74,16 +73,14 @@ const cookie = req ? req.headers.cookie : document.cookie,
   }
 ```
 
+- As of the current version of Next (9.0.3), does not support API routing **and** support for middleware. Next@9.0.3 added support for API routing which extends Node's Request and Response objects along with some basic functionality but middleware support is not built out. The project has been separated into a [backend](https://github.com/brianqian/eventspotter-backend) and frontend repo.
+
 ## Node
 
 - In each route the header can pass cookies as authentication with the {include: credentials} key. Cookies are usually sent on each request for routes within the same domain but not necessarily for an external API.
-- Custom server middleware can be built and pass information along in res.locals. The HTTP route continues down a single path until the response ends at a res.end, res.json, res.send.
+- Custom server middleware can be built and pass information along in res.locals. The HTTP route continues down a single path until the response ends at a res.end, res.json, res.send or reaches the end of routing parameters.
 - While the HTTP response can end with an express command, more work can be done in the callback until a `return` is reached.
-- For a custom error handler to be recognized by Node, you need all 4 parameters, `(err,res,req,next)`, in the function definition.
-
-## NextJS
-
-- As of the current version of Next (9.0.3), does not support API routing **and** support for middleware. Next@9.0.3 added support for API routing which extends Node's Request and Response objects along with some basic functionality like support for `res.json` and `res.cookie` but middleware support is not built out. I'm taking this opportunity to separate my project into a [backend](https://github.com/brianqian/eventspotter-backend) and frontend repo.
+- For a custom error handler to be recognized by Node, you need all 4 parameters, `(err,res,req,next)`, in the function definition even if unused.
 
 ## Javascript
 
@@ -93,9 +90,7 @@ const cookie = req ? req.headers.cookie : document.cookie,
 
 ## React
 
-- Each hook maintains its own state when it's called. When a state variable is destructured from `useState` it can only be modified by its "setState" partner. This became an issue in a component (which has since been removed) recreated below. The `LibraryComponent` received props from `Library Page` which could send a varying library depending on certain parameters. When LibraryComponent re-rendered, `library` would not be updated with the new values.
-
-_The below examples are no longer used_
+- Each hook maintains its own state when it's called. When a state variable is destructured from `useState` it can only be modified by its "setState" partner. This became an issue in a component (which has since been removed) recreated below. The `LibraryComponent` received props from `Library Page` which could send a varying library depending on certain parameters. When LibraryComponent re-rendered, `library` would not be updated with the new values. _The below examples are no longer used in production or development_
 
 ```javascript
 //useFetch.js
@@ -127,10 +122,10 @@ const LibraryComponent = ({data})=>{
 
 ```
 
-# System Design & Responsibility
+## System Design & Responsibility
 
 - Typescript would have been extremely useful in this project
 - Data shape varies when it's passed to and from the database, cache, front-end, external API's, routes, etc.
 - The shape needs to be formatted and where the shaping of data happens should be consistent.
 - Where errors are handled also need to be considered and how routing works when errors are caught need to be considered.
-- Server side
+- Abstracting API calls with an HttpClient is useful for header declarations and endpoint changes in dev/production environments

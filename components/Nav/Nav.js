@@ -1,9 +1,9 @@
 import fetch from 'isomorphic-unfetch';
-import HttpClient from '../../utils/HttpClient';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import useModal from '../../utils/hooks/useModal';
+import ServerStatus from '../ServerStatus/ServerStatus';
 import UserSettings from '../UserSettingsModal/UserSettings';
 import Dropdown from '../NavDropdown/NavDropdown';
 
@@ -53,6 +53,8 @@ const UserProfile = styled.div`
 `;
 
 const Nav = () => {
+  const [serverLoading, setServerLoading] = useState(true);
+
   const [modalIsOpen, toggleModal] = useModal();
   const [user, setUser] = useState({ spotifyID: '', imgURL: '', displayName: '' });
   useEffect(() => {
@@ -62,37 +64,49 @@ const Nav = () => {
       });
       const { userInfo = null } = await resp.json();
       console.log('userinfo retrieved', userInfo);
-      if (userInfo) setUser(userInfo);
+      if (userInfo) {
+        setUser(userInfo);
+        setServerLoading(false);
+      }
     };
     console.log('USE EFFECT RUNNING');
     getUserInfo();
   }, []);
   return (
     <>
-      <StyledNav authenticated={user.spotifyID}>
-        <Link prefetch href="/">
-          <a>Home</a>
-        </Link>
-        <Link prefetch href="/libraryPage?filterBy=all" as="/library?filterBy=all">
-          <a>My Library</a>
-        </Link>
-
-        <Link prefetch href="/libraryPage?filterBy=top_artists" as="/library?filterBy=top_artists">
-          <a>Top Artists</a>
-        </Link>
-
-        <UserProfile>
-          <Dropdown>
-            <img src={user.imgURL} alt="" />
-            <div onClick={toggleModal}>User Settings</div>
-            <Link href="/logout">
-              <a>Logout</a>
+      {serverLoading ? (
+        <ServerStatus />
+      ) : (
+        <>
+          <StyledNav authenticated={user.spotifyID}>
+            <Link prefetch href="/">
+              <a>Home</a>
             </Link>
-          </Dropdown>
-        </UserProfile>
-      </StyledNav>
+            <Link prefetch href="/libraryPage?filterBy=all" as="/library?filterBy=all">
+              <a>My Library</a>
+            </Link>
 
-      <UserSettings isShowing={modalIsOpen} hide={toggleModal} />
+            <Link
+              prefetch
+              href="/libraryPage?filterBy=top_artists"
+              as="/library?filterBy=top_artists"
+            >
+              <a>Top Artists</a>
+            </Link>
+
+            <UserProfile>
+              <Dropdown>
+                <img src={user.imgURL} alt="" />
+                <div onClick={toggleModal}>User Settings</div>
+                <Link href="/logout">
+                  <a>Logout</a>
+                </Link>
+              </Dropdown>
+            </UserProfile>
+          </StyledNav>
+          <UserSettings isShowing={modalIsOpen} hide={toggleModal} />
+        </>
+      )}
     </>
   );
 };

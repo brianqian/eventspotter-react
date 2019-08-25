@@ -1,22 +1,13 @@
-// import ReactTable from 'react-table';
+import Router from 'next/router';
 import React from 'react';
 import styled from 'styled-components';
 import Head from 'next/head';
 import { getCookieFromCookies } from '../utils/format';
-import Sidebar from '../components/MusicLibrary/MusicSidebar';
 import ReactTable from '../components/MusicLibrary/LibraryTable';
 import HttpClient from '../utils/HttpClient';
-import Router from 'next/router';
 
 const Container = styled.div`
   display: flex;
-`;
-
-const StyledSidebar = styled(Sidebar)`
-  flex: 2;
-  color: ${props => props.theme.color.white};
-  width: 100%;
-  background-color: ${props => props.theme.color.background};
 `;
 
 const MainDisplay = styled.main`
