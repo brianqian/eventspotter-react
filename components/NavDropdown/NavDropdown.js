@@ -4,7 +4,6 @@ const Container = styled.div`
   width: 200px;
   color: ${props => props.theme.color.white};
   position: relative;
-  height: 50px;
 `;
 
 const OptionContainer = styled.div`

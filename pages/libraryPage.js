@@ -5,6 +5,7 @@ import Head from 'next/head';
 import { getCookieFromCookies } from '../utils/format';
 import ReactTable from '../components/MusicLibrary/LibraryTable';
 import HttpClient from '../utils/HttpClient';
+import ContextMenu from '../components/ContextMenu/ContextMenu';
 
 const Container = styled.div`
   display: flex;
@@ -22,6 +23,7 @@ function LibraryPage({ data, filterBy }) {
         <title>EventSpotter - Library</title>
       </Head>
       <MainDisplay>
+        {/* <ContextMenu filterBy={filterBy}/> */}
         <ReactTable library={data} filterBy={filterBy} />
       </MainDisplay>
     </Container>
