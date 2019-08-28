@@ -8,22 +8,22 @@ import UserSettings from '../UserSettingsModal/UserSettings';
 import Dropdown from '../NavDropdown/NavDropdown';
 
 const StyledNav = styled.nav`
-  background-color: ${props => props.theme.color.background};
+  background-color: ${(props) => props.theme.color.background};
   display: flex;
   font-size: 20px;
   text-transform: uppercase;
 
-  border-bottom: 1px solid ${props => props.theme.color.black};
+  border-bottom: 1px solid ${(props) => props.theme.color.black};
   align-items: center;
   justify-content: flex-end;
   width: 100vw;
-  height: ${props => (props.authenticated ? 50 : 0)}px;
-  overflow: ${props => (props.authenticated ? 'visible' : 'hidden')};
+  height: ${(props) => (props.authenticated ? 50 : 0)}px;
+  overflow: ${(props) => (props.authenticated ? 'visible' : 'hidden')};
   transition: 0.25s;
   z-index: 1000;
 
   a {
-    color: ${props => props.theme.color.white};
+    color: ${(props) => props.theme.color.white};
     display: flex;
     align-items: center;
     text-decoration: none;
@@ -38,12 +38,12 @@ const StyledNav = styled.nav`
     margin: 0 3rem;
     height: 50px;
     :hover {
-      color: ${props => props.theme.color.green};
+      color: ${(props) => props.theme.color.green};
     }
   }
 `;
 const UserProfile = styled.div`
-  color: ${props => props.theme.color.white};
+  color: ${(props) => props.theme.color.white};
   display: flex;
   align-items: center;
   img {
@@ -60,7 +60,7 @@ const Nav = () => {
   useEffect(() => {
     const getUserInfo = async () => {
       const resp = await fetch('/api/auth/user_info', {
-        credentials: 'include'
+        credentials: 'include',
       });
       const { userInfo = null } = await resp.json();
       console.log('userinfo retrieved', userInfo);
@@ -97,7 +97,7 @@ const Nav = () => {
             <UserProfile>
               <Dropdown>
                 <img src={user.imgURL} alt="" />
-                <div onClick={toggleModal}>User Settings</div>
+                {/* <div onClick={toggleModal}>User Settings</div> */}
                 <Link href="/logout">
                   <a>Logout</a>
                 </Link>

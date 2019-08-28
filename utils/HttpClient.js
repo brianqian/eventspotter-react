@@ -13,12 +13,10 @@ const request = async (endpoint, token, res) => {
     credentials: 'include',
     headers: {
       Accept: 'application/json',
-      'x-token': token || ''
-    }
+      'x-token': token || '',
+    },
   });
-  const data = await resp.json();
-  console.log(data);
-  if (resp.status === 200) return data;
+  if (resp.status === 200) return resp.json();
   if (res) {
     console.log('🚫 SSR 🚫');
     res.redirect(`/error?code=${resp.status}`);

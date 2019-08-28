@@ -6,6 +6,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  color: ${props => props.theme.tailwind.gray1};
 `;
 
 const TitleBar = styled.div`
