@@ -86,14 +86,6 @@ const Nav = () => {
               <a>My Library</a>
             </Link>
 
-            <Link
-              prefetch
-              href="/libraryPage?filterBy=top_artists"
-              as="/library?filterBy=top_artists"
-            >
-              <a>Top Artists</a>
-            </Link>
-
             <UserProfile>
               <Dropdown>
                 <img src={user.imgURL} alt="" />

@@ -1,9 +1,8 @@
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import React from 'react';
 import styled from 'styled-components';
 import Head from 'next/head';
 import { getCookieFromCookies } from '../utils/format';
-import ReactTable from '../components/MusicLibrary/LibraryTable';
 import HttpClient from '../utils/HttpClient';
 import ContextMenu from '../components/ContextMenu/ContextMenu';
 
@@ -16,23 +15,26 @@ const MainDisplay = styled.main`
   overflow: auto;
 `;
 
-function LibraryPage({ data, filterBy }) {
+function TopPages({ data }) {
+  const router = useRouter();
+  const { filterBy } = router.query;
+
   return (
     <Container>
       <Head>
-        <title>Library</title>
+        <title>Top {filterBy}</title>
       </Head>
       <MainDisplay>
         <ContextMenu />
-        <ReactTable library={data} filterBy={filterBy} />
+        IM THE TOP PAGES. filterby: {filterBy}
       </MainDisplay>
     </Container>
   );
 }
 
-LibraryPage.getInitialProps = async ({ req, err, res, query }) => {
+TopPages.getInitialProps = async ({ req, err, res, query }) => {
   if (err) console.log('server error', err);
-  const { filterBy = 'all' } = query;
+  const { filterBy } = query;
   const token = getCookieFromCookies(req ? req.headers.cookie : document.cookie, 'userInfo');
   if (!token) {
     if (!res) {
@@ -41,10 +43,11 @@ LibraryPage.getInitialProps = async ({ req, err, res, query }) => {
     }
     return res.redirect(`/error?code=401`);
   }
-
-  const resp = await HttpClient.request(`/api/library/${filterBy}`, token, res);
-  const { data = [] } = resp;
-  return { data, filterBy };
+  console.log('🐷 TOP PAGES GIP', filterBy);
+  // const resp = await HttpClient.request(`/api/library/${filterBy}`, token, res);
+  const data = [];
+  // const { data = [] } = resp;
+  return { data };
 };
 
-export default LibraryPage;
+export default TopPages;

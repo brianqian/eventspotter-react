@@ -12,9 +12,9 @@ const handle = app.getRequestHandler();
 const ssrCache = cacheableResponse({
   ttl: 1000 * 60 * 60, // 1hour
   get: async ({ req, res, pagePath, queryParams }) => ({
-    data: await app.renderToHTML(req, res, pagePath, queryParams)
+    data: await app.renderToHTML(req, res, pagePath, queryParams),
   }),
-  send: ({ data, res }) => res.send(data)
+  send: ({ data, res }) => res.send(data),
 });
 
 app.prepare().then(() => {
@@ -44,8 +44,15 @@ app.prepare().then(() => {
   });
 
   server.get('/library', (req, res) => {
-    const filterBy = req.query.filterBy || 'all';
-    app.render(req, res, '/libraryPage', { filterBy });
+    app.render(req, res, '/libraryPage');
+  });
+
+  server.get('/top/:filterBy', (req, res) => {
+    console.log(req.params.filterBy);
+    const { filterBy } = req.params;
+    console.log('TCL: filterBy', { filterBy });
+
+    app.render(req, res, '/top', { filterBy });
   });
 
   server.get('/logout', (req, res) => {
@@ -55,7 +62,7 @@ app.prepare().then(() => {
 
   server.get('*', (req, res) => handle(req, res));
 
-  server.listen(port, err => {
+  server.listen(port, (err) => {
     if (err) throw err;
     console.log('Mode:', process.env.NODE_ENV);
     console.log(`> Frontend ready on port:${port}`);

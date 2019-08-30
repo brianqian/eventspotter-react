@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTable } from 'react-table';
+import { useTable, useSortBy } from 'react-table';
 import styled from 'styled-components';
 import Router from 'next/router';
 import { format } from 'date-fns';
@@ -8,23 +8,27 @@ import { formatArtistsToArray } from '../../utils/format';
 const Styles = styled.div`
   padding: 1rem;
   color: ${(props) => props.theme.color.white};
-  width: 100%;
+  min-width: 100%;
   height: 100%;
   min-height: 100vh;
   background-color: ${(props) => props.theme.color.library};
   font-family: 'Source Sans Pro';
 
   table {
-    width: 100%;
+    min-width: 100%;
     th,
     td {
       margin: 0;
       padding: 0.5rem;
       text-align: left;
       flex: 1;
-      :nth-last-child(1) {
+      :nth-child(3) {
         flex: 0.5;
       }
+    }
+    th {
+      position: sticky;
+      top: 0;
     }
 
     tr {
@@ -52,17 +56,23 @@ const GenerateCalendar = styled.div`
 
 function Table({ columns, data }) {
   console.log('DATA IN TABLE', data[0], data.length);
-  const { getTableProps, headerGroups, rows, prepareRow } = useTable({
-    columns,
-    data,
-  });
+  const { getTableProps, headerGroups, rows, prepareRow } = useTable(
+    {
+      columns,
+      data,
+    },
+    useSortBy
+  );
   return (
     <table {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map((column) => (
-              <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+              <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                {column.render('Header')}
+                <span> {column.isSorted ? (column.isSortedDesc ? '🔽' : ' 🔼') : ''} </span>
+              </th>
             ))}
           </tr>
         ))}
@@ -103,6 +113,11 @@ function AllSongsLibrary({ library, filterBy }) {
           {
             Header: 'Date Added',
             accessor: 'dateAdded',
+          },
+          {
+            Header: 'Acousticness',
+            accessor: 'acousticness',
+            sortType: 'basic',
           },
         ],
       },
