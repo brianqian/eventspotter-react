@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 import Head from '../components/head';
+import ArtistCard from '../components/TopArtistCard/TopArtistCard';
 
 const Container = styled.div`
-  background-color: ${props => props.theme.color.background};
-  color: ${props => props.theme.color.white};
-  font-family: ${props => props.theme.textFont};
+  background-color: ${(props) => props.theme.color.background};
+  color: ${(props) => props.theme.color.white};
+  font-family: ${(props) => props.theme.textFont};
   font-size: 18px;
   height: 100vh;
 `;
@@ -51,7 +52,7 @@ const SignIn = styled.div`
   padding: 10px 20px;
 
   border-radius: 25px;
-  background-color: ${props => props.theme.color.green};
+  background-color: ${(props) => props.theme.color.green};
 
   user-select: none;
   cursor: pointer;
@@ -59,7 +60,7 @@ const SignIn = styled.div`
     font-family: 'Work Sans';
     font-size: 18px;
     z-index: 2;
-    color: ${props => props.theme.color.white};
+    color: ${(props) => props.theme.color.white};
     text-decoration: none;
   }
 `;
@@ -67,7 +68,7 @@ const SignIn = styled.div`
 const HeroImage = styled.img`
   width: 700px;
   opacity: 0.3;
-  box-shadow: ${props => props.theme.bs};
+  box-shadow: ${(props) => props.theme.bs};
   margin: 2rem;
   position: absolute;
   left: 40px;
@@ -95,18 +96,24 @@ const Home = ({ cookieExists }) => {
         <BodyText>Build a map of your artists' tours to see where they'll be. </BodyText>
         {/* <HeroImage src="../static/img/concert-stock-800.jpg" /> */}
         <HeroImage src="../static/img/SpotifyExample-800.png" />
+        <button
+          onClick={() => {
+            fetch('http://localhost:3001/api/library/test');
+          }}
+        >
+          TEST ROUTE
+        </button>
         {!cookieExists && (
           <SignIn>
             <Link
-              href={`https://accounts.spotify.com/authorize?response_type=code&client_id=${
-                process.env.SPOTIFY_CLIENT_ID
-              }&scope=${scopes}&redirect_uri=${redirectURI}`}
+              href={`https://accounts.spotify.com/authorize?response_type=code&client_id=${process.env.SPOTIFY_CLIENT_ID}&scope=${scopes}&redirect_uri=${redirectURI}`}
             >
               <a>LOGIN WITH SPOTIFY</a>
             </Link>
           </SignIn>
         )}
       </IntroDiv>
+      <ArtistCard />
     </Container>
   );
 };

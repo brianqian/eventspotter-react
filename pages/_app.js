@@ -9,7 +9,7 @@ import Nav from '../components/Nav/Nav';
 const GlobalStyle = createGlobalStyle`
 
 body, html{
-  font-family: ${props => props.theme.textFont};
+  font-family: ${(props) => props.theme.textFont};
   max-width: 100vw;
 }
 *{
@@ -20,33 +20,22 @@ body, html{
 
 `;
 
-Router.events.on('routeChangeStart', url => {
-  console.log(`Loading: ${url}`);
+Router.events.on('routeChangeStart', (url) => {
   NProgress.start();
 });
 Router.events.on('routeChangeComplete', () => NProgress.done());
 Router.events.on('routeChangeError', () => NProgress.done());
 
 export default class MyApp extends App {
-  static async getInitialProps({ Component, ctx, ctx: { req, res } }) {
-    let pageProps = {};
-    if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx);
-    }
-    return { pageProps: { ...pageProps } };
-  }
-  state = {
-    serverConnected: false,
-    activePage: 'home'
-  };
-
-  setActivePage = page => {
-    console.log('active page being set: ', page);
-    this.setState({ activePage: page });
-  };
+  // static async getInitialProps({ Component, ctx, ctx: { req, res } }) {
+  //   let pageProps = {};
+  //   if (Component.getInitialProps) {
+  //     pageProps = await Component.getInitialProps(ctx);
+  //   }
+  //   return { pageProps: { ...pageProps } };
+  // }
 
   render() {
-    console.log(this.state, '🐷');
     const { Component, pageProps } = this.props;
     return (
       <Container>

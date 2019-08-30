@@ -7,11 +7,11 @@ import { formatArtistsToArray } from '../../utils/format';
 
 const Styles = styled.div`
   padding: 1rem;
-  color: ${props => props.theme.color.white};
+  color: ${(props) => props.theme.color.white};
   width: 100%;
   height: 100%;
   min-height: 100vh;
-  background-color: ${props => props.theme.color.library};
+  background-color: ${(props) => props.theme.color.library};
   font-family: 'Source Sans Pro';
 
   table {
@@ -21,7 +21,16 @@ const Styles = styled.div`
       margin: 0;
       padding: 0.5rem;
       text-align: left;
+      flex: 1;
+      :nth-last-child(1) {
+        flex: 0.5;
+      }
     }
+
+    tr {
+      display: flex;
+    }
+
     thead {
       font-size: 22px;
     }
@@ -31,7 +40,7 @@ const Styles = styled.div`
 const GenerateCalendar = styled.div`
   width: 100%;
   height: 50px;
-  background-color: ${props => props.theme.color.green};
+  background-color: ${(props) => props.theme.color.green};
   color: black;
   display: flex;
   align-items: center;
@@ -45,14 +54,14 @@ function Table({ columns, data }) {
   console.log('DATA IN TABLE', data[0], data.length);
   const { getTableProps, headerGroups, rows, prepareRow } = useTable({
     columns,
-    data
+    data,
   });
   return (
     <table {...getTableProps()}>
       <thead>
-        {headerGroups.map(headerGroup => (
+        {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
+            {headerGroup.headers.map((column) => (
               <th {...column.getHeaderProps()}>{column.render('Header')}</th>
             ))}
           </tr>
@@ -63,7 +72,7 @@ function Table({ columns, data }) {
           (row, i) =>
             prepareRow(row) || (
               <tr {...row.getRowProps()}>
-                {row.cells.map(cell => {
+                {row.cells.map((cell) => {
                   if (cell.column.id === 'dateAdded') {
                     cell.value = format(cell.value, 'MM-DD-YYYY');
                   }
@@ -85,18 +94,18 @@ function AllSongsLibrary({ library, filterBy }) {
         columns: [
           {
             Header: 'Title',
-            accessor: 'title'
+            accessor: 'title',
           },
           {
             Header: 'Artist',
-            accessor: 'artist'
+            accessor: 'artist',
           },
           {
             Header: 'Date Added',
-            accessor: 'dateAdded'
-          }
-        ]
-      }
+            accessor: 'dateAdded',
+          },
+        ],
+      },
     ],
     top_artists: [
       {
@@ -104,23 +113,23 @@ function AllSongsLibrary({ library, filterBy }) {
         columns: [
           {
             Header: '',
-            accessor: '0.name'
+            accessor: '0.name',
           },
           {
             Header: '',
-            accessor: '1.name'
+            accessor: '1.name',
           },
           {
             Header: '',
-            accessor: '2.name'
+            accessor: '2.name',
           },
           {
             Header: '',
-            accessor: '3.name'
-          }
-        ]
-      }
-    ]
+            accessor: '3.name',
+          },
+        ],
+      },
+    ],
   };
 
   let memoLibrary;
@@ -153,7 +162,7 @@ function AllSongsLibrary({ library, filterBy }) {
             Router.push(
               {
                 query,
-                pathname: '/calendar'
+                pathname: '/calendar',
               },
 
               '/calendar'

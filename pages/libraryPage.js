@@ -24,6 +24,7 @@ function LibraryPage({ data, filterBy }) {
       </Head>
       <MainDisplay>
         {/* <ContextMenu filterBy={filterBy}/> */}
+
         <ReactTable library={data} filterBy={filterBy} />
       </MainDisplay>
     </Container>
