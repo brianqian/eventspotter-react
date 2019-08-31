@@ -19,85 +19,46 @@ const MenuItem = styled.div`
 `;
 
 function ContextMenu() {
+  const audioAnalytics = {
+    acousticness: 'Most Acoustic',
+    danceability: 'Most Danceable',
+    energy: 'Highest Energy',
+    instrumentalness: 'Most Instrumental',
+    loudness: 'Loudest',
+    tempo: 'Highest Tempo',
+    valence: 'Most Valent',
+    speechiness: ' Most Positive',
+    liveness: 'Most Live',
+  };
   return (
     <Container>
       <MenuItem>
         <Dropdown>
-          <label>Quick Access: </label>
+          <label>Quick Access </label>
           <Link
             prefetch
             href={{ pathname: '/top', query: { filterBy: 'artists' } }}
-            as="/top/artists"
+            as="top/artists"
           >
             <a>Top Artists</a>
           </Link>
-          <Link
-            prefetch
-            href={{ pathname: '/top', query: { filterBy: 'acousticness' } }}
-            as="/top/acousticness"
-          >
-            <a>Most Acoustic</a>
-          </Link>
-
-          <Link
-            prefetch
-            href={{ pathname: '/top', query: { filterBy: 'danceability' } }}
-            as="/top/danceability"
-          >
-            <a>Most Danceable</a>
-          </Link>
-          <Link
-            prefetch
-            href={{ pathname: '/top', query: { filterBy: 'energy' } }}
-            as="/top/energy"
-          >
-            <a>Most Energy</a>
-          </Link>
-          <Link
-            prefetch
-            href={{ pathname: '/top', query: { filterBy: 'instrumentalness' } }}
-            as="/top/instrumentalness"
-          >
-            <a>Most Instrumental</a>
-          </Link>
-          <Link
-            prefetch
-            href={{ pathname: '/top', query: { filterBy: 'loudness' } }}
-            as="/top/loudness"
-          >
-            <a>Loudest</a>
-          </Link>
-          <Link prefetch href={{ pathname: '/top', query: { filterBy: 'tempo' } }} as="/top/tempo">
-            <a>Highest Tempo</a>
-          </Link>
-          <Link
-            prefetch
-            href={{ pathname: '/top', query: { filterBy: 'valence' } }}
-            as="/top/valence"
-          >
-            <a>Most Valent</a>
-          </Link>
-          <Link
-            prefetch
-            href={{ pathname: '/top', query: { filterBy: 'speechiness' } }}
-            as="/top/speechiness"
-          >
-            <a>Speechiest</a>
-          </Link>
-          <Link
-            prefetch
-            href={{ pathname: '/top', query: { filterBy: 'liveness' } }}
-            as="/top/liveness"
-          >
-            <a>Most Live</a>
-          </Link>
+          {Object.keys(audioAnalytics).map((menuItem) => (
+            <Link
+              prefetch
+              href={{ pathname: '/top', query: { filterBy: menuItem } }}
+              as={`top/${menuItem}`}
+            >
+              <a>{audioAnalytics[menuItem]}</a>
+            </Link>
+          ))}
         </Dropdown>
       </MenuItem>
       <MenuItem>
         <Dropdown>
           <label>Columns</label>
-          <p>Acousticness</p>
-          <p>Tempo</p>
+          {Object.keys(audioAnalytics).map((item) => (
+            <p>{item}</p>
+          ))}
         </Dropdown>
       </MenuItem>
     </Container>

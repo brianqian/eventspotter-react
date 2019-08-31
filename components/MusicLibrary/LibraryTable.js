@@ -100,9 +100,11 @@ function Table({ columns, data }) {
   );
 }
 
-function AllSongsLibrary({ library, filterBy }) {
-  const columnIndex = {
-    all: [
+function AllSongsLibrary({ library }) {
+  const memoLibrary = React.useMemo(() => library);
+
+  const columns = React.useMemo(
+    () => [
       {
         Header: 'All Songs',
         columns: [
@@ -126,71 +128,12 @@ function AllSongsLibrary({ library, filterBy }) {
         ],
       },
     ],
-    top_artists: [
-      {
-        Header: 'Top Artists',
-        columns: [
-          {
-            Header: '',
-            accessor: '0.name',
-          },
-          {
-            Header: '',
-            accessor: '1.name',
-          },
-          {
-            Header: '',
-            accessor: '2.name',
-          },
-          {
-            Header: '',
-            accessor: '3.name',
-          },
-        ],
-      },
-    ],
-  };
-
-  let memoLibrary;
-  if (filterBy === 'top_artists') {
-    const tempList = [];
-    const topArtists = library;
-    topArtists.forEach((artistName, i) => {
-      const currentList = tempList[i % 5];
-      if (currentList) {
-        currentList.push(artistName);
-      } else {
-        tempList[i % 5] = [artistName];
-      }
-    });
-
-    memoLibrary = React.useMemo(() => tempList);
-  } else {
-    memoLibrary = React.useMemo(() => library);
-  }
-
-  const columns = React.useMemo(() => columnIndex[filterBy], [filterBy]);
+    []
+  );
   // TODO: change library.length validation
   // This exists to allow for "top <audio metric>" sorting to have similar styling to all
   return (
     <Styles>
-      {filterBy !== 'all' && library.length < 100 && (
-        <GenerateCalendar
-          onClick={() => {
-            const query = formatArtistsToArray(library, filterBy);
-            Router.push(
-              {
-                query,
-                pathname: '/calendar',
-              },
-
-              '/calendar'
-            );
-          }}
-        >
-          Generate Calendar
-        </GenerateCalendar>
-      )}
       <Table columns={columns} data={memoLibrary} />
     </Styles>
   );

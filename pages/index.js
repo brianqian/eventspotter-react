@@ -95,13 +95,6 @@ const Home = ({ cookieExists }) => {
         <BodyText>Build a map of your artists' tours to see where they'll be. </BodyText>
         {/* <HeroImage src="../static/img/concert-stock-800.jpg" /> */}
         <HeroImage src="../static/img/SpotifyExample-800.png" />
-        <button
-          onClick={() => {
-            fetch('http://localhost:3001/api/library/test');
-          }}
-        >
-          TEST ROUTE
-        </button>
         {!cookieExists && (
           <SignIn>
             <Link

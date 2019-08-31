@@ -32,9 +32,10 @@ const Option = styled.div`
   z-index: 200;
   flex: 1;
   padding: 0.25rem 0;
-  &:first-child {
+  :first-child {
     height: 100%;
   }
+
   &:hover {
     background-color: hsla(141, 25%, 12%, 1);
     * {
@@ -52,11 +53,12 @@ const Option = styled.div`
 `;
 
 function Dropdown({ children, className, multi }) {
-  const [firstItem, ...dropdownOptions] = children;
+  const flattenedChildren = children.flat(Infinity);
+  const [firstItem, ...dropdownOptions] = flattenedChildren;
   return (
     <Container className={className}>
-      <Option className="dropdown_first_item">{firstItem}</Option>
-      <OptionContainer length={children.length + 1}>
+      <Option>{firstItem}</Option>
+      <OptionContainer length={flattenedChildren.length + 1}>
         {dropdownOptions.map((item, i) => (
           <Option key={item + i}>{item}</Option>
         ))}
