@@ -26,17 +26,21 @@ const Styles = styled.div`
         flex: 0.5;
       }
     }
-    th {
-      position: sticky;
-      top: 0;
-    }
-
     tr {
       display: flex;
     }
-
+    tbody {
+      display: block;
+      overflow: auto;
+    }
     thead {
       font-size: 22px;
+      tr {
+        :nth-child(2) {
+          position: sticky;
+          top: 0;
+        }
+      }
     }
   }
 `;

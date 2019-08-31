@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 import Head from '../components/head';
-import ArtistCard from '../components/TopArtistCard/TopArtistCard';
 
 const Container = styled.div`
   background-color: ${(props) => props.theme.color.background};
@@ -113,7 +112,6 @@ const Home = ({ cookieExists }) => {
           </SignIn>
         )}
       </IntroDiv>
-      <ArtistCard />
     </Container>
   );
 };

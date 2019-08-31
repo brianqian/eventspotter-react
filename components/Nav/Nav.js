@@ -82,7 +82,7 @@ const Nav = () => {
             <Link prefetch href="/">
               <a>Home</a>
             </Link>
-            <Link prefetch href="/libraryPage?filterBy=all" as="/library?filterBy=all">
+            <Link prefetch href="/libraryPage" as="/library">
               <a>My Library</a>
             </Link>
 

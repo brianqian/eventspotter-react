@@ -9,10 +9,10 @@ import ContextMenu from '../components/ContextMenu/ContextMenu';
 
 const Container = styled.div`
   display: flex;
+  flex-direction: column;
 `;
 
 const MainDisplay = styled.main`
-  flex: 10;
   overflow: auto;
 `;
 
@@ -22,8 +22,8 @@ function LibraryPage({ data, filterBy }) {
       <Head>
         <title>Library</title>
       </Head>
+      <ContextMenu />
       <MainDisplay>
-        <ContextMenu />
         <ReactTable library={data} filterBy={filterBy} />
       </MainDisplay>
     </Container>
