@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import useModal from '../../utils/hooks/useModal';
 import HttpClient from '../../utils/HttpClient';
-import fetch from 'isomorphic-unfetch';
 
 const Container = styled.div`
   height: 100%;
@@ -53,16 +52,13 @@ const BottomOverlay = styled.div`
   width: 100%;
   height: 30px;
   transform: translateY(100px);
-  background-color: ${(props) => props.theme.tailwind.gray1};
+  background-color: ${(props) => props.theme.changeOpacity(props.theme.tailwind.gray1, 75)};
   z-index: 5;
-  opacity: 0.75;
-  transition: 0.3s ease-in;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
+  transition: 0.2s ease-in;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-clip: padding-box;
   ${Container}:hover & {
     transform: translate(0);
   }
@@ -81,10 +77,20 @@ const Ranking = styled.div`
   align-items: center;
   height: 30px;
   width: 30px;
+  opacity: 1;
 `;
 const ArtistName = styled.div`
-  text-align: center;
-  flex: 1;
+  width: 140px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  p {
+    padding: 0 0.2rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
 `;
 
 const OpenModal = styled.div`
@@ -109,31 +115,7 @@ const BackgroundImage = styled.img`
   }
 `;
 
-const CenterOverlay = styled.div`
-  opacity: 0;
-  height: 0;
-  width: 0;
-  top: 0;
-  left: 0;
-  position: absolute;
-  justify-content: center;
-  align-items: center;
-  transition: opacity 0.25s ease-in;
-  overflow: hidden;
-  z-index: 5;
-  user-select: none;
-  div {
-    margin: 0 2rem;
-  }
-  ${Container}:hover & {
-    display: flex;
-    height: 100%;
-    width: 100%;
-    opacity: 1;
-  }
-`;
-
-function TopArtistCard({ artist, text, img, index, token }) {
+function TopArtistCard({ artist, img, index, token }) {
   const [eventData, setEventData] = useState([]);
 
   useEffect(() => {
@@ -155,7 +137,9 @@ function TopArtistCard({ artist, text, img, index, token }) {
       <Container data-number={index + 1} className={eventData.length ? 'selected' : null}>
         <TopOverlay>
           <Ranking>{index + 1}</Ranking>
-          <ArtistName>{artist}</ArtistName>
+          <ArtistName>
+            <p>{artist}</p>
+          </ArtistName>
           <OpenModal>?</OpenModal>
         </TopOverlay>
         <BackgroundImage src={img} />

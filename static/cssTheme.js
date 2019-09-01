@@ -1,10 +1,27 @@
 const theme = {
   color: {
     white: '#EFEFF9',
-    black: '',
     background: 'hsla(165, 10%, 15%, 1);',
     library: 'hsla(165, 10%, 10%, 1);',
     green: 'hsl(141, 73%, 42%)',
+  },
+  changeOpacity: (color, opacity) => {
+    const opacityPrefixes = {
+      0: '00',
+      10: '1A',
+      20: '33',
+      25: '40',
+      30: '4D',
+      40: '66',
+      50: '80',
+      60: '99',
+      70: 'B3',
+      75: 'BF',
+      80: 'CC',
+      90: 'E6',
+      100: 'FF',
+    };
+    return color + opacityPrefixes[opacity];
   },
   tailwind: {
     green1: '#F0FFF4',
