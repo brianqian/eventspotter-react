@@ -27,8 +27,8 @@ function ContextMenu() {
     loudness: 'Loudest',
     tempo: 'Highest Tempo',
     valence: 'Most Valent',
-    speechiness: ' Most Positive',
-    liveness: 'Most Live',
+    speechiness: ' Most Speechy',
+    liveness: 'Most Liveness',
   };
   return (
     <Container>
@@ -38,17 +38,17 @@ function ContextMenu() {
           <Link
             prefetch
             href={{ pathname: '/top', query: { filterBy: 'artists' } }}
-            as="top/artists"
+            as="/top/artists"
           >
             <a>Top Artists</a>
           </Link>
-          {Object.keys(audioAnalytics).map((menuItem) => (
+          {Object.keys(audioAnalytics).map((item) => (
             <Link
               prefetch
-              href={{ pathname: '/top', query: { filterBy: menuItem } }}
-              as={`top/${menuItem}`}
+              href={{ pathname: '/top', query: { filterBy: item } }}
+              as={`/top/${item}`}
             >
-              <a>{audioAnalytics[menuItem]}</a>
+              <a>{audioAnalytics[item]}</a>
             </Link>
           ))}
         </Dropdown>

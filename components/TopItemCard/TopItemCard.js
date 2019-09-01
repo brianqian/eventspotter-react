@@ -1,5 +1,8 @@
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import useModal from '../../utils/hooks/useModal';
+import HttpClient from '../../utils/HttpClient';
+import fetch from 'isomorphic-unfetch';
 
 const Container = styled.div`
   height: 100%;
@@ -12,7 +15,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-self: center;
-  &::after {
+  /* &::after {
     content: attr(data-number);
     color: ${(props) => props.theme.color.green};
     display: flex;
@@ -29,6 +32,9 @@ const Container = styled.div`
     :hover {
       opacity: 0.3;
     }
+  } */
+  &.selected {
+    border: 3px solid ${(props) => props.theme.color.green};
   }
 `;
 
@@ -41,17 +47,17 @@ const Modal = styled.div`
   display: ${(props) => (props.showing ? 'block' : 'none')};
 `;
 
-const TopOverlay = styled.div`
+const BottomOverlay = styled.div`
   position: absolute;
-  top: 0;
+  bottom: 0;
   width: 100%;
   height: 30px;
-  transform: translateY(-100px);
+  transform: translateY(100px);
   background-color: ${(props) => props.theme.tailwind.gray1};
   z-index: 5;
   opacity: 0.75;
   transition: 0.3s ease-in;
-  text-overflow: ellipses;
+  text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
   display: flex;
@@ -62,10 +68,31 @@ const TopOverlay = styled.div`
   }
 `;
 
-const BottomOverlay = styled(TopOverlay)`
-  top: initial;
-  bottom: 0;
-  transform: translateY(100px);
+const TopOverlay = styled(BottomOverlay)`
+  bottom: initial;
+  top: 0;
+  transform: translateY(-100px);
+`;
+
+const Ranking = styled.div`
+  background-color: ${(props) => props.theme.color.green};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  width: 30px;
+`;
+const ArtistName = styled.div`
+  text-align: center;
+  flex: 1;
+`;
+
+const OpenModal = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  width: 30px;
 `;
 
 const BackgroundImage = styled.img`
@@ -106,21 +133,37 @@ const CenterOverlay = styled.div`
   }
 `;
 
-const SelectItem = styled.div``;
+function TopArtistCard({ artist, text, img, index, token }) {
+  const [eventData, setEventData] = useState([]);
 
-const MoreDetails = styled.div``;
-function TopArtistCard({ title, text, img, index }) {
+  useEffect(() => {
+    const fetchEventData = async () => {
+      const encodedArtist = encodeURIComponent(artist);
+      const { data = [] } = await HttpClient.request(`/api/events/artist/${encodedArtist}`, token);
+      console.log(artist, data);
+      setEventData(data);
+    };
+    fetchEventData();
+  }, []);
+  // modal contains top tracks for artist
+  // upcoming events
+  // audio statistics if (song)
+
   const [showModal, toggleModal] = useModal(false);
   return (
     <>
-      <Container data-number={index + 1}>
-        <TopOverlay>{title}</TopOverlay>
+      <Container data-number={index + 1} className={eventData.length ? 'selected' : null}>
+        <TopOverlay>
+          <Ranking>{index + 1}</Ranking>
+          <ArtistName>{artist}</ArtistName>
+          <OpenModal>?</OpenModal>
+        </TopOverlay>
         <BackgroundImage src={img} />
-        <CenterOverlay>
+        {/* <CenterOverlay>
           <SelectItem>✅</SelectItem>
           <MoreDetails onClick={toggleModal}>📖</MoreDetails>
-        </CenterOverlay>
-        <BottomOverlay>{text}</BottomOverlay>
+        </CenterOverlay> */}
+        <BottomOverlay>{`${eventData.length} events found`}</BottomOverlay>
       </Container>
       <Modal showing={showModal}>I'm the modal</Modal>
     </>

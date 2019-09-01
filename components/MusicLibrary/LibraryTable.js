@@ -32,30 +32,18 @@ const Styles = styled.div`
     tbody {
       display: block;
       overflow: auto;
+      max-height: calc(100vh - 75px);
     }
     thead {
       font-size: 22px;
       tr {
         :nth-child(2) {
           position: sticky;
-          top: 0;
+          top: 0px;
         }
       }
     }
   }
-`;
-
-const GenerateCalendar = styled.div`
-  width: 100%;
-  height: 50px;
-  background-color: ${(props) => props.theme.color.green};
-  color: black;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-  font-family: 'Roboto Condensed', sans-serif;
-  border-radius: 30px;
 `;
 
 function Table({ columns, data }) {

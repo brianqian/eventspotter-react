@@ -4,7 +4,7 @@ const theme = {
     black: '',
     background: 'hsla(165, 10%, 15%, 1);',
     library: 'hsla(165, 10%, 10%, 1);',
-    green: 'hsl(141, 73%, 42%)'
+    green: 'hsl(141, 73%, 42%)',
   },
   tailwind: {
     green1: '#F0FFF4',
@@ -16,6 +16,7 @@ const theme = {
     green7: '#2F855A',
     green8: '#276749',
     green9: '#22543D',
+
     gray1: '#F7FAFC',
     gray2: '#EDF2F7',
     gray3: '#E2E8F0',
@@ -24,12 +25,42 @@ const theme = {
     gray6: '#718096',
     gray7: '#4A5568',
     gray8: '#2D3748',
-    gray9: '#1A202C'
+    gray9: '#1A202C',
+
+    teal1: '#E6FFFA',
+    teal2: '#B2F5EA',
+    teal3: '#81E6D9',
+    teal4: '#4FD1C5',
+    teal5: '#38B2AC',
+    teal6: '#319795',
+    teal7: '#2C7A7B',
+    teal8: '#285E61',
+    teal9: '#234E52',
+
+    blue1: '#EBF8FF',
+    blue2: '#BEE3F8',
+    blue3: '#90CDF4',
+    blue4: '#63B3ED',
+    blue5: '#4299E1',
+    blue6: '#3182CE',
+    blue7: '#2B6CB0',
+    blue8: '#2C5282',
+    blue9: '#2A4365',
+
+    pink1: '#FFF5F7',
+    pink2: '#FED7E2',
+    pink3: '#FBB6CE',
+    pink4: '#F687B3',
+    pink5: '#ED64A6',
+    pink6: '#D53F8C',
+    pink7: '#B83280',
+    pink8: '#97266D',
+    pink9: '#702459',
   },
   // ORIGINAL VALUE bs: "0 12px 24px 0 rgba(0, 0, 0, 0.09)",
   bs: '0 12px 24px 0 rgba(0, 0, 0, 1)',
   textFont: 'Source Sans Pro',
-  accent: 'darkorange'
+  accent: 'darkorange',
 };
 
 export default theme;

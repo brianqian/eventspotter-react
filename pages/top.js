@@ -33,7 +33,7 @@ const MainDisplay = styled.main`
   padding: 3rem;
 `;
 
-function TopPages({ data }) {
+function TopPages({ data, token }) {
   const router = useRouter();
   const { filterBy } = router.query;
   const isTopArtists = filterBy === 'artists';
@@ -50,18 +50,20 @@ function TopPages({ data }) {
           isTopArtists ? (
             <ItemCard
               key={item.id}
-              title={item.name}
+              artist={item.name}
               text="15 events"
               img={item.images[2].url}
               index={i}
+              token={token}
             />
           ) : (
             <ItemCard
               key={item.song_id}
-              title={item.artist}
+              artist={item.artist}
               text={item.title}
               img={item.album_img}
               index={i}
+              token={token}
             />
           )
         )}
@@ -84,7 +86,7 @@ TopPages.getInitialProps = async ({ req, err, res, query }) => {
   console.log('🐷 TOP PAGES GIP', filterBy);
   const resp = await HttpClient.request(`/api/library/top/${filterBy}`, token, res);
   const { data = [] } = resp;
-  return { data };
+  return { data, token };
 };
 
 export default TopPages;
