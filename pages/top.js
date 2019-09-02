@@ -23,6 +23,7 @@ const Title = styled.h1`
 
 const MainDisplay = styled.main`
   width: 100%;
+  max-width: 1200px;
   height: auto;
   display: grid;
   grid-template-columns: repeat(auto-fill, 200px);
@@ -32,6 +33,7 @@ const MainDisplay = styled.main`
   grid-gap: 1rem;
   padding: 3rem;
 `;
+
 
 function TopPages({ data, token }) {
   const router = useRouter();
@@ -43,6 +45,7 @@ function TopPages({ data, token }) {
       <Head>
         <title>Top {filterBy}</title>
       </Head>
+
       <ContextMenu />
       <Title>{filterBy.toUpperCase()}</Title>
       <MainDisplay>
@@ -51,7 +54,6 @@ function TopPages({ data, token }) {
             <ItemCard
               key={item.id}
               artist={item.name}
-              text="15 events"
               img={item.images[2].url}
               index={i}
               token={token}

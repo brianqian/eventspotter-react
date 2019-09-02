@@ -32,6 +32,7 @@ app.prepare().then(() => {
 
   server.get('/error', (req, res) => {
     const { code } = req.query;
+    if (code === 401) res.clearCookie('userInfo');
     app.render(req, res, '/errorPage', { code });
   });
 

@@ -26,7 +26,9 @@ const StyledNav = styled.nav`
     color: ${(props) => props.theme.color.white};
     display: flex;
     align-items: center;
+    justify-content: center;
     text-decoration: none;
+
     :hover {
       text-decoration: underline;
     }
@@ -35,10 +37,10 @@ const StyledNav = styled.nav`
     }
   }
   > * {
-    margin: 0 3rem;
-    height: 50px;
+    margin: 0 .5rem;
+    min-width: 150px;
     :hover {
-      color: ${(props) => props.theme.color.green};
+      /* color: ${(props) => props.theme.color.green}; */
     }
   }
 `;
@@ -54,7 +56,6 @@ const UserProfile = styled.div`
 
 const Nav = () => {
   const [serverLoading, setServerLoading] = useState(true);
-
   const [modalIsOpen, toggleModal] = useModal();
   const [user, setUser] = useState({ spotifyID: '', imgURL: '', displayName: '' });
   useEffect(() => {
@@ -72,6 +73,18 @@ const Nav = () => {
     console.log('USE EFFECT RUNNING');
     getUserInfo();
   }, []);
+
+  const audioAnalytics = {
+    acousticness: 'Most Acoustic',
+    danceability: 'Most Danceable',
+    energy: 'Highest Energy',
+    instrumentalness: 'Most Instrumental',
+    loudness: 'Loudest',
+    tempo: 'Highest Tempo',
+    valence: 'Most Valent',
+    speechiness: ' Most Speechy',
+    liveness: 'Most Liveness',
+  };
   return (
     <>
       {serverLoading ? (
@@ -80,11 +93,34 @@ const Nav = () => {
         <>
           <StyledNav authenticated={user.spotifyID}>
             <Link prefetch href="/">
-              <a>Home</a>
+              <label>
+                <a>Home</a>
+              </label>
             </Link>
             <Link prefetch href="/libraryPage" as="/library">
-              <a>My Library</a>
+              <label>
+                <a>My Library</a>
+              </label>
             </Link>
+            <Dropdown>
+              <label>Quick Access </label>
+              <Link
+                prefetch
+                href={{ pathname: '/top', query: { filterBy: 'artists' } }}
+                as="/top/artists"
+              >
+                <a>Top Artists</a>
+              </Link>
+              {Object.keys(audioAnalytics).map((item) => (
+                <Link
+                  prefetch
+                  href={{ pathname: '/top', query: { filterBy: item } }}
+                  as={`/top/${item}`}
+                >
+                  <a>{audioAnalytics[item]}</a>
+                </Link>
+              ))}
+            </Dropdown>
 
             <UserProfile>
               <Dropdown>

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const Container = styled.div`
-  width: 200px;
+  width: ${(props) => props.width || 200}px;
   position: relative;
 `;
 
@@ -52,11 +52,11 @@ const Option = styled.div`
   }
 `;
 
-function Dropdown({ children, className, multi }) {
+function Dropdown({ children, className, multi, width }) {
   const flattenedChildren = children.flat(Infinity);
   const [firstItem, ...dropdownOptions] = flattenedChildren;
   return (
-    <Container className={className}>
+    <Container className={className} width={width}>
       <Option>{firstItem}</Option>
       <OptionContainer length={flattenedChildren.length + 1}>
         {dropdownOptions.map((item, i) => (

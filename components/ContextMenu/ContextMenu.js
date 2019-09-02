@@ -30,6 +30,13 @@ function ContextMenu() {
     speechiness: ' Most Speechy',
     liveness: 'Most Liveness',
   };
+
+
+// ! Context Menu Items
+// -> Events for selected artists
+// (isTopArtists ? ) filter by short/medium/long term
+
+
   return (
     <Container>
       <MenuItem>
@@ -54,12 +61,12 @@ function ContextMenu() {
         </Dropdown>
       </MenuItem>
       <MenuItem>
-        <Dropdown>
+        {/* <Dropdown>
           <label>Columns</label>
           {Object.keys(audioAnalytics).map((item) => (
             <p>{item}</p>
           ))}
-        </Dropdown>
+        </Dropdown> */}
       </MenuItem>
     </Container>
   );

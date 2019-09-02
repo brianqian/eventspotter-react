@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import useModal from '../../utils/hooks/useModal';
 import HttpClient from '../../utils/HttpClient';
+import Modal from '../Modal/Modal';
 
 const Container = styled.div`
   height: 100%;
@@ -14,38 +15,12 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-self: center;
-  /* &::after {
-    content: attr(data-number);
-    color: ${(props) => props.theme.color.green};
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 80px;
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    top: 0;
-    left: 0;
-    opacity: 0.7;
-    transition: 0.25s;
-    :hover {
-      opacity: 0.3;
-    }
-  } */
   &.selected {
     border: 3px solid ${(props) => props.theme.color.green};
   }
 `;
 
-const Modal = styled.div`
-  overflow: hidden;
-  position: absolute;
-  color: white;
-  height: 70vh;
-  width: 50vw;
-  display: ${(props) => (props.showing ? 'block' : 'none')};
-`;
-
+// Overlay
 const BottomOverlay = styled.div`
   position: absolute;
   bottom: 0;
@@ -68,6 +43,42 @@ const TopOverlay = styled(BottomOverlay)`
   bottom: initial;
   top: 0;
   transform: translateY(-100px);
+`;
+
+const CenterOverlay = styled.div`
+  opacity: 0;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.25s ease-in;
+  overflow: hidden;
+  z-index: 5;
+  user-select: none;
+  div {
+    margin: 0 2rem;
+  }
+  ${Container}:hover & {
+    opacity: 1;
+  }
+`;
+
+const MoreInfo = styled.div`
+  background-color: ${(props) => props.theme.color.white};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50px;
+  width: 50px;
+  height: 50px;
+  opacity: 0.25;
+  :hover {
+    opacity: 1;
+  }
 `;
 
 const Ranking = styled.div`
@@ -101,6 +112,8 @@ const OpenModal = styled.div`
   width: 30px;
 `;
 
+// Background
+
 const BackgroundImage = styled.img`
   height: 100%;
   max-height: 200px;
@@ -115,7 +128,7 @@ const BackgroundImage = styled.img`
   }
 `;
 
-function TopArtistCard({ artist, img, index, token }) {
+function TopArtistCard({ artist, img, index, text, token }) {
   const [eventData, setEventData] = useState([]);
 
   useEffect(() => {
@@ -143,13 +156,14 @@ function TopArtistCard({ artist, img, index, token }) {
           <OpenModal>?</OpenModal>
         </TopOverlay>
         <BackgroundImage src={img} />
-        {/* <CenterOverlay>
-          <SelectItem>✅</SelectItem>
-          <MoreDetails onClick={toggleModal}>📖</MoreDetails>
-        </CenterOverlay> */}
-        <BottomOverlay>{`${eventData.length} events found`}</BottomOverlay>
+        <CenterOverlay>
+          <MoreInfo onClick={toggleModal}>
+            <img src="/static/icons/list.svg" height="25px" alt="" />
+          </MoreInfo>
+        </CenterOverlay>
+        <BottomOverlay>{text || `${eventData.length} events found`}</BottomOverlay>
       </Container>
-      <Modal showing={showModal}>I'm the modal</Modal>
+      <Modal isShowing={showModal} hide={toggleModal} />
     </>
   );
 }
