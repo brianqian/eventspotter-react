@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import styled from 'styled-components';
 import Dropdown from '../NavDropdown/NavDropdown';
-import { FlexContainer } from '../StyledComponents/Container';
 
 const Container = styled.div`
   height: auto;
@@ -31,11 +30,9 @@ function ContextMenu() {
     liveness: 'Most Liveness',
   };
 
-
-// ! Context Menu Items
-// -> Events for selected artists
-// (isTopArtists ? ) filter by short/medium/long term
-
+  // ! Context Menu Items
+  // -> Events for selected artists
+  // (isTopArtists ? ) filter by short/medium/long term
 
   return (
     <Container>

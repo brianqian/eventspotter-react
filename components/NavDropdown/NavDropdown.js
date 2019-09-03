@@ -36,7 +36,7 @@ const Option = styled.div`
     height: 100%;
   }
 
-  &:hover {
+  &:hover :not(:first-child) {
     background-color: hsla(141, 25%, 12%, 1);
     * {
       color: ${(props) => props.theme.color.green};

@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import useModal from '../../utils/hooks/useModal';
 import HttpClient from '../../utils/HttpClient';
 import Modal from '../Modal/Modal';
+import { format } from 'date-fns';
+import CollapseIcon from '../Icons/CollapseIcon';
+import ExpandIcon from '../Icons/ExpandIcon';
 
 const Container = styled.div`
   height: 100%;
@@ -91,7 +94,7 @@ const Ranking = styled.div`
   opacity: 1;
 `;
 const ArtistName = styled.div`
-  width: 140px;
+  width: 170px;
   height: 30px;
   display: flex;
   align-items: center;
@@ -104,13 +107,13 @@ const ArtistName = styled.div`
   }
 `;
 
-const OpenModal = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 30px;
-  width: 30px;
-`;
+// const OpenModal = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   height: 30px;
+//   width: 30px;
+// `;
 
 // Background
 
@@ -127,24 +130,75 @@ const BackgroundImage = styled.img`
     opacity: 0.3;
   }
 `;
+const ModalBody = styled.section`
+  display: flex;
+`;
 
-function TopArtistCard({ artist, img, index, text, token }) {
+const ModalSection = styled.div`
+  /* flex: 1; */
+  width: ${(props) => props.width};
+  max-height: 80%;
+
+  section {
+    max-height: 100%;
+    overflow: auto;
+  }
+`;
+
+const ModalRow = styled.div`
+  display: flex;
+  margin: 0.25rem 0;
+
+  div {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .modal_icon {
+    flex: 0.3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal_title {
+    flex: 5;
+  }
+  .modal_date {
+    flex: 1;
+  }
+  .modal_location {
+    flex: 1.5;
+  }
+`;
+
+function TopArtistCard({ artist, img, index, text, token, artistID }) {
   const [eventData, setEventData] = useState([]);
-
+  const [topTracks, setTopTracks] = useState([]);
+  const [showModal, toggleModal] = useModal(false);
   useEffect(() => {
-    const fetchEventData = async () => {
+    const fetchData = async () => {
       const encodedArtist = encodeURIComponent(artist);
-      const { data = [] } = await HttpClient.request(`/api/events/artist/${encodedArtist}`, token);
-      console.log(artist, data);
-      setEventData(data);
+      const { data: events = [] } = await HttpClient.request(
+        `/api/events/artist/${encodedArtist}`,
+        token
+      );
+      setEventData(events);
+      console.log(artist, 'events', events);
+      if (artistID && index === 0) {
+        const { data: tracks = [] } = await HttpClient.request(
+          `/api/library/top_tracks/${artistID}`,
+          token
+        );
+        console.log(artist, 'tracks', tracks);
+        setTopTracks(tracks);
+      }
     };
-    fetchEventData();
+    fetchData();
   }, []);
   // modal contains top tracks for artist
   // upcoming events
   // audio statistics if (song)
 
-  const [showModal, toggleModal] = useModal(false);
   return (
     <>
       <Container data-number={index + 1} className={eventData.length ? 'selected' : null}>
@@ -153,7 +207,6 @@ function TopArtistCard({ artist, img, index, text, token }) {
           <ArtistName>
             <p>{artist}</p>
           </ArtistName>
-          <OpenModal>?</OpenModal>
         </TopOverlay>
         <BackgroundImage src={img} />
         <CenterOverlay>
@@ -163,7 +216,42 @@ function TopArtistCard({ artist, img, index, text, token }) {
         </CenterOverlay>
         <BottomOverlay>{text || `${eventData.length} events found`}</BottomOverlay>
       </Container>
-      <Modal isShowing={showModal} hide={toggleModal} />
+
+      <Modal isShowing={showModal} hide={toggleModal}>
+        <h1>{artist}</h1>
+        <ModalBody>
+          <ModalSection width="30%">
+            <header>
+              <h3>Top Tracks</h3>
+            </header>
+            <section>
+              {topTracks.map((track, i) => (
+                <p>{`${i + 1}. ${track.name}`}</p>
+              ))}
+            </section>
+          </ModalSection>
+          <ModalSection width="70%">
+            <header>
+              <h3>Upcoming Events</h3>
+            </header>
+            <section>
+              {eventData.map((event) => (
+                <ModalRow>
+                  <div className="modal_icon">$</div>
+                  <div className="modal_title">{event.title}</div>
+                  <div className="modal_date">{format(event.date, 'MM/DD/YY')}</div>
+                  <div className="modal_location">
+                    {event.location.city}, {event.location.state}
+                  </div>
+                  <div className="modal_icon">
+                    <ExpandIcon color={'#fff'} height="15" />
+                  </div>
+                </ModalRow>
+              ))}
+            </section>
+          </ModalSection>
+        </ModalBody>
+      </Modal>
     </>
   );
 }

@@ -10,8 +10,8 @@ import Dropdown from '../NavDropdown/NavDropdown';
 const StyledNav = styled.nav`
   background-color: ${(props) => props.theme.color.background};
   display: flex;
-  font-size: 20px;
-  text-transform: uppercase;
+  font-size: 18px;
+  /* text-transform: uppercase; */
 
   border-bottom: 1px solid ${(props) => props.theme.color.black};
   align-items: center;
@@ -28,20 +28,19 @@ const StyledNav = styled.nav`
     align-items: center;
     justify-content: center;
     text-decoration: none;
+    cursor: pointer;
 
     :hover {
       text-decoration: underline;
+      color: ${(props) => props.theme.color.green};
     }
     &.active {
       color: green;
     }
   }
   > * {
-    margin: 0 .5rem;
+    margin: 0 0.5rem;
     min-width: 150px;
-    :hover {
-      /* color: ${(props) => props.theme.color.green}; */
-    }
   }
 `;
 const UserProfile = styled.div`

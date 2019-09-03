@@ -6,6 +6,7 @@ import { getCookieFromCookies } from '../utils/format';
 import HttpClient from '../utils/HttpClient';
 import ContextMenu from '../components/ContextMenu/ContextMenu';
 import ItemCard from '../components/TopItemCard/TopItemCard';
+import useAppendData from '../utils/hooks/useAppendData';
 
 const Container = styled.div`
   height: 100%;
@@ -34,22 +35,22 @@ const MainDisplay = styled.main`
   padding: 3rem;
 `;
 
-
 function TopPages({ data, token }) {
   const router = useRouter();
   const { filterBy } = router.query;
   const isTopArtists = filterBy === 'artists';
   console.log(data);
+  const [currentData, requestData] = useAppendData(data);
   return (
     <Container>
       <Head>
         <title>Top {filterBy}</title>
       </Head>
 
-      <ContextMenu />
+      <ContextMenu type={filterBy} />
       <Title>{filterBy.toUpperCase()}</Title>
       <MainDisplay>
-        {data.map((item, i) =>
+        {currentData.map((item, i) =>
           isTopArtists ? (
             <ItemCard
               key={item.id}
@@ -57,6 +58,7 @@ function TopPages({ data, token }) {
               img={item.images[2].url}
               index={i}
               token={token}
+              artistID={item.id}
             />
           ) : (
             <ItemCard
