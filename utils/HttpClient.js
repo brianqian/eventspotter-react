@@ -10,7 +10,6 @@ const HOSTNAME =
 
 const request = async (endpoint, token, res) => {
   const resp = await fetch(`${HOSTNAME}${endpoint}`, {
-    credentials: 'include',
     headers: {
       Accept: 'application/json',
       'x-token': token || '',
@@ -25,5 +24,7 @@ const request = async (endpoint, token, res) => {
     Router.push(`/error?code=${resp.status}`);
   }
 };
+
+const requestMultiple = async (endpoint, token, res) => {};
 
 export default { request };

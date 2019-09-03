@@ -17,7 +17,7 @@ const MenuItem = styled.div`
   margin: 0 2rem;
 `;
 
-function ContextMenu() {
+function ContextMenu({ setTopArtist, token }) {
   const audioAnalytics = {
     acousticness: 'Most Acoustic',
     danceability: 'Most Danceable',
@@ -32,30 +32,18 @@ function ContextMenu() {
 
   // ! Context Menu Items
   // -> Events for selected artists
-  // (isTopArtists ? ) filter by short/medium/long term
 
   return (
     <Container>
       <MenuItem>
-        <Dropdown>
-          <label>Quick Access </label>
-          <Link
-            prefetch
-            href={{ pathname: '/top', query: { filterBy: 'artists' } }}
-            as="/top/artists"
-          >
-            <a>Top Artists</a>
-          </Link>
-          {Object.keys(audioAnalytics).map((item) => (
-            <Link
-              prefetch
-              href={{ pathname: '/top', query: { filterBy: item } }}
-              as={`/top/${item}`}
-            >
-              <a>{audioAnalytics[item]}</a>
-            </Link>
-          ))}
-        </Dropdown>
+        {setTopArtist && (
+          <Dropdown>
+            <p>Top Artists From: </p>
+            <p onClick={() => setTopArtist('short', token)}>4 Weeks</p>
+            <p onClick={() => setTopArtist('medium', token)}>6 months</p>
+            <p onClick={() => setTopArtist('long', token)}>All time</p>
+          </Dropdown>
+        )}
       </MenuItem>
       <MenuItem>
         {/* <Dropdown>

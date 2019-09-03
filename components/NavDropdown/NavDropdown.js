@@ -36,7 +36,7 @@ const Option = styled.div`
     height: 100%;
   }
 
-  &:hover :not(:first-child) {
+  &:hover :not(.dropdown_label) {
     background-color: hsla(141, 25%, 12%, 1);
     * {
       color: ${(props) => props.theme.color.green};
@@ -57,7 +57,7 @@ function Dropdown({ children, className, multi, width }) {
   const [firstItem, ...dropdownOptions] = flattenedChildren;
   return (
     <Container className={className} width={width}>
-      <Option>{firstItem}</Option>
+      <Option className="dropdown_label">{firstItem}</Option>
       <OptionContainer length={flattenedChildren.length + 1}>
         {dropdownOptions.map((item, i) => (
           <Option key={item + i}>{item}</Option>

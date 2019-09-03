@@ -6,10 +6,10 @@ import { getCookieFromCookies } from '../utils/format';
 import HttpClient from '../utils/HttpClient';
 import ContextMenu from '../components/ContextMenu/ContextMenu';
 import ItemCard from '../components/TopItemCard/TopItemCard';
-import useAppendData from '../utils/hooks/useAppendData';
+import useChangeTopArtist from '../utils/hooks/useChangeTopArtist';
 
 const Container = styled.div`
-  height: 100%;
+  min-height: 100vh;
   width: 100%;
   background-color: ${(props) => props.theme.color.background};
   display: flex;
@@ -40,14 +40,14 @@ function TopPages({ data, token }) {
   const { filterBy } = router.query;
   const isTopArtists = filterBy === 'artists';
   console.log(data);
-  const [currentData, requestData] = useAppendData(data);
+  const [currentData, setTopArtistLength] = useChangeTopArtist(data);
   return (
     <Container>
       <Head>
         <title>Top {filterBy}</title>
       </Head>
 
-      <ContextMenu type={filterBy} />
+      <ContextMenu token={token} setTopArtist={currentData.length ? setTopArtistLength : null} />
       <Title>{filterBy.toUpperCase()}</Title>
       <MainDisplay>
         {currentData.map((item, i) =>

@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import Router from 'next/router';
 import { format } from 'date-fns';
 import { formatArtistsToArray } from '../../utils/format';
+import Collapse from '../Icons/CollapseIcon';
+import Expand from '../Icons/ExpandIcon';
 
 const Styles = styled.div`
   padding: 1rem;
@@ -63,7 +65,18 @@ function Table({ columns, data }) {
             {headerGroup.headers.map((column) => (
               <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                 {column.render('Header')}
-                <span> {column.isSorted ? (column.isSortedDesc ? '🔽' : ' 🔼') : ''} </span>
+                <span>
+                  {' '}
+                  {column.isSorted ? (
+                    column.isSortedDesc ? (
+                      <Expand color="#fff" height="15" />
+                    ) : (
+                      <Collapse color="#fff" height="15" />
+                    )
+                  ) : (
+                    ''
+                  )}
+                </span>
               </th>
             ))}
           </tr>
@@ -99,10 +112,12 @@ function AllSongsLibrary({ library }) {
           {
             Header: 'Title',
             accessor: 'title',
+            sortType: 'basic',
           },
           {
             Header: 'Artist',
             accessor: 'artist',
+            sortType: 'basic',
           },
           {
             Header: 'Date Added',

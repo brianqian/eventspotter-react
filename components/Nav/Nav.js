@@ -69,7 +69,7 @@ const Nav = () => {
         setServerLoading(false);
       }
     };
-    console.log('USE EFFECT RUNNING');
+
     getUserInfo();
   }, []);
 
