@@ -49,7 +49,6 @@ app.prepare().then(() => {
   });
 
   server.get('/top/:filterBy', (req, res) => {
-    console.log(req.params.filterBy);
     const { filterBy } = req.params;
     console.log('TCL: filterBy', { filterBy });
 

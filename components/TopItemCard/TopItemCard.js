@@ -176,25 +176,29 @@ function TopArtistCard({ artist, img, index, text, token, artistID }) {
   const [topTracks, setTopTracks] = useState([]);
   const [showModal, toggleModal] = useModal(false);
   useEffect(() => {
+    let isMounted = true;
     const fetchData = async () => {
       const encodedArtist = encodeURIComponent(artist);
       const { data: events = [] } = await HttpClient.request(
         `/api/events/artist/${encodedArtist}`,
         token
       );
-      setEventData(events);
-      console.log(artist, 'events', events);
-      if (artistID && index === 0) {
+      if (isMounted) setEventData(events);
+      // console.log(artist, 'events', events);
+      // If calculating top_artist, retrieve top songs
+      if (artistID) {
         const { data: tracks = [] } = await HttpClient.request(
           `/api/library/top_tracks/${artistID}`,
           token
         );
-        console.log(artist, 'tracks', tracks);
-        setTopTracks(tracks);
+        // console.log(artist, 'tracks', tracks);
+        if (isMounted) setTopTracks(tracks);
       }
     };
+    console.log('USE EFFECT RUNNING IN TOP ARTIST CARD');
     fetchData();
-  }, []);
+    return () => (isMounted = false);
+  }, [artist, img, index, text, token, artistID]);
   // modal contains top tracks for artist
   // upcoming events
   // audio statistics if (song)
@@ -217,7 +221,7 @@ function TopArtistCard({ artist, img, index, text, token, artistID }) {
         <BottomOverlay>{text || `${eventData.length} events found`}</BottomOverlay>
       </Container>
 
-      <Modal isShowing={showModal} hide={toggleModal}>
+      <Modal isShowing={showModal} hide={toggleModal} height="70vh" width="80vh">
         <h1>{artist}</h1>
         <ModalBody>
           <ModalSection width="30%">
@@ -226,7 +230,7 @@ function TopArtistCard({ artist, img, index, text, token, artistID }) {
             </header>
             <section>
               {topTracks.map((track, i) => (
-                <p>{`${i + 1}. ${track.name}`}</p>
+                <p key={track.name}>{`${i + 1}. ${track.name}`}</p>
               ))}
             </section>
           </ModalSection>
@@ -236,7 +240,7 @@ function TopArtistCard({ artist, img, index, text, token, artistID }) {
             </header>
             <section>
               {eventData.map((event) => (
-                <ModalRow>
+                <ModalRow key={event.id}>
                   <div className="modal_icon">$</div>
                   <div className="modal_title">{event.title}</div>
                   <div className="modal_date">{format(event.date, 'MM/DD/YY')}</div>
@@ -244,7 +248,7 @@ function TopArtistCard({ artist, img, index, text, token, artistID }) {
                     {event.location.city}, {event.location.state}
                   </div>
                   <div className="modal_icon">
-                    <ExpandIcon color={'#fff'} height="15" />
+                    <ExpandIcon color="#fff" height="15" />
                   </div>
                 </ModalRow>
               ))}

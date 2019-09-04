@@ -17,6 +17,8 @@ const MainDisplay = styled.main`
 `;
 
 function LibraryPage({ data, filterBy }) {
+  // LibraryPage needs it's own hook that controls the view of the current available columns.
+  // this hook should be informed by UserSettings and pass the controls to ContextMenu Component
   return (
     <Container>
       <Head>
@@ -41,7 +43,7 @@ LibraryPage.getInitialProps = async ({ req, err, res, query }) => {
     }
     return res.redirect(`/error?code=401`);
   }
-
+  // make a fetch request for column settings
   const resp = await HttpClient.request(`/api/library/${filterBy}`, token, res);
   const { data = [] } = resp;
   return { data, filterBy };

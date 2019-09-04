@@ -17,7 +17,7 @@ const MenuItem = styled.div`
   margin: 0 2rem;
 `;
 
-function ContextMenu({ setTopArtist, token }) {
+function ContextMenu({ setTopArtist, token, columns, setColumns }) {
   const audioAnalytics = {
     acousticness: 'Most Acoustic',
     danceability: 'Most Danceable',
