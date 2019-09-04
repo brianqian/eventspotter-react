@@ -1,29 +1,25 @@
+import NProgress from 'nprogress';
 import fetch from 'isomorphic-unfetch';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import useModal from '../../utils/hooks/useModal';
-import NProgress from 'nprogress';
-import UserSettings from '../UserSettingsModal/UserSettings';
 import Dropdown from '../NavDropdown/NavDropdown';
 import UserSettingsModal from '../UserSettingsModal/UserSettings';
 
 const StyledNav = styled.nav`
-  background-color: ${(props) => props.theme.color.background};
   display: flex;
   font-size: 18px;
-  /* text-transform: uppercase; */
-
-  border-bottom: 1px solid ${(props) => props.theme.color.black};
   align-items: center;
   justify-content: flex-end;
+
+  border-bottom: 1px solid ${(props) => props.theme.tailwind.gray9};
   width: 100vw;
-  height: ${(props) => (props.loggedIn ? props.theme.navHeight : 0)}px;
+  height: ${(props) => (props.loggedIn ? props.theme.navHeight : 0)};
   overflow: ${(props) => (props.loggedIn ? 'visible' : 'hidden')};
   transition: 0.25s;
   z-index: 1000;
-  /* position: absolute;
-  top: 0; */
+  background-color: ${(props) => props.theme.color.background};
 
   a {
     color: ${(props) => props.theme.color.white};
@@ -41,19 +37,28 @@ const StyledNav = styled.nav`
       color: green;
     }
   }
+  img {
+    width: 50px;
+    height: 50px;
+  }
+  label {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   > * {
     margin: 0 0.5rem;
     min-width: 150px;
   }
 `;
+
 const UserProfile = styled.div`
-  color: ${(props) => props.theme.color.white};
+  /* color: ${(props) => props.theme.color.white};
   display: flex;
   align-items: center;
-  img {
-    width: 50px;
-    height: 100%;
-  }
+  height: ${(props) => props.theme.navHeight}; */
+
 `;
 
 const Nav = () => {
@@ -99,10 +104,10 @@ const Nav = () => {
         </Link>
         <Link prefetch href="/libraryPage" as="/library">
           <label>
-            <a>My Library</a>
+            <a>Library</a>
           </label>
         </Link>
-        <Dropdown>
+        <Dropdown width="175">
           <label>Quick Access </label>
           <Link
             prefetch
@@ -123,15 +128,13 @@ const Nav = () => {
           ))}
         </Dropdown>
 
-        <UserProfile>
-          <Dropdown width="175">
-            <img src={user.imgURL} alt="" />
-            <div onClick={toggleModal}>User Settings</div>
-            <Link href="/logout">
-              <a>Logout</a>
-            </Link>
-          </Dropdown>
-        </UserProfile>
+        <Dropdown width="175">
+          <img src={user.imgURL} alt="" />
+          <div onClick={toggleModal}>User Settings</div>
+          <Link href="/logout">
+            <a>Logout</a>
+          </Link>
+        </Dropdown>
       </StyledNav>
       <UserSettingsModal isShowing={modalIsOpen} hide={toggleModal} />
     </>

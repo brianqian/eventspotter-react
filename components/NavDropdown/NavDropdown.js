@@ -3,6 +3,7 @@ import styled from 'styled-components';
 const Container = styled.div`
   width: ${(props) => props.width || 200}px;
   position: relative;
+  margin: auto 0;
 `;
 
 const OptionContainer = styled.div`
@@ -22,8 +23,7 @@ const OptionContainer = styled.div`
 `;
 
 const Option = styled.div`
-  height: 30px;
-  display: block;
+  height: auto;
   text-align: center;
   display: flex;
   align-items: center;
@@ -31,17 +31,17 @@ const Option = styled.div`
   cursor: pointer;
   z-index: 200;
   flex: 1;
-  padding: 0.25rem 0;
-  :first-child {
-    height: 100%;
-  }
 
-  &:hover :not(.dropdown_label) {
-    background-color: hsla(141, 25%, 12%, 1);
-    * {
-      color: ${(props) => props.theme.color.green};
+  :not(.dropdown_label) {
+    padding: 3px 0;
+    :hover {
+      background-color: hsla(141, 25%, 12%, 1);
+      * {
+        color: ${(props) => props.theme.color.green};
+      }
     }
   }
+
   * {
     display: flex;
     align-items: center;

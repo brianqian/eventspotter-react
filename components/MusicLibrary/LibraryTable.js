@@ -168,7 +168,7 @@ function AllSongsLibrary({ library, columns }) {
   const renderedColumns = React.useMemo(
     () => [
       {
-        Header: 'All Songs',
+        Header: 'Library',
         columns: [
           {
             Header: 'Title',
