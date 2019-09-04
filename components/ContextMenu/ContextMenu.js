@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import Dropdown from '../NavDropdown/NavDropdown';
 
 const Container = styled.div`
+  /* position: absolute;
+  top: ${(props) => props.theme.navHeight}; */
   height: auto;
   width: 100%;
   background-color: ${(props) => props.theme.tailwind.green9};

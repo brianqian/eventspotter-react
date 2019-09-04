@@ -5,6 +5,7 @@ const theme = {
     library: 'hsla(165, 10%, 10%, 1);',
     green: 'hsl(141, 73%, 42%)',
   },
+  navHeight: '50px',
   changeOpacity: (color, opacity) => {
     const opacityPrefixes = {
       0: '00',

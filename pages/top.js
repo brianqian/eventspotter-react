@@ -39,7 +39,7 @@ function TopPages({ data, token }) {
   const router = useRouter();
   const { filterBy } = router.query;
   const isTopArtists = filterBy === 'artists';
-  const [currentData, setTopArtistHistory, isLoaded] = useChangeTopArtist(data);
+  const [currentData, setTopArtistHistory] = useChangeTopArtist(data);
   return (
     <Container>
       <Head>
@@ -49,28 +49,28 @@ function TopPages({ data, token }) {
       <ContextMenu token={token} setTopArtist={setTopArtistHistory} />
       <Title>{filterBy.toUpperCase()}</Title>
       <MainDisplay>
-        {isLoaded &&
-          currentData.map((item, i) => {
-            return isTopArtists ? (
-              <ItemCard
-                key={item.id}
-                artist={item.name}
-                img={item.images[2].url}
-                index={i}
-                token={token}
-                artistID={item.id}
-              />
-            ) : (
-              <ItemCard
-                key={item.song_id}
-                artist={item.artist}
-                text={item.title}
-                img={item.album_img}
-                index={i}
-                token={token}
-              />
-            );
-          })}
+        {currentData.map((item, i) => {
+          if (!item.images && isTopArtists) console.log(item);
+          return isTopArtists ? (
+            <ItemCard
+              key={item.id}
+              artist={item.name}
+              img={(item.images && item.images[2].url) || ''}
+              index={i}
+              token={token}
+              artistID={item.id}
+            />
+          ) : (
+            <ItemCard
+              key={item.song_id}
+              artist={item.artist}
+              text={item.title}
+              img={item.album_img}
+              index={i}
+              token={token}
+            />
+          );
+        })}
       </MainDisplay>
     </Container>
   );

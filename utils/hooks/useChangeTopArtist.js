@@ -3,20 +3,16 @@ import HttpClient from '../HttpClient';
 
 function useChangeTopArtist(originalData) {
   const [currentData, setCurrentData] = useState(originalData);
-  const [isLoaded, setIsLoaded] = useState(false);
+  // console.log(originalData[0]);
+  useEffect(() => {
+    setCurrentData(originalData);
+  }, [originalData]);
+
   const setTopArtistHistory = async (term, token) => {
     const { data = [] } = await HttpClient.request(`/api/library/top/artists/${term}`, token);
     if (data.length) setCurrentData(data);
   };
-  useEffect(() => {
-    const handleEffect = async () => {
-      await setIsLoaded(false);
-      await setCurrentData(originalData);
-      await setIsLoaded(true);
-    };
-    handleEffect();
-  }, [originalData]);
 
-  return [currentData, setTopArtistHistory, isLoaded];
+  return [currentData, setTopArtistHistory];
 }
 export default useChangeTopArtist;

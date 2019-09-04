@@ -18,10 +18,12 @@ const StyledNav = styled.nav`
   align-items: center;
   justify-content: flex-end;
   width: 100vw;
-  height: ${(props) => (props.authenticated ? 50 : 0)}px;
-  overflow: ${(props) => (props.authenticated ? 'visible' : 'hidden')};
+  height: ${(props) => (props.loggedIn ? props.theme.navHeight : 0)}px;
+  overflow: ${(props) => (props.loggedIn ? 'visible' : 'hidden')};
   transition: 0.25s;
   z-index: 1000;
+  /* position: absolute;
+  top: 0; */
 
   a {
     color: ${(props) => props.theme.color.white};
@@ -89,7 +91,7 @@ const Nav = () => {
   };
   return (
     <>
-      <StyledNav authenticated={user}>
+      <StyledNav loggedIn={user}>
         <Link prefetch href="/">
           <label>
             <a>Home</a>

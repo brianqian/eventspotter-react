@@ -3,7 +3,6 @@ import { useTable, useSortBy } from 'react-table';
 import styled from 'styled-components';
 import Router from 'next/router';
 import { format } from 'date-fns';
-import { formatArtistsToArray } from '../../utils/format';
 import Collapse from '../Icons/CollapseIcon';
 import Expand from '../Icons/ExpandIcon';
 

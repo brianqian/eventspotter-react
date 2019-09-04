@@ -107,24 +107,16 @@ const ArtistName = styled.div`
   }
 `;
 
-// const OpenModal = styled.div`
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   height: 30px;
-//   width: 30px;
-// `;
-
 // Background
 
 const BackgroundImage = styled.img`
-  height: 100%;
-  max-height: 200px;
-  width: 100%;
-  max-width: 200px;
+  /* height: 100%; */
+  height: 200px;
+  /* width: 100%; */
+  width: 200px;
   object-fit: cover;
   opacity: 0.9;
-  background-color: ${(props) => props.theme.tailwind.gray3};
+  background-color: ${(props) => props.theme.color.library};
   transition: opacity 0.2s linear;
   ${Container}:hover & {
     opacity: 0.3;
@@ -171,7 +163,7 @@ const ModalRow = styled.div`
   }
 `;
 
-function TopArtistCard({ artist, img, index, text, token, artistID }) {
+function TopArtistCard({ artist, img, index, text, token, artistID, id }) {
   const [eventData, setEventData] = useState([]);
   const [topTracks, setTopTracks] = useState([]);
   const [showModal, toggleModal] = useModal(false);
@@ -184,25 +176,21 @@ function TopArtistCard({ artist, img, index, text, token, artistID }) {
         token
       );
       if (isMounted) setEventData(events);
-      // console.log(artist, 'events', events);
       // If calculating top_artist, retrieve top songs
       if (artistID) {
         const { data: tracks = [] } = await HttpClient.request(
           `/api/library/top_tracks/${artistID}`,
           token
         );
-        // console.log(artist, 'tracks', tracks);
         if (isMounted) setTopTracks(tracks);
       }
     };
-    console.log('USE EFFECT RUNNING IN TOP ARTIST CARD');
     fetchData();
     return () => (isMounted = false);
   }, [artist, img, index, text, token, artistID]);
   // modal contains top tracks for artist
   // upcoming events
   // audio statistics if (song)
-
   return (
     <>
       <Container data-number={index + 1} className={eventData.length ? 'selected' : null}>
