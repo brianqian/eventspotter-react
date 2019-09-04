@@ -89,10 +89,10 @@ const Home = ({ cookieExists }) => {
         <BodyTitle>EventSpotter.</BodyTitle>
         <BodyText>
           Find your favorite Top Artists on Spotify, their events, and competitive pricing using
-          Seatgeek's ticketing API. After logging in with your Spotify account, get instant access
-          to your library and Spotify's hidden audio analytics.
+          Seatgeek&apos;s ticketing API. After logging in with your Spotify account, get instant
+          access to your library and Spotify&apos;s hidden audio analytics.
         </BodyText>
-        <BodyText>Build a map of your artists' tours to see where they'll be. </BodyText>
+        <BodyText>Build a map of your artists&apos; tours to see where they&apos;ll be. </BodyText>
         {/* <HeroImage src="../static/img/concert-stock-800.jpg" /> */}
         <HeroImage src="../static/img/SpotifyExample-800.png" />
         {!cookieExists && (

@@ -53,7 +53,7 @@ const Option = styled.div`
 `;
 
 function Dropdown({ children, className, multi, width }) {
-  const flattenedChildren = children.flat(Infinity);
+  const flattenedChildren = children.reduce((acc, item) => acc.concat(item), []);
   const [firstItem, ...dropdownOptions] = flattenedChildren;
   return (
     <Container className={className} width={width}>
