@@ -37,7 +37,8 @@ app.prepare().then(() => {
   });
 
   server.get('/', async (req, res) => {
-    app.render(req, res, '/index');
+    return ssrCache({ req, res, pagePath: '/' });
+    // app.render(req, res, '/index');
   });
 
   server.get('/calendar', async (req, res) => {
@@ -52,7 +53,8 @@ app.prepare().then(() => {
     const { filterBy } = req.params;
     console.log('TCL: filterBy', { filterBy });
 
-    app.render(req, res, '/top', { filterBy });
+    // app.render(req, res, '/top', { filterBy });
+    return ssrCache({ req, res, pagePath: '/top', queryParams: { filterBy } });
   });
 
   server.get('/logout', (req, res) => {

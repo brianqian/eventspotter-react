@@ -34,15 +34,11 @@ const StatusBackground = styled.div`
   transition: left 0.1s ease-out;
 `;
 
-function Checkbox({ isChecked = false, returnStatus, name, name2 }) {
+function Checkbox({ isChecked = false, handleClick, name }) {
   // const [isChecked, setChecked] = useState(checked);
-  const handleClick = () => {
-    console.log('clicked', isChecked);
-    returnStatus(!isChecked, name, name2);
-    // setChecked(!checked);
-  };
+
   return (
-    <Container onClick={handleClick}>
+    <Container onClick={() => handleClick(name)}>
       <StatusBackground isChecked={isChecked}>
         <Marker />
       </StatusBackground>

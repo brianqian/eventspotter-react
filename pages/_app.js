@@ -1,8 +1,8 @@
 import App, { Container } from 'next/app';
-import fetch from 'isomorphic-unfetch';
+import NProgress from 'nprogress';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
 import Router from 'next/router';
-import NProgress from 'nprogress';
+import SettingsProvider from '../components/SettingsProvider/SettingsProvider';
 import theme from '../static/cssTheme';
 import Nav from '../components/Nav/Nav';
 
@@ -40,11 +40,11 @@ export default class MyApp extends App {
     return (
       <Container>
         <ThemeProvider theme={theme}>
-          <>
+          <SettingsProvider>
             <GlobalStyle />
             <Nav activePage={this.activePage} />
             <Component {...pageProps} setActivePage={this.setActivePage} />
-          </>
+          </SettingsProvider>
         </ThemeProvider>
       </Container>
     );

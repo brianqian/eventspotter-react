@@ -173,6 +173,7 @@ function TopArtistCard({ artist, img, index, text, token, artistID, id }) {
   useEffect(() => {
     let isMounted = true;
     const fetchData = async () => {
+      if (!artist) return;
       const encodedArtist = encodeURIComponent(artist);
       const { data: events = [] } = await HttpClient.request(
         `/api/events/artist/${encodedArtist}`,

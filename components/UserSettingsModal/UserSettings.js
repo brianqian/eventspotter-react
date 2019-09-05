@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import Modal from '../Modal/Modal';
 import Checkbox from '../Checkbox/Checkbox';
+import { SettingsConsumer } from '../SettingsProvider/SettingsProvider';
 
 const ColumnSettings = styled.div`
   display: grid;
@@ -34,23 +35,6 @@ const UserSettings = ({ isShowing, hide }) => {
     onlyArtistsWithEvents: false,
   };
 
-  const [settings, setSettings] = useState(settingsFromDb);
-
-  const updateColumns = (e) => {
-    console.log(e.target.value);
-    console.log(e.target.checked);
-    // makes changes to the provider.
-  };
-
-  const updateUserSettings = (isChecked, name, name2) => {
-    if (name2) {
-      // pseudo makes changes to provider
-      setSettings({ ...settings, columns: { ...settings.columns, [name2]: isChecked } });
-    } else {
-      // pseudo make changes to provider
-      setSettings({ ...settings, [name]: isChecked });
-    }
-  };
   const MainUserSettings = styled.div``;
   return (
     <Modal isShowing={isShowing} hide={hide}>
@@ -69,24 +53,15 @@ const UserSettings = ({ isShowing, hide }) => {
       </MainUserSettings>
       <h3>Library Analytics</h3>
       <ColumnSettings>
-        {Object.keys(settings.columns).map((analytic) => (
-          <label htmlFor={`settings-${analytic}`}>
-            {/* <input
-              type="checkbox"
-              value={analytic}
-              key={`settings-${analytic}`}
-              id={`settings-${analytic}`}
-              onChange={updateColumns}
-              checked={settingsFromDb.columns[analytic]}
-            /> */}
-            {analytic.toUpperCase()}
-            <Checkbox
-              isChecked={settings.columns[analytic]}
-              returnStatus={updateUserSettings}
-              name="columns"
-              name2={analytic}
-            />
-          </label>
+        {Object.keys(settingsFromDb.columns).map((analytic) => (
+          <SettingsConsumer>
+            {({ state, toggleSetting }) => (
+              <label htmlFor={`settings-${analytic}`}>
+                {analytic.toUpperCase()}
+                <Checkbox isChecked={state[analytic]} handleClick={toggleSetting} name={analytic} />
+              </label>
+            )}
+          </SettingsConsumer>
         ))}
       </ColumnSettings>
     </Modal>
