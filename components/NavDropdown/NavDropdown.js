@@ -15,7 +15,7 @@ const OptionContainer = styled.div`
   display: flex;
   flex-direction: column;
   transition: 0.25s;
-  background-color: hsla(141, 25%, 4%, 1);
+  background-color: ${(props) => props.theme.color.library};
   ${Container}:hover & {
     border: 1px solid ${(props) => props.theme.color.green};
     max-height: ${(props) => props.length * 40}px;
@@ -35,7 +35,6 @@ const Option = styled.div`
   :not(.dropdown_label) {
     padding: 3px 0;
     :hover {
-      background-color: hsla(141, 25%, 12%, 1);
       * {
         color: ${(props) => props.theme.color.green};
       }

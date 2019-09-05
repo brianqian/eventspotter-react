@@ -39,7 +39,7 @@ function ContextMenu({ setTopArtist, token, columns, setColumns }) {
     <Container>
       <MenuItem>
         {setTopArtist && (
-          <Dropdown>
+          <Dropdown width="125">
             <p>Top Artists From: </p>
             <p onClick={() => setTopArtist('short', token)}>4 Weeks</p>
             <p onClick={() => setTopArtist('medium', token)}>6 months</p>

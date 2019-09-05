@@ -31,7 +31,7 @@ const MainDisplay = styled.main`
   grid-template-rows: repeat(auto-fill, 200px);
   justify-content: center;
   align-items: center;
-  grid-gap: 1rem;
+  grid-gap: 1.5rem;
   padding: 3rem;
 `;
 
@@ -45,7 +45,6 @@ function TopPages({ data, token }) {
       <Head>
         <title>Top {filterBy}</title>
       </Head>
-
       <ContextMenu token={token} setTopArtist={setTopArtistHistory} />
       <Title>{filterBy.toUpperCase()}</Title>
       <MainDisplay>

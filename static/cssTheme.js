@@ -7,7 +7,7 @@ const theme = {
   },
   navHeight: '50px',
   changeOpacity: (color, opacity) => {
-    const opacityPrefixes = {
+    const opacityHexCodes = {
       0: '00',
       10: '1A',
       20: '33',
@@ -22,7 +22,7 @@ const theme = {
       90: 'E6',
       100: 'FF',
     };
-    return color + opacityPrefixes[opacity];
+    return color + opacityHexCodes[opacity];
   },
   tailwind: {
     green1: '#F0FFF4',

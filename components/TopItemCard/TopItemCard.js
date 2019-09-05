@@ -18,6 +18,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-self: center;
+  box-shadow: -10px 7px 6px rgba(0, 0, 0, 0.3);
   &.selected {
     border: 3px solid ${(props) => props.theme.color.green};
   }
@@ -30,13 +31,14 @@ const BottomOverlay = styled.div`
   width: 100%;
   height: 30px;
   transform: translateY(100px);
-  background-color: ${(props) => props.theme.changeOpacity(props.theme.tailwind.gray1, 75)};
+  background-color: ${(props) => props.theme.changeOpacity(props.theme.tailwind.gray1, 80)};
   z-index: 5;
   transition: 0.2s ease-in;
   display: flex;
   justify-content: center;
   align-items: center;
   background-clip: padding-box;
+  box-shadow: 0px -4px 11px rgba(0, 0, 0, 0.4);
   ${Container}:hover & {
     transform: translate(0);
   }
@@ -46,6 +48,7 @@ const TopOverlay = styled(BottomOverlay)`
   bottom: initial;
   top: 0;
   transform: translateY(-100px);
+  box-shadow: 0px 4px 11px rgba(0, 0, 0, 0.4);
 `;
 
 const CenterOverlay = styled.div`

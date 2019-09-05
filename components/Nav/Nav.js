@@ -128,9 +128,9 @@ const Nav = () => {
           ))}
         </Dropdown>
 
-        <Dropdown width="175">
+        <Dropdown width="150">
           <img src={user.imgURL} alt="" />
-          <div onClick={toggleModal}>User Settings</div>
+          <div onClick={toggleModal}>Settings</div>
           <Link href="/logout">
             <a>Logout</a>
           </Link>
