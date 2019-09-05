@@ -15,26 +15,6 @@ const ColumnSettings = styled.div`
 `;
 
 const UserSettings = ({ isShowing, hide }) => {
-  // pseudo provider state
-  const settingsFromDb = {
-    columns: {
-      acousticness: true,
-      danceability: true,
-      energy: true,
-      instrumentalness: true,
-      loudness: true,
-      tempo: true,
-      valence: true,
-      speechiness: true,
-      liveness: true,
-    },
-    limitEventsByRadius: false, // value is miles, [false, 5, 10, 25]
-    allowLocation: false,
-
-    forcedOverlayOnCards: false,
-    onlyArtistsWithEvents: false,
-  };
-
   const MainUserSettings = styled.div``;
   return (
     <Modal isShowing={isShowing} hide={hide}>
@@ -53,16 +33,21 @@ const UserSettings = ({ isShowing, hide }) => {
       </MainUserSettings>
       <h3>Library Analytics</h3>
       <ColumnSettings>
-        {Object.keys(settingsFromDb.columns).map((analytic) => (
-          <SettingsConsumer>
-            {({ state, toggleSetting }) => (
+        <SettingsConsumer>
+          {({ state, toggleAnalytic }) =>
+            Object.keys(state.columns).map((analytic) => (
               <label htmlFor={`settings-${analytic}`}>
                 {analytic.toUpperCase()}
-                <Checkbox isChecked={state[analytic]} handleClick={toggleSetting} name={analytic} />
+                <Checkbox
+                  key={`settings-${analytic}`}
+                  isChecked={state.columns[analytic]}
+                  handleClick={toggleAnalytic}
+                  name={analytic}
+                />
               </label>
-            )}
-          </SettingsConsumer>
-        ))}
+            ))
+          }
+        </SettingsConsumer>
       </ColumnSettings>
     </Modal>
   );

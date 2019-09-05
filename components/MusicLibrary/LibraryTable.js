@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTable, useSortBy } from 'react-table';
 import styled from 'styled-components';
-import Router from 'next/router';
+import columnLibrary from './ColumnLibrary';
 import { format } from 'date-fns';
 import Collapse from '../Icons/CollapseIcon';
 import Expand from '../Icons/ExpandIcon';
@@ -24,7 +24,7 @@ const Styles = styled.div`
       text-align: left;
       flex: 1;
       :nth-child(3) {
-        flex: 0.5;
+        /* flex: 0.5; */
       }
     }
     tr {
@@ -101,99 +101,33 @@ function Table({ columns, data }) {
 }
 
 function AllSongsLibrary({ library, columns }) {
+  const columnsToRender = [
+    {
+      Header: 'Library',
+      columns: [
+        {
+          Header: 'Title',
+          accessor: 'title',
+          sortType: 'basic',
+        },
+        {
+          Header: 'Artist',
+          accessor: 'artist',
+          sortType: 'basic',
+        },
+        {
+          Header: 'Date Added',
+          accessor: 'dateAdded',
+        },
+      ],
+    },
+  ];
+  Object.keys(columns).forEach((analytic) => {
+    if (columns[analytic]) columnsToRender[0].columns.push(columnLibrary[analytic]);
+  });
+
+  const renderedColumns = React.useMemo(() => columnsToRender, [columnsToRender]);
   const memoLibrary = React.useMemo(() => library);
-
-  const columnLibrary = {
-    title: {
-      Header: 'Title',
-      accessor: 'title',
-      sortType: 'basic',
-    },
-    artist: {
-      Header: 'Artist',
-      accessor: 'artist',
-      sortType: 'basic',
-    },
-    dateAdded: {
-      Header: 'Date Added',
-      accessor: 'dateAdded',
-    },
-    acousticness: {
-      Header: 'Acousticness',
-      accessor: 'acousticness',
-      sortType: 'basic',
-    },
-    danceability: {
-      Header: 'Instrumentalness',
-      accessor: 'instrumenalness',
-      sortType: 'basic',
-    },
-    energy: {
-      Header: 'Energy',
-      accessor: 'energy',
-      sortType: 'basic',
-    },
-    instrumentalness: {
-      Header: 'Instrumentalness',
-      accessor: 'instrumenalness',
-      sortType: 'basic',
-    },
-    loudness: {
-      Header: 'Loudness',
-      accessor: 'loudness',
-      sortType: 'basic',
-    },
-    tempo: {
-      Header: 'Tempo',
-      accessor: 'tempo',
-      sortType: 'basic',
-    },
-    valence: {
-      Header: 'Valence',
-      accessor: 'valence',
-      sortType: 'basic',
-    },
-    speechiness: {
-      Header: 'Speechiness',
-      accessor: 'speechiness',
-      sortType: 'basic',
-    },
-    liveness: {
-      Header: 'Liveness',
-      accessor: 'liveness',
-      sortType: 'basic',
-    },
-  };
-
-  const renderedColumns = React.useMemo(
-    () => [
-      {
-        Header: 'Library',
-        columns: [
-          {
-            Header: 'Title',
-            accessor: 'title',
-            sortType: 'basic',
-          },
-          {
-            Header: 'Artist',
-            accessor: 'artist',
-            sortType: 'basic',
-          },
-          {
-            Header: 'Date Added',
-            accessor: 'dateAdded',
-          },
-          {
-            Header: 'Acousticness',
-            accessor: 'acousticness',
-            sortType: 'basic',
-          },
-        ],
-      },
-    ],
-    []
-  );
   // TODO: change library.length validation
   // This exists to allow for "top <audio metric>" sorting to have similar styling to all
   return (

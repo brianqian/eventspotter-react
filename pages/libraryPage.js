@@ -6,6 +6,7 @@ import { getCookieFromCookies } from '../utils/format';
 import ReactTable from '../components/MusicLibrary/LibraryTable';
 import HttpClient from '../utils/HttpClient';
 import ContextMenu from '../components/ContextMenu/ContextMenu';
+import { SettingsConsumer } from '../components/SettingsProvider/SettingsProvider';
 
 const Container = styled.div`
   display: flex;
@@ -26,7 +27,11 @@ function LibraryPage({ data, filterBy }) {
       </Head>
       <ContextMenu />
       <MainDisplay>
-        <ReactTable library={data} filterBy={filterBy} columns />
+        <SettingsConsumer>
+          {({ state: { columns } }) => (
+            <ReactTable library={data} filterBy={filterBy} columns={columns} />
+          )}
+        </SettingsConsumer>
       </MainDisplay>
     </Container>
   );

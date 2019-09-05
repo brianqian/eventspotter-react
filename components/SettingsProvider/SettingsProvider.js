@@ -11,21 +11,32 @@ class SettingsProvider extends Component {
       this.setState({ [setting]: !this.state[setting] });
     };
 
+    this.toggleAnalytic = (analytic) => {
+      this.setState((state) => ({
+        ...state,
+        columns: {
+          ...state.columns,
+          [analytic]: !state.columns[analytic],
+        },
+      }));
+    };
+
     this.state = {
-      acousticness: true,
-      danceability: true,
-      energy: true,
-      instrumentalness: true,
-      loudness: true,
-      tempo: true,
-      valence: true,
-      speechiness: true,
-      liveness: true,
+      columns: {
+        acousticness: true,
+        danceability: true,
+        energy: true,
+        instrumentalness: true,
+        loudness: true,
+        tempo: true,
+        valence: true,
+        speechiness: true,
+        liveness: true,
+      },
       limitEventsByRadius: false, // value is miles, [false, 5, 10, 25]
       allowLocation: false,
       forcedOverlayOnCards: false,
       onlyArtistsWithEvents: false,
-      toggleSetting: this.toggleSetting,
     };
 
     this.componentDidMount = () => {
@@ -46,6 +57,7 @@ class SettingsProvider extends Component {
         value={{
           state: this.state,
           toggleSetting: this.toggleSetting,
+          toggleAnalytic: this.toggleAnalytic,
         }}
       >
         {children}
