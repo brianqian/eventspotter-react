@@ -166,7 +166,7 @@ const ModalRow = styled.div`
   }
 `;
 
-function TopArtistCard({ artist, img, index, text, token, artistID, id }) {
+function TopArtistCard({ artist, img, index, text, token, artistID }) {
   const [eventData, setEventData] = useState([]);
   const [topTracks, setTopTracks] = useState([]);
   const [showModal, toggleModal] = useModal(false);

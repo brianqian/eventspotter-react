@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -34,8 +34,8 @@ const StatusBackground = styled.div`
   transition: left 0.1s ease-out;
 `;
 
-function Checkbox({ isChecked = false, handleClick, name }) {
-  // const [isChecked, setChecked] = useState(checked);
+const Checkbox = React.memo(({ isChecked = false, handleClick, name }) => {
+  console.log('is rerendering');
 
   return (
     <Container onClick={() => handleClick(name)}>
@@ -44,6 +44,6 @@ function Checkbox({ isChecked = false, handleClick, name }) {
       </StatusBackground>
     </Container>
   );
-}
+});
 
 export default Checkbox;

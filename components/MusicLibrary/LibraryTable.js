@@ -5,11 +5,13 @@ import columnLibrary from './ColumnLibrary';
 import { format } from 'date-fns';
 import Collapse from '../Icons/CollapseIcon';
 import Expand from '../Icons/ExpandIcon';
+import { SettingsConsumer } from '../SettingsProvider/SettingsProvider';
 
 const Styles = styled.div`
   padding: 1rem;
   color: ${(props) => props.theme.color.white};
-  min-width: 100%;
+  min-width: 100vw;
+  width: auto;
   height: 100%;
   min-height: 100vh;
   background-color: ${(props) => props.theme.color.library};
@@ -35,15 +37,25 @@ const Styles = styled.div`
       overflow: auto;
       max-height: calc(100vh - 75px);
     }
-    thead {
-      font-size: 22px;
-      tr {
-        :nth-child(2) {
-          position: sticky;
-          top: 0px;
-        }
-      }
+  }
+`;
+
+const TableContainer = styled.table`
+  min-width: 100vw;
+  width: auto;
+`;
+
+const TableHead = styled.thead`
+  font-size: 22px;
+  tr {
+    display: flex;
+    :nth-child(2) {
+      position: sticky;
+      top: 0px;
     }
+  }
+  th {
+    flex: 1;
   }
 `;
 
@@ -57,8 +69,8 @@ function Table({ columns, data }) {
     useSortBy
   );
   return (
-    <table {...getTableProps()}>
-      <thead>
+    <TableContainer {...getTableProps()}>
+      <TableHead>
         {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map((column) => (
@@ -80,7 +92,7 @@ function Table({ columns, data }) {
             ))}
           </tr>
         ))}
-      </thead>
+      </TableHead>
       <tbody>
         {rows.map(
           (row, i) =>
@@ -96,7 +108,7 @@ function Table({ columns, data }) {
             )
         )}
       </tbody>
-    </table>
+    </TableContainer>
   );
 }
 
@@ -127,9 +139,8 @@ function AllSongsLibrary({ library, columns }) {
   });
 
   const renderedColumns = React.useMemo(() => columnsToRender, [columnsToRender]);
-  const memoLibrary = React.useMemo(() => library);
-  // TODO: change library.length validation
-  // This exists to allow for "top <audio metric>" sorting to have similar styling to all
+  const memoLibrary = React.useMemo(() => library, [library]);
+  console.log('table is rerendering');
   return (
     <Styles>
       <Table columns={renderedColumns} data={memoLibrary} />

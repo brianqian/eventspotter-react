@@ -23,15 +23,15 @@ class SettingsProvider extends Component {
 
     this.state = {
       columns: {
-        acousticness: true,
-        danceability: true,
-        energy: true,
-        instrumentalness: true,
-        loudness: true,
-        tempo: true,
-        valence: true,
-        speechiness: true,
-        liveness: true,
+        acousticness: false,
+        danceability: false,
+        energy: false,
+        instrumentalness: false,
+        loudness: false,
+        tempo: false,
+        valence: false,
+        speechiness: false,
+        liveness: false,
       },
       limitEventsByRadius: false, // value is miles, [false, 5, 10, 25]
       allowLocation: false,

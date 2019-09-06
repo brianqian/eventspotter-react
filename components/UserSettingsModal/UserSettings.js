@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import Modal from '../Modal/Modal';
 import Checkbox from '../Checkbox/Checkbox';
@@ -14,8 +14,9 @@ const ColumnSettings = styled.div`
   }
 `;
 
+const MainUserSettings = styled.div``;
+
 const UserSettings = ({ isShowing, hide }) => {
-  const MainUserSettings = styled.div``;
   return (
     <Modal isShowing={isShowing} hide={hide}>
       <h1>Settings</h1>
@@ -35,17 +36,18 @@ const UserSettings = ({ isShowing, hide }) => {
       <ColumnSettings>
         <SettingsConsumer>
           {({ state, toggleAnalytic }) =>
-            Object.keys(state.columns).map((analytic) => (
-              <label htmlFor={`settings-${analytic}`}>
-                {analytic.toUpperCase()}
-                <Checkbox
-                  key={`settings-${analytic}`}
-                  isChecked={state.columns[analytic]}
-                  handleClick={toggleAnalytic}
-                  name={analytic}
-                />
-              </label>
-            ))
+            Object.keys(state.columns).map((analytic) => {
+              return (
+                <label htmlFor={`settings-${analytic}`} key={`settings-${analytic}`}>
+                  {analytic.toUpperCase()}
+                  <Checkbox
+                    isChecked={state.columns[analytic]}
+                    handleClick={toggleAnalytic}
+                    name={analytic}
+                  />
+                </label>
+              );
+            })
           }
         </SettingsConsumer>
       </ColumnSettings>
