@@ -37,10 +37,6 @@ const StyledNav = styled.nav`
       color: green;
     }
   }
-  img {
-    width: 50px;
-    height: 50px;
-  }
   label {
     height: 50px;
     display: flex;
@@ -53,12 +49,9 @@ const StyledNav = styled.nav`
   }
 `;
 
-const UserProfile = styled.div`
-  /* color: ${(props) => props.theme.color.white};
-  display: flex;
-  align-items: center;
-  height: ${(props) => props.theme.navHeight}; */
-
+const ProfilePicture = styled.img`
+  height: 50px;
+  width: 50px;
 `;
 
 const Nav = () => {
@@ -129,7 +122,10 @@ const Nav = () => {
         </Dropdown>
 
         <Dropdown width="150">
-          <img src={user.imgURL} alt="" />
+          <ProfilePicture
+            src={user.imgURL ? user.imgURL : '/static/icons/user-silhouette.svg'}
+            alt=""
+          />
           <div onClick={toggleModal}>Settings</div>
           <Link href="/logout">
             <a>Logout</a>
