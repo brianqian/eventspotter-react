@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Head from 'next/head';
 import { getCookieFromCookies } from '../utils/format';
-import ReactTable from '../components/MusicLibrary/LibraryTable';
+import LibraryTable from '../components/MusicLibrary/LibraryTable';
 import HttpClient from '../utils/HttpClient';
 import ContextMenu from '../components/ContextMenu/ContextMenu';
 import { SettingsConsumer } from '../components/SettingsProvider/SettingsProvider';
@@ -29,7 +29,7 @@ function LibraryPage({ data, filterBy }) {
       <MainDisplay>
         <SettingsConsumer>
           {({ state: { columns } }) => (
-            <ReactTable library={data} filterBy={filterBy} columns={columns} />
+            <LibraryTable library={data} filterBy={filterBy} columns={columns} />
           )}
         </SettingsConsumer>
       </MainDisplay>

@@ -96,7 +96,7 @@ const Nav = () => {
   };
   return (
     <>
-      <StyledNav loggedIn={user.spotifyID}>
+      <StyledNav loggedIn={user}>
         <Link prefetch href="/">
           <label>
             <a>Home</a>

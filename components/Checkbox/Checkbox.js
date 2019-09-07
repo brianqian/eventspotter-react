@@ -35,8 +35,6 @@ const StatusBackground = styled.div`
 `;
 
 const Checkbox = React.memo(({ isChecked = false, handleClick, name }) => {
-  console.log('is rerendering');
-
   return (
     <Container onClick={() => handleClick(name)}>
       <StatusBackground isChecked={isChecked}>
