@@ -9,6 +9,11 @@ const theme = {
   changeOpacity: (color, opacity) => {
     const opacityHexCodes = {
       0: '00',
+      1: '03',
+      2: '05',
+      3: '08',
+      4: '0A',
+      5: '0D',
       10: '1A',
       20: '33',
       25: '40',

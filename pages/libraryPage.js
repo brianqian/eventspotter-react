@@ -9,7 +9,7 @@ import ContextMenu from '../components/ContextMenu/ContextMenu';
 import { SettingsConsumer } from '../components/SettingsProvider/SettingsProvider';
 
 const Container = styled.div`
-  display: flex;
+  /* display: flex; */
   flex-direction: column;
 `;
 
@@ -25,7 +25,6 @@ function LibraryPage({ data, filterBy }) {
       <Head>
         <title>Library</title>
       </Head>
-      <ContextMenu />
       <MainDisplay>
         <SettingsConsumer>
           {({ state: { columns } }) => (

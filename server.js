@@ -37,8 +37,8 @@ app.prepare().then(() => {
   });
 
   server.get('/', async (req, res) => {
-    return ssrCache({ req, res, pagePath: '/' });
-    // app.render(req, res, '/index');
+    // return ssrCache({ req, res, pagePath: '/' });
+    app.render(req, res, '/index');
   });
 
   server.get('/calendar', async (req, res) => {

@@ -1,8 +1,9 @@
+/* eslint-disable no-nested-ternary */
 import React from 'react';
 import { useTable, useSortBy } from 'react-table';
 import styled from 'styled-components';
-import columnLibrary from './ColumnLibrary';
 import { format } from 'date-fns';
+import columnLibrary from './ColumnLibrary';
 import Collapse from '../Icons/CollapseIcon';
 import Expand from '../Icons/ExpandIcon';
 import { SettingsConsumer } from '../SettingsProvider/SettingsProvider';
@@ -25,18 +26,15 @@ const Styles = styled.div`
       padding: 0.5rem;
       text-align: left;
       flex: 1;
-      :nth-child(3) {
-        /* flex: 0.5; */
-      }
     }
     tr {
       display: flex;
     }
-    tbody {
+    /* tbody {
       display: block;
       overflow: auto;
       max-height: calc(100vh - 75px);
-    }
+    } */
   }
 `;
 
@@ -56,6 +54,17 @@ const TableHead = styled.thead`
   }
   th {
     flex: 1;
+  }
+`;
+
+const TableBody = styled.tbody`
+  display: block;
+  overflow: auto;
+  max-height: calc(100vh - 75px);
+  tr {
+    :hover {
+      background-color: ${(props) => props.theme.changeOpacity(props.theme.tailwind.green1, 10)};
+    }
   }
 `;
 
@@ -93,7 +102,7 @@ function Table({ columns, data }) {
           </tr>
         ))}
       </TableHead>
-      <tbody>
+      <TableBody>
         {rows.map(
           (row, i) =>
             prepareRow(row) || (
@@ -107,7 +116,7 @@ function Table({ columns, data }) {
               </tr>
             )
         )}
-      </tbody>
+      </TableBody>
     </TableContainer>
   );
 }

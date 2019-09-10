@@ -6,7 +6,7 @@ const Modal = styled.div`
   color: ${(props) => props.theme.color.white};
   background-color: ${(props) => props.theme.color.background};
   box-shadow: ${(props) => props.theme.bs};
-  border: 1px solid white;
+  border: 1px solid rgba(0, 0, 0, 0.4);
   height: ${(props) => props.height || '50vh'};
   width: ${(props) => props.width || '50vw'};
   padding: ${(props) => props.padding || '2rem'};
@@ -15,6 +15,7 @@ const Modal = styled.div`
   transform: translate(-50%, -50%);
   position: fixed;
   z-index: 1000;
+  overflow: scroll;
 `;
 
 const CloseContainer = styled.div`
@@ -27,12 +28,10 @@ const CloseContainer = styled.div`
 `;
 
 const Login = ({ isShowing, hide, theme, children, height, width, padding }) => {
-  const modalRef = useRef(null);
-
   const [strokeColor, setStrokeColor] = useState('#fff');
   return isShowing
     ? ReactDOM.createPortal(
-        <Modal ref={modalRef} height={height} width={width} padding={padding}>
+        <Modal height={height} width={width} padding={padding}>
           <CloseContainer onClick={hide}>
             <svg
               fill="none"

@@ -213,7 +213,7 @@ function TopArtistCard({ artist, img, index, text, token, artistID }) {
         <BottomOverlay>{text || `${eventData.length} events found`}</BottomOverlay>
       </Container>
 
-      <Modal isShowing={showModal} hide={toggleModal} height="70vh" width="80vh">
+      <Modal isShowing={showModal} hide={toggleModal} height="70vh" width="80vw">
         <h1>{artist}</h1>
         <ModalBody>
           <ModalSection width="30%">
@@ -231,13 +231,13 @@ function TopArtistCard({ artist, img, index, text, token, artistID }) {
               <h3>Upcoming Events</h3>
             </header>
             <section>
-              {eventData.map((event) => (
-                <ModalRow key={event.id}>
+              {eventData.map(({ id, title, location, date }) => (
+                <ModalRow key={id}>
                   <div className="modal_icon">$</div>
-                  <div className="modal_title">{event.title}</div>
-                  <div className="modal_date">{format(event.date, 'MM/DD/YY')}</div>
+                  <div className="modal_title">{title}</div>
+                  <div className="modal_date">{format(date, 'MM/DD/YY')}</div>
                   <div className="modal_location">
-                    {event.location.city}, {event.location.state}
+                    {location.city},{location.state}
                   </div>
                   <div className="modal_icon">
                     <ExpandIcon color="#fff" height="15" />

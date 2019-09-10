@@ -1,11 +1,12 @@
 import NProgress from 'nprogress';
 import fetch from 'isomorphic-unfetch';
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { withTheme } from 'styled-components';
 import Link from 'next/link';
 import useModal from '../../utils/hooks/useModal';
 import Dropdown from '../NavDropdown/NavDropdown';
 import UserSettingsModal from '../UserSettingsModal/UserSettings';
+import SettingsIcon from '../Icons/SettingsIcon';
 
 const StyledNav = styled.nav`
   display: flex;
@@ -46,15 +47,18 @@ const StyledNav = styled.nav`
   > * {
     margin: 0 0.5rem;
     min-width: 150px;
+    /* height: 100%; */
+    :last-child {
+      min-width: 40px;
+      cursor: pointer;
+      margin: auto 0;
+      display: flex;
+      align-content: center;
+    }
   }
 `;
 
-const ProfilePicture = styled.img`
-  height: 50px;
-  width: 50px;
-`;
-
-const Nav = () => {
+const Nav = ({ theme }) => {
   const [modalIsOpen, toggleModal] = useModal();
   const [user, setUser] = useState({ spotifyID: '', imgURL: '', displayName: '' });
   useEffect(() => {
@@ -120,21 +124,20 @@ const Nav = () => {
             </Link>
           ))}
         </Dropdown>
-
-        <Dropdown width="150">
-          <ProfilePicture
-            src={user.imgURL ? user.imgURL : '/static/icons/user-silhouette.svg'}
-            alt=""
-          />
-          <div onClick={toggleModal}>Settings</div>
-          <Link href="/logout">
-            <a>Logout</a>
-          </Link>
-        </Dropdown>
+        <div onClick={toggleModal}>
+          <SettingsIcon height="24px" hoverColor={theme.color.green} />
+          {/* <img
+            src="/static/icons/settings.svg"
+            alt="settings"
+            onClick={toggleModal}
+            height="25px"
+          /> */}
+        </div>
+        {/* <Link href="/logout"> */}
       </StyledNav>
-      <UserSettingsModal isShowing={modalIsOpen} hide={toggleModal} />
+      <UserSettingsModal isShowing={modalIsOpen} hide={toggleModal} img={user.imgURL} />
     </>
   );
 };
 
-export default Nav;
+export default withTheme(Nav);

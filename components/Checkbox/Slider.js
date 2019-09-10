@@ -9,7 +9,7 @@ const Container = styled.div`
   position: relative;
   overflow: hidden;
   background-color: ${(props) => props.theme.color.library};
-  box-shadow: -2px -3px 4px rgba(0, 0, 0, 0.2);
+  /* box-shadow: -2px -3px 4px rgba(0, 0, 0, 0.2); */
 `;
 
 const Marker = styled.span`
