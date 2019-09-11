@@ -2,8 +2,9 @@ const theme = {
   color: {
     white: '#EFEFF9',
     background: 'hsla(165, 10%, 15%, 1);',
-    library: 'hsla(165, 10%, 10%, 1);',
+    library: 'hsla(141, 10%, 10%, 1);',
     green: 'hsl(141, 73%, 42%)',
+    gray: '#3b3e3b',
   },
   navHeight: '50px',
   changeOpacity: (color, opacity) => {

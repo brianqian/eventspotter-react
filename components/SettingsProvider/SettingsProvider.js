@@ -5,15 +5,12 @@ const SettingsContext = createContext();
 class SettingsProvider extends Component {
   constructor(props) {
     super(props);
-
     this.toggleSetting = (setting) => {
-      console.log('toggling setting', setting);
-      this.setState({ [setting]: !this.state[setting] });
+      this.setState((state) => ({ [setting]: !state[setting] }));
     };
 
     this.toggleAnalytic = (analytic) => {
       this.setState((state) => ({
-        ...state,
         columns: {
           ...state.columns,
           [analytic]: !state.columns[analytic],
@@ -35,7 +32,7 @@ class SettingsProvider extends Component {
       },
       limitEventsByRadius: false, // value is miles, [false, 5, 10, 25]
       allowLocation: false,
-      forcedOverlayOnCards: false,
+      forcedOverlay: false,
       onlyArtistsWithEvents: false,
     };
 

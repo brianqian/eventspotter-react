@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import styled, { withTheme } from 'styled-components';
 import Link from 'next/link';
 import useModal from '../../utils/hooks/useModal';
-import Dropdown from '../NavDropdown/NavDropdown';
+import Dropdown from '../Dropdown/NavDropdown';
 import UserSettingsModal from '../UserSettingsModal/UserSettings';
 import SettingsIcon from '../Icons/SettingsIcon';
 
@@ -135,7 +135,12 @@ const Nav = ({ theme }) => {
         </div>
         {/* <Link href="/logout"> */}
       </StyledNav>
-      <UserSettingsModal isShowing={modalIsOpen} hide={toggleModal} img={user.imgURL} />
+      <UserSettingsModal
+        isShowing={modalIsOpen}
+        hide={toggleModal}
+        img={user.imgURL}
+        name={user.displayName}
+      />
     </>
   );
 };

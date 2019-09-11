@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import styled from 'styled-components';
-import Dropdown from '../NavDropdown/NavDropdown';
+import Dropdown from '../Dropdown/NavDropdown';
 
 const Container = styled.div`
   /* position: absolute;
@@ -34,6 +34,7 @@ function ContextMenu({ setTopArtist, token, columns, setColumns }) {
 
   // ! Context Menu Items
   // -> Events for selected artists
+  // -> Filter by artists with events
 
   return (
     <Container>
