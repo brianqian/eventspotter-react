@@ -35,7 +35,7 @@ const ContextMenu = styled.div`
   justify-content: space-between;
   flex: 0.5;
   padding-right: 1rem;
-  h3 {
+  nav {
     width: 100%;
     text-align: center;
     color: ${(props) => props.theme.tailwind.gray2};
@@ -113,24 +113,24 @@ const UserSettingsModal = ({ isShowing, hide, img, name }) => {
             </SideBar>
             <AllSettingsArea>
               <ContextMenu onClick={changeSubsection}>
-                <h3
+                <nav
                   data-value="general"
                   className={categoryView === 'general' ? 'setting-active' : ''}
                 >
                   General
-                </h3>
-                <h3
+                </nav>
+                <nav
                   data-value="analytics"
                   className={categoryView === 'analytics' ? 'setting-active' : ''}
                 >
                   Analytics
-                </h3>
-                <h3
+                </nav>
+                <nav
                   data-value="location"
                   className={categoryView === 'location' ? 'setting-active' : ''}
                 >
                   Location
-                </h3>
+                </nav>
               </ContextMenu>
               <GeneralSettings display={categoryView === 'general' ? '' : 'none'}>
                 <SettingsRow>
@@ -175,7 +175,7 @@ const UserSettingsModal = ({ isShowing, hide, img, name }) => {
               </AnalyticSettings>
               <LocationSettings display={categoryView === 'location' ? '' : 'none'}>
                 <SettingsRow>
-                  <p>Enable Location Services</p>
+                  <p>Enable Location Services*</p>
                   <Slider
                     isChecked={state.allowLocation}
                     handleClick={toggleSetting}
@@ -183,7 +183,7 @@ const UserSettingsModal = ({ isShowing, hide, img, name }) => {
                   />
                 </SettingsRow>
                 <SettingsRow>
-                  <p>Only show events:</p>
+                  <p>Only show events*:</p>
                   <select
                     value={state.eventRadius}
                     onChange={(e) => setEventRadius(e.target.value)}
@@ -195,6 +195,7 @@ const UserSettingsModal = ({ isShowing, hide, img, name }) => {
                   </select>
                 </SettingsRow>
               </LocationSettings>
+              <p>* = currently being built</p>
             </AllSettingsArea>
           </Container>
         )}

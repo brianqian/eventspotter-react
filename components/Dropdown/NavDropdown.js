@@ -45,20 +45,14 @@ const Option = styled.div`
   }
 `;
 
-function Dropdown({ theme, children, className, width = '200px', borderColor, bg, offset = '0' }) {
+function Dropdown({ theme, children, className, width = '200px', borderColor, bg }) {
   const flattenedChildren = children.reduce((acc, item) => acc.concat(item), []);
   const [firstItem, ...dropdownOptions] = flattenedChildren;
   return (
     <Container className={className} width={width}>
       <Option className="dropdown_label">{firstItem}</Option>
-      <OptionContainer
-        offset={offset}
-        length={flattenedChildren.length + 1}
-        border={borderColor || theme.color.green}
-        bg={bg || theme.color.library}
-      >
+      <OptionContainer border={borderColor || theme.color.green} bg={bg || theme.color.library}>
         {dropdownOptions.map((option, i) => {
-          console.log(option);
           return <Option key={`dropdown-${option + i}`}>{option}</Option>;
         })}
       </OptionContainer>

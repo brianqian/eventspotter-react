@@ -94,7 +94,7 @@ const Nav = ({ theme }) => {
   };
   return (
     <>
-      <StyledNav loggedIn={user}>
+      <StyledNav loggedIn={user.spotifyID}>
         <Link prefetch href="/">
           <label>
             <a>Home</a>
@@ -105,7 +105,7 @@ const Nav = ({ theme }) => {
             <a>Library</a>
           </label>
         </Link>
-        <Dropdown width="175px" offset="50px">
+        <Dropdown width="175px">
           <label>Quick Access </label>
           <Link
             prefetch
