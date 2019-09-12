@@ -1,7 +1,7 @@
-import styled from 'styled-components';
+import styled, { withTheme } from 'styled-components';
 
 const Container = styled.div`
-  width: ${(props) => props.width || 200}px;
+  width: ${(props) => props.width};
   position: relative;
   margin: auto 0;
 `;
@@ -15,10 +15,10 @@ const OptionContainer = styled.div`
   display: flex;
   flex-direction: column;
   transition: 0.25s;
-  background-color: ${(props) => props.theme.color.library};
+  background-color: ${(props) => props.bg};
   ${Container}:hover & {
-    border: 1px solid ${(props) => props.theme.color.green};
-    max-height: ${(props) => props.length * 40}px;
+    border: 1px solid ${(props) => props.border};
+    max-height: 90vh;
   }
 `;
 
@@ -34,11 +34,6 @@ const Option = styled.div`
 
   :not(.dropdown_label) {
     padding: 3px 0;
-    :hover {
-      * {
-        color: ${(props) => props.theme.color.green};
-      }
-    }
   }
 
   * {
@@ -46,24 +41,29 @@ const Option = styled.div`
     align-items: center;
     justify-content: center;
     height: 100%;
-    color: ${(props) => props.theme.color.white};
     text-decoration: none;
   }
 `;
 
-function Dropdown({ children, className, multi, width }) {
+function Dropdown({ theme, children, className, width = '200px', borderColor, bg, offset = '0' }) {
   const flattenedChildren = children.reduce((acc, item) => acc.concat(item), []);
   const [firstItem, ...dropdownOptions] = flattenedChildren;
   return (
     <Container className={className} width={width}>
       <Option className="dropdown_label">{firstItem}</Option>
-      <OptionContainer length={flattenedChildren.length + 1}>
-        {dropdownOptions.map((item, i) => (
-          <Option key={item + i}>{item}</Option>
-        ))}
+      <OptionContainer
+        offset={offset}
+        length={flattenedChildren.length + 1}
+        border={borderColor || theme.color.green}
+        bg={bg || theme.color.library}
+      >
+        {dropdownOptions.map((option, i) => {
+          console.log(option);
+          return <Option key={`dropdown-${option + i}`}>{option}</Option>;
+        })}
       </OptionContainer>
     </Container>
   );
 }
 
-export default Dropdown;
+export default withTheme(Dropdown);

@@ -39,6 +39,7 @@ const StyledNav = styled.nav`
     }
   }
   label {
+    color: ${(props) => props.theme.color.white};
     height: 50px;
     display: flex;
     align-items: center;
@@ -104,7 +105,7 @@ const Nav = ({ theme }) => {
             <a>Library</a>
           </label>
         </Link>
-        <Dropdown width="175">
+        <Dropdown width="175px" offset="50px">
           <label>Quick Access </label>
           <Link
             prefetch

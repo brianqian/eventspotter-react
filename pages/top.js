@@ -7,6 +7,7 @@ import HttpClient from '../utils/HttpClient';
 import ContextMenu from '../components/ContextMenu/ContextMenu';
 import ItemCard from '../components/TopItemCard/TopItemCard';
 import useChangeTopArtist from '../utils/hooks/useChangeTopArtist';
+import Dropdown from '../components/Dropdown/NavDropdown';
 
 const Container = styled.div`
   min-height: 100vh;
@@ -18,7 +19,7 @@ const Container = styled.div`
   align-items: center;
 `;
 
-const Title = styled.h1`
+const Header = styled.h1`
   color: ${(props) => props.theme.color.white};
 `;
 
@@ -46,7 +47,7 @@ function TopPages({ data, token }) {
         <title>Top {filterBy}</title>
       </Head>
       <ContextMenu token={token} setTopArtist={setTopArtistHistory} />
-      <Title>{filterBy.toUpperCase()}</Title>
+      <Header>{filterBy.toUpperCase()}</Header>
       <MainDisplay>
         {currentData.map((item, i) => {
           if (!item.images && isTopArtists) console.log(item);

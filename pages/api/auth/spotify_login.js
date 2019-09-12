@@ -3,7 +3,6 @@ import HttpClient from '../../../utils/HttpClient';
 export default async (req, res) => {
   const { code = null } = req.query;
   const token = req.cookies && req.cookies.userInfo;
-  console.log('TCL: token', token);
   const { encodedToken = null } = await HttpClient.request(
     `/api/auth/token?code=${code}`,
     token,

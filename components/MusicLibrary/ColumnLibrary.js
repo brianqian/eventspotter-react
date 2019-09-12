@@ -30,7 +30,7 @@ export default {
   },
   instrumentalness: {
     Header: 'Instrumentalness',
-    accessor: 'instrumenalness',
+    accessor: 'instrumentalness',
     sortType: 'basic',
   },
   loudness: {

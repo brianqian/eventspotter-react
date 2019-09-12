@@ -18,6 +18,10 @@ class SettingsProvider extends Component {
       }));
     };
 
+    this.setEventRadius = (value) => {
+      this.setState({ eventRadius: value });
+    };
+
     this.state = {
       columns: {
         acousticness: false,
@@ -30,7 +34,7 @@ class SettingsProvider extends Component {
         speechiness: false,
         liveness: false,
       },
-      limitEventsByRadius: false, // value is miles, [false, 5, 10, 25]
+      eventRadius: 0, // value is miles, [false, 5, 10, 25]
       allowLocation: false,
       forcedOverlay: false,
       onlyArtistsWithEvents: false,
@@ -55,6 +59,7 @@ class SettingsProvider extends Component {
           state: this.state,
           toggleSetting: this.toggleSetting,
           toggleAnalytic: this.toggleAnalytic,
+          setEventRadius: this.setEventRadius,
         }}
       >
         {children}

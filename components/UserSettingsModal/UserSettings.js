@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Modal from '../Modal/Modal';
 import Slider from '../Checkbox/Slider';
 import { SettingsConsumer } from '../SettingsProvider/SettingsProvider';
+import Dropdown from '../Dropdown/NavDropdown';
 
 const Container = styled.div`
   display: grid;
@@ -63,6 +64,7 @@ const SettingsRow = styled.label`
   display: flex;
   justify-content: space-between;
   padding: 0.5rem 1rem;
+  height: 40px;
   border-top: 0.5px solid ${(props) => props.theme.color.gray};
   border-bottom: 0.5px solid ${(props) => props.theme.color.gray};
   opacity: 0.9;
@@ -89,7 +91,7 @@ const LocationSettings = styled(GeneralSettings)`
 `;
 
 const UserSettingsModal = ({ isShowing, hide, img, name }) => {
-  const [categoryView, setCategoryView] = useState('general');
+  const [categoryView, setCategoryView] = useState('location');
 
   const changeSubsection = (e) => {
     setCategoryView(e.target.dataset.value);
@@ -97,13 +99,17 @@ const UserSettingsModal = ({ isShowing, hide, img, name }) => {
   return (
     <Modal isShowing={isShowing} hide={hide} height="560px" width="1000px" padding="0">
       <SettingsConsumer>
-        {({ state, toggleAnalytic, toggleSetting }) => (
+        {({ state, toggleAnalytic, toggleSetting, setEventRadius }) => (
           <Container>
             <SideBar>
               <h2>{name}</h2>
               <ProfilePicture src={img || '/static/icons/user-silhouette.svg'}></ProfilePicture>
-              <h2>Log out - EventSpotter</h2>
-              <h2>Log out - Spotify</h2>
+              <a href={`${process.env.FRONTEND_HOST}/logout`}>
+                <h2>Log out - EventSpotter</h2>
+              </a>
+              <a href="https://accounts.spotify.com/en-US/logout/">
+                <h2>Log out - Spotify</h2>
+              </a>
             </SideBar>
             <AllSettingsArea>
               <ContextMenu onClick={changeSubsection}>
@@ -158,6 +164,14 @@ const UserSettingsModal = ({ isShowing, hide, img, name }) => {
                     </SettingsRow>
                   );
                 })}
+                {/* <SettingsRow>
+                  <p>All Analytics</p>
+                  <Slider
+                    isChecked={Object.values(state.columns).every(Boolean)}
+                    handleClick={toggleAnalytic}
+                    name="all"
+                  />
+                </SettingsRow> */}
               </AnalyticSettings>
               <LocationSettings display={categoryView === 'location' ? '' : 'none'}>
                 <SettingsRow>
@@ -170,11 +184,14 @@ const UserSettingsModal = ({ isShowing, hide, img, name }) => {
                 </SettingsRow>
                 <SettingsRow>
                   <p>Only show events:</p>
-                  <select name="event_radius" id="settings-event_radius">
-                    <option value="5">within 5 miles</option>
-                    <option value="10">within 10 miles</option>
-                    <option value="25">within 25 miles</option>
-                    <option value={false}>Show all events</option>
+                  <select
+                    value={state.eventRadius}
+                    onChange={(e) => setEventRadius(e.target.value)}
+                  >
+                    <option value={5}>within 5 miles</option>
+                    <option value={10}>within 10 miles</option>
+                    <option value={25}>within 25 miles</option>
+                    <option value={0}>Show all events</option>
                   </select>
                 </SettingsRow>
               </LocationSettings>

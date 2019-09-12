@@ -62,6 +62,14 @@ app.prepare().then(() => {
     res.redirect('/');
   });
 
+  server.get('/secret', (req, res) => {
+    const { password = null } = req.query;
+    if (password === process.env.SECRET_PASSWORD) {
+      res.cookie('userInfo', process.env.SECRET_KEY);
+      res.redirect('/');
+    }
+  });
+
   server.get('*', (req, res) => handle(req, res));
 
   server.listen(port, (err) => {

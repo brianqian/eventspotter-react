@@ -12,9 +12,8 @@ const Styles = styled.div`
   padding: 1rem;
   color: ${(props) => props.theme.color.white};
   min-width: 100vw;
-  width: auto;
-  height: 100%;
   min-height: 100vh;
+  width: fit-content;
   background-color: ${(props) => props.theme.color.library};
   font-family: 'Source Sans Pro';
 
@@ -26,7 +25,15 @@ const Styles = styled.div`
       padding: 0.5rem;
       text-align: left;
       flex: 1;
+      min-width: 150px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      :nth-child(-n + 3) {
+        min-width: 200px;
+      }
     }
+
     tr {
       display: flex;
     }
@@ -41,6 +48,7 @@ const Styles = styled.div`
 const TableContainer = styled.table`
   min-width: 100vw;
   width: auto;
+  overflow: auto;
 `;
 
 const TableHead = styled.thead`
