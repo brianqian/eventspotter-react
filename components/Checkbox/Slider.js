@@ -36,7 +36,7 @@ const StatusBackground = styled.div`
 
 const Checkbox = React.memo(({ isChecked = false, handleClick, name }) => {
   return (
-    <Container onClick={() => handleClick(name)}>
+    <Container onClick={() => handleClick && handleClick(name)}>
       <StatusBackground isChecked={isChecked}>
         <Marker />
       </StatusBackground>

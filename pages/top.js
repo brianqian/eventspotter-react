@@ -7,7 +7,7 @@ import HttpClient from '../utils/HttpClient';
 import ContextMenu from '../components/ContextMenu/ContextMenu';
 import ItemCard from '../components/TopItemCard/TopItemCard';
 import useChangeTopArtist from '../utils/hooks/useChangeTopArtist';
-import Dropdown from '../components/Dropdown/NavDropdown';
+import { SettingsConsumer } from '../components/SettingsProvider/SettingsProvider';
 
 const Container = styled.div`
   min-height: 100vh;
@@ -42,37 +42,47 @@ function TopPages({ data, token }) {
   const isTopArtists = filterBy === 'artists';
   const [currentData, setTopArtistHistory] = useChangeTopArtist(data);
   return (
-    <Container>
-      <Head>
-        <title>Top {filterBy}</title>
-      </Head>
-      <ContextMenu token={token} setTopArtist={setTopArtistHistory} />
-      <Header>{filterBy.toUpperCase()}</Header>
-      <MainDisplay>
-        {currentData.map((item, i) => {
-          if (!item.images && isTopArtists) console.log(item);
-          return isTopArtists ? (
-            <ItemCard
-              key={item.id}
-              artist={item.name}
-              img={(item.images && item.images[2].url) || ''}
-              index={i}
-              token={token}
-              artistID={item.id}
-            />
-          ) : (
-            <ItemCard
-              key={item.song_id}
-              artist={item.artist}
-              text={item.title}
-              img={item.album_img}
-              index={i}
-              token={token}
-            />
-          );
-        })}
-      </MainDisplay>
-    </Container>
+    <SettingsConsumer>
+      {({ state: { general, location } }) => {
+        return (
+          <Container>
+            <Head>
+              <title>Top {filterBy}</title>
+            </Head>
+            <ContextMenu token={token} setTopArtist={setTopArtistHistory} />
+            <Header>{filterBy.toUpperCase()}</Header>
+            <MainDisplay>
+              {currentData.map((item, i) => {
+                if (!isTopArtists) console.log(item);
+                return isTopArtists ? (
+                  <ItemCard
+                    key={item.id}
+                    artist={item.name}
+                    img={(item.images && item.images[2].url) || ''}
+                    index={i}
+                    token={token}
+                    artistID={item.id}
+                    generalSettings={general}
+                    locationSettings={location}
+                  />
+                ) : (
+                  <ItemCard
+                    key={item.song_id}
+                    artist={item.artist}
+                    text={item.title}
+                    img={item.album_img}
+                    index={i}
+                    token={token}
+                    generalSettings={general}
+                    locationSettings={location}
+                  />
+                );
+              })}
+            </MainDisplay>
+          </Container>
+        );
+      }}
+    </SettingsConsumer>
   );
 }
 

@@ -9,21 +9,35 @@ class SettingsProvider extends Component {
       this.setState((state) => ({ [setting]: !state[setting] }));
     };
 
-    this.toggleAnalytic = (analytic) => {
+    this.toggleGeneral = (setting) => {
       this.setState((state) => ({
-        columns: {
-          ...state.columns,
-          [analytic]: !state.columns[analytic],
+        general: {
+          ...state.general,
+          [setting]: !state.general[setting],
         },
       }));
     };
 
-    this.setEventRadius = (value) => {
-      this.setState({ eventRadius: value });
+    this.toggleAnalytic = (analytic) => {
+      this.setState((state) => ({
+        analytics: {
+          ...state.analytics,
+          [analytic]: !state.analytics[analytic],
+        },
+      }));
+    };
+
+    this.changeSetting = (category, key, value) => {
+      this.setState((state) => ({
+        [category]: {
+          ...state[category],
+          [key]: value,
+        },
+      }));
     };
 
     this.state = {
-      columns: {
+      analytics: {
         acousticness: false,
         danceability: false,
         energy: false,
@@ -34,14 +48,35 @@ class SettingsProvider extends Component {
         speechiness: false,
         liveness: false,
       },
-      eventRadius: 0, // value is miles, [false, 5, 10, 25]
-      allowLocation: false,
-      forcedOverlay: false,
-      onlyArtistsWithEvents: false,
+      location: {
+        eventRadius: 0, // ie dont allow location -- infinite event radius
+        latitude: null,
+        longitude: null,
+        zipcode: null,
+      },
+      general: {
+        forcedOverlay: false,
+        onlyArtistsWithEvents: false,
+      },
     };
 
-    this.componentDidMount = () => {
-      console.log('user settings provider mounted');
+    this.componentDidMount = async () => {
+      console.log('PROVIDER MOUNTING');
+
+      const locationSuccess = (position) => {
+        const { latitude, longitude } = position.coords;
+        this.setState({ locationSettings: latitude, longitude });
+      };
+
+      const locationFail = () => {
+        this.setState({ allowLocation: false });
+      };
+      if (this.state.allowLocation) {
+        console.log('location allowed, retrieving coords');
+        navigator.geolocation.getCurrentPosition(locationSuccess, locationFail);
+      } else {
+        this.setState({ eventRadius: 0 });
+      }
       // if settings in local storage
       // update state with local storage settings
       // else
@@ -57,9 +92,9 @@ class SettingsProvider extends Component {
       <SettingsContext.Provider
         value={{
           state: this.state,
-          toggleSetting: this.toggleSetting,
+          changeSetting: this.changeSetting,
+          toggleGeneral: this.toggleGeneral,
           toggleAnalytic: this.toggleAnalytic,
-          setEventRadius: this.setEventRadius,
         }}
       >
         {children}

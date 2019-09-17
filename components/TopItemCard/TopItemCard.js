@@ -30,7 +30,7 @@ const BottomOverlay = styled.div`
   bottom: 0;
   width: 100%;
   height: 30px;
-  transform: translateY(100px);
+  transform: ${(props) => (props.forced ? 'translateY(0)' : 'translateY(100px)')};
   background-color: ${(props) => props.theme.changeOpacity(props.theme.tailwind.gray1, 80)};
   z-index: 5;
   transition: 0.2s ease-in;
@@ -113,9 +113,7 @@ const ArtistName = styled.div`
 // Background
 
 const BackgroundImage = styled.img`
-  /* height: 100%; */
   height: 200px;
-  /* width: 100%; */
   width: 200px;
   object-fit: cover;
   opacity: 0.9;
@@ -144,7 +142,7 @@ const ModalRow = styled.div`
   display: flex;
   margin: 0.25rem 0;
 
-  div {
+  > * {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -166,13 +164,37 @@ const ModalRow = styled.div`
   }
 `;
 
-function TopArtistCard({ artist, img, index, text, token, artistID }) {
+function TopArtistCard({
+  artist,
+  img,
+  index,
+  text,
+  token,
+  artistID,
+  generalSettings,
+  locationSettings,
+}) {
   const [eventData, setEventData] = useState([]);
-  const [topTracks, setTopTracks] = useState([]);
+  const [sidebarData, setsidebarData] = useState([]);
   const [showModal, toggleModal] = useModal(false);
+  const artistHasEvents = eventData.length;
+
+  const promiseFetchEvents = (encodedArtist) => {
+    return new Promise((resolve, reject) => {
+      resolve(HttpClient.request(`/api/events/artist/${encodedArtist}`, token));
+    });
+  };
+
+  const promiseFetchTopTracks = (artistID) => {
+    return new Promise((resolve, reject) => {
+      resolve(HttpClient.request(`/api/library/top_tracks/${artistID}`, token));
+    });
+  };
+
   useEffect(() => {
     let isMounted = true;
     const fetchData = async () => {
+      // GET EVENTS FOR ARTISTS -- ALWAYS FIRES
       if (!artist) return;
       const encodedArtist = encodeURIComponent(artist);
       const { data: events = [] } = await HttpClient.request(
@@ -180,32 +202,34 @@ function TopArtistCard({ artist, img, index, text, token, artistID }) {
         token
       );
       if (isMounted) setEventData(events);
-      // If calculating top_artist, retrieve top songs
+      // ONLY FIRE IF TOP ARTIST. OTHERWISE DISPLAY SONG ANALYTICS
       if (artistID) {
         const { data: tracks = [] } = await HttpClient.request(
           `/api/library/top_tracks/${artistID}`,
           token
         );
-        if (isMounted) setTopTracks(tracks);
+        if (isMounted) setsidebarData(tracks);
+      } else {
+        // query API for song and its analytics
       }
     };
     fetchData();
     return () => (isMounted = false);
   }, [artist, img, index, text, token, artistID]);
-  // modal contains top tracks for artist
-  // upcoming events
-  // audio statistics if (song)
+
+  // if "onlyArtistsWithEvents" enabled and artistHasEvents
+
   return (
     <>
-      <Container data-number={index + 1} className={eventData.length ? 'selected' : null}>
-        <TopOverlay>
+      <Container data-number={index + 1} className={artistHasEvents ? 'selected' : null}>
+        <TopOverlay forced={generalSettings.alwaysShowOverlay}>
           <Ranking>{index + 1}</Ranking>
           <ArtistName>
             <p>{artist}</p>
           </ArtistName>
         </TopOverlay>
         <BackgroundImage src={img} />
-        <CenterOverlay>
+        <CenterOverlay forced={generalSettings.alwaysShowOverlay}>
           <MoreInfo onClick={toggleModal}>
             <img src="/static/icons/list.svg" height="25px" alt="" />
           </MoreInfo>
@@ -221,7 +245,7 @@ function TopArtistCard({ artist, img, index, text, token, artistID }) {
               <h3>Top Tracks</h3>
             </header>
             <section>
-              {topTracks.map((track, i) => (
+              {sidebarData.map((track, i) => (
                 <p key={track.name}>{`${i + 1}. ${track.name}`}</p>
               ))}
             </section>
@@ -231,9 +255,11 @@ function TopArtistCard({ artist, img, index, text, token, artistID }) {
               <h3>Upcoming Events</h3>
             </header>
             <section>
-              {eventData.map(({ id, title, location, date }) => (
+              {eventData.map(({ id, title, location, date, url }) => (
                 <ModalRow key={id}>
-                  <div className="modal_icon">$</div>
+                  <a href={url} target="__blank" className="modal_icon">
+                    $
+                  </a>
                   <div className="modal_title">{title}</div>
                   <div className="modal_date">{format(date, 'MM/DD/YY')}</div>
                   <div className="modal_location">

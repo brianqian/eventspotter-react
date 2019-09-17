@@ -19,6 +19,18 @@ const SideBar = styled.div`
   color: ${(props) => props.theme.color.library};
   align-items: center;
   user-select: none;
+
+  a {
+    text-decoration: none;
+    background-color: ${(props) => props.theme.color.green};
+    border-radius: 30px;
+    padding: 4px 8px;
+    margin: 1rem 0;
+    color: white;
+    h2 {
+      font-size: 20px;
+    }
+  }
 `;
 
 const ProfilePicture = styled.img`
@@ -99,7 +111,7 @@ const UserSettingsModal = ({ isShowing, hide, img, name }) => {
   return (
     <Modal isShowing={isShowing} hide={hide} height="560px" width="1000px" padding="0">
       <SettingsConsumer>
-        {({ state, toggleAnalytic, toggleSetting, setEventRadius }) => (
+        {({ state, toggleAnalytic, changeSetting, toggleGeneral }) => (
           <Container>
             <SideBar>
               <h2>{name}</h2>
@@ -136,27 +148,27 @@ const UserSettingsModal = ({ isShowing, hide, img, name }) => {
                 <SettingsRow>
                   <p>Forced Overlay on Cards (default: off)</p>
                   <Slider
-                    isChecked={state.forcedOverlay}
-                    handleClick={toggleSetting}
+                    isChecked={state.general.forcedOverlay}
+                    handleClick={toggleGeneral}
                     name="forcedOverlay"
                   />
                 </SettingsRow>
                 <SettingsRow>
                   <p>Filter Artists with no events</p>
                   <Slider
-                    isChecked={state.onlyArtistsWithEvents}
-                    handleClick={toggleSetting}
+                    isChecked={state.general.onlyArtistsWithEvents}
+                    handleClick={toggleGeneral}
                     name="onlyArtistsWithEvents"
                   />
                 </SettingsRow>
               </GeneralSettings>
               <AnalyticSettings display={categoryView === 'analytics' ? '' : 'none'}>
-                {Object.keys(state.columns).map((analytic) => {
+                {Object.keys(state.analytics).map((analytic) => {
                   return (
                     <SettingsRow htmlFor={`settings-${analytic}`} key={`settings-${analytic}`}>
                       <p>{analytic.toUpperCase()}</p>
                       <Slider
-                        isChecked={state.columns[analytic]}
+                        isChecked={state.analytics[analytic]}
                         handleClick={toggleAnalytic}
                         name={analytic}
                         id={`settings-${analytic}`}
@@ -167,30 +179,32 @@ const UserSettingsModal = ({ isShowing, hide, img, name }) => {
                 {/* <SettingsRow>
                   <p>All Analytics</p>
                   <Slider
-                    isChecked={Object.values(state.columns).every(Boolean)}
+                    isChecked={Object.values(state.analytics).every(Boolean)}
                     handleClick={toggleAnalytic}
                     name="all"
                   />
                 </SettingsRow> */}
               </AnalyticSettings>
               <LocationSettings display={categoryView === 'location' ? '' : 'none'}>
-                <SettingsRow>
+                {/* <SettingsRow>
                   <p>Enable Location Services*</p>
                   <Slider
-                    isChecked={state.allowLocation}
+                    isChecked={state.location.eventRadius}
                     handleClick={toggleSetting}
                     name="allowLocation"
                   />
-                </SettingsRow>
+                </SettingsRow> */}
                 <SettingsRow>
-                  <p>Only show events*:</p>
+                  <p>
+                    Event Radius* <span>(Requires Location Services)</span>:
+                  </p>
                   <select
-                    value={state.eventRadius}
-                    onChange={(e) => setEventRadius(e.target.value)}
+                    value={state.location.eventRadius}
+                    onChange={(e) => changeSetting('location', 'eventRadius', e.target.value)}
                   >
-                    <option value={5}>within 5 miles</option>
-                    <option value={10}>within 10 miles</option>
-                    <option value={25}>within 25 miles</option>
+                    <option value={5}>Show events within 5 miles</option>
+                    <option value={10}>Show events within 10 miles</option>
+                    <option value={25}>Show events within 25 miles</option>
                     <option value={0}>Show all events</option>
                   </select>
                 </SettingsRow>

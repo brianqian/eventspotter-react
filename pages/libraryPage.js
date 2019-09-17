@@ -27,8 +27,8 @@ function LibraryPage({ data, filterBy }) {
       </Head>
       <MainDisplay>
         <SettingsConsumer>
-          {({ state: { columns } }) => (
-            <LibraryTable library={data} filterBy={filterBy} columns={columns} />
+          {({ state: { analytics } }) => (
+            <LibraryTable library={data} filterBy={filterBy} columns={analytics} />
           )}
         </SettingsConsumer>
       </MainDisplay>

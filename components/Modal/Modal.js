@@ -19,6 +19,8 @@ const Modal = styled.div`
   border: 1px solid rgba(255, 255, 255, 0.4);
   height: ${(props) => props.height || '50vh'};
   width: ${(props) => props.width || '50vw'};
+  max-width: 100vw;
+  max-height: 100vh;
   padding: ${(props) => props.padding || '2rem'};
 
   left: 50%;
