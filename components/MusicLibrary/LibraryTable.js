@@ -37,11 +37,6 @@ const Styles = styled.div`
     tr {
       display: flex;
     }
-    /* tbody {
-      display: block;
-      overflow: auto;
-      max-height: calc(100vh - 75px);
-    } */
   }
 `;
 

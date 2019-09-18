@@ -17,6 +17,13 @@ body, html{
   padding: 0;
   box-sizing: border-box;
 }
+a {
+  color: #EFEFF9;
+    :visited {
+      color: #EFEFF9;
+    }
+    text-decoration: none;
+}
 
 `;
 
@@ -41,7 +48,7 @@ export default class MyApp extends App {
       <Container>
         <ThemeProvider theme={theme}>
           <SettingsProvider>
-            <GlobalStyle />
+            <GlobalStyle theme={theme} />
             <Nav activePage={this.activePage} />
             <Component {...pageProps} setActivePage={this.setActivePage} />
           </SettingsProvider>

@@ -23,7 +23,6 @@ const StyledNav = styled.nav`
   background-color: ${(props) => props.theme.color.background};
 
   a {
-    color: ${(props) => props.theme.color.white};
     display: flex;
     align-items: center;
     justify-content: center;

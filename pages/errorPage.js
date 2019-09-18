@@ -5,14 +5,11 @@ import Error404 from '../components/Error/404';
 import Error500 from '../components/Error/500';
 
 const Container = styled.div`
-  background-color: ${props => props.theme.color.background};
-  color: ${props => props.theme.color.white};
-  font-family: ${props => props.theme.textFont};
+  background-color: ${(props) => props.theme.color.background};
+  color: ${(props) => props.theme.color.white};
+  font-family: ${(props) => props.theme.textFont};
   font-size: 18px;
   min-height: calc(100vh - 50px);
-  a {
-    color: ${props => props.theme.color.white};
-  }
 `;
 
 const ErrorMessage = styled.div`

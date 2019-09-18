@@ -24,7 +24,7 @@ const IntroDiv = styled.div`
 `;
 
 const BodyTitle = styled.h1`
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Source Sans', sans-serif;
   font-size: 80px;
   font-display: swap;
   width: 60%;
@@ -59,7 +59,6 @@ const SignIn = styled.div`
     font-family: 'Work Sans';
     font-size: 18px;
     z-index: 2;
-    color: ${(props) => props.theme.color.white};
     text-decoration: none;
   }
 `;

@@ -6,17 +6,13 @@ const Container = styled.section`
   display: flex;
   flex-direction: column;
   margin: 1rem 0;
-  border-bottom: 2px solid ${props => props.theme.color.white};
+  border-bottom: 2px solid ${(props) => props.theme.color.white};
 
   p {
     padding: 0.3rem 0;
     font-weight: 700;
   }
   a {
-    color: ${props => props.theme.color.white};
-    :visited {
-      color: ${props => props.theme.color.white};
-    }
     font-size: 24px;
   }
   span {
