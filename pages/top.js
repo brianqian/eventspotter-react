@@ -73,6 +73,7 @@ function TopPages({ data, token }) {
                     img={item.album_img}
                     index={i}
                     token={token}
+                    analytics={item}
                     generalSettings={general}
                     locationSettings={location}
                   />

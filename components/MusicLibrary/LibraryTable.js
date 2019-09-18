@@ -4,8 +4,7 @@ import { useTable, useSortBy } from 'react-table';
 import styled from 'styled-components';
 import { format } from 'date-fns';
 import columnLibrary from './ColumnLibrary';
-import Collapse from '../Icons/CollapseIcon';
-import Expand from '../Icons/ExpandIcon';
+import ExpandCollapse from '../Icons/ExpandCollapseIcon';
 import { SettingsConsumer } from '../SettingsProvider/SettingsProvider';
 
 const Styles = styled.div`
@@ -91,11 +90,7 @@ function Table({ columns, data }) {
                 <span>
                   {' '}
                   {column.isSorted ? (
-                    column.isSortedDesc ? (
-                      <Expand color="#fff" height="15" />
-                    ) : (
-                      <Collapse color="#fff" height="15" />
-                    )
+                    <ExpandCollapse color="#fff" height="15" collapse={column.isSortedDesc} />
                   ) : (
                     ''
                   )}

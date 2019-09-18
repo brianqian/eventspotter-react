@@ -1,11 +1,8 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import useModal from '../../utils/hooks/useModal';
 import HttpClient from '../../utils/HttpClient';
-import Modal from '../Modal/Modal';
-import { format } from 'date-fns';
-import CollapseIcon from '../Icons/CollapseIcon';
-import ExpandIcon from '../Icons/ExpandIcon';
+import EventModal from './Modal/EventModal';
+import useModal from '../../utils/hooks/useModal';
 
 const Container = styled.div`
   height: 100%;
@@ -38,6 +35,7 @@ const BottomOverlay = styled.div`
   justify-content: center;
   align-items: center;
   background-clip: padding-box;
+  text-align: center;
   box-shadow: 0px -4px 11px rgba(0, 0, 0, 0.4);
   ${Container}:hover & {
     transform: translate(0);
@@ -123,46 +121,6 @@ const BackgroundImage = styled.img`
     opacity: 0.3;
   }
 `;
-const ModalBody = styled.section`
-  display: flex;
-`;
-
-const ModalSection = styled.div`
-  /* flex: 1; */
-  width: ${(props) => props.width};
-  max-height: 80%;
-
-  section {
-    max-height: 100%;
-    overflow: auto;
-  }
-`;
-
-const ModalRow = styled.div`
-  display: flex;
-  margin: 0.25rem 0;
-
-  > * {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
-  .modal_icon {
-    flex: 0.3;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .modal_title {
-    flex: 5;
-  }
-  .modal_date {
-    flex: 1;
-  }
-  .modal_location {
-    flex: 1.5;
-  }
-`;
 
 function TopArtistCard({
   artist,
@@ -173,10 +131,12 @@ function TopArtistCard({
   artistID,
   generalSettings,
   locationSettings,
+  analytics,
 }) {
-  const [eventData, setEventData] = useState([]);
-  const [sidebarData, setsidebarData] = useState([]);
   const [showModal, toggleModal] = useModal(false);
+  const [eventData, setEventData] = useState([]);
+  const [sidebarData, setSidebarData] = useState([]);
+
   const artistHasEvents = eventData.length;
 
   const promiseFetchEvents = (encodedArtist) => {
@@ -208,10 +168,9 @@ function TopArtistCard({
           `/api/library/top_tracks/${artistID}`,
           token
         );
-        if (isMounted) setsidebarData(tracks);
-      } else {
-        // query API for song and its analytics
+        if (isMounted) setSidebarData(tracks.map((track) => track.name));
       }
+      // else -- set analytics to sidebar data
     };
     fetchData();
     return () => (isMounted = false);
@@ -237,43 +196,16 @@ function TopArtistCard({
         <BottomOverlay>{text || `${eventData.length} events found`}</BottomOverlay>
       </Container>
 
-      <Modal isShowing={showModal} hide={toggleModal} height="70vh" width="80vw">
-        <h1>{artist}</h1>
-        <ModalBody>
-          <ModalSection width="30%">
-            <header>
-              <h3>Top Tracks</h3>
-            </header>
-            <section>
-              {sidebarData.map((track, i) => (
-                <p key={track.name}>{`${i + 1}. ${track.name}`}</p>
-              ))}
-            </section>
-          </ModalSection>
-          <ModalSection width="70%">
-            <header>
-              <h3>Upcoming Events</h3>
-            </header>
-            <section>
-              {eventData.map(({ id, title, location, date, url }) => (
-                <ModalRow key={id}>
-                  <a href={url} target="__blank" className="modal_icon">
-                    $
-                  </a>
-                  <div className="modal_title">{title}</div>
-                  <div className="modal_date">{format(date, 'MM/DD/YY')}</div>
-                  <div className="modal_location">
-                    {location.city},{location.state}
-                  </div>
-                  <div className="modal_icon">
-                    <ExpandIcon color="#fff" height="15" />
-                  </div>
-                </ModalRow>
-              ))}
-            </section>
-          </ModalSection>
-        </ModalBody>
-      </Modal>
+      {/** ***************************** */}
+
+      <EventModal
+        eventData={eventData}
+        sidebarData={sidebarData}
+        type={analytics ? 'analytic' : 'artist'}
+        artist={artist}
+        showModal={showModal}
+        toggleModal={toggleModal}
+      />
     </>
   );
 }
