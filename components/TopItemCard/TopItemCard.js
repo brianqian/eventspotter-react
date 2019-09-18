@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import HttpClient from '../../utils/HttpClient';
 import EventModal from './Modal/EventModal';
 import useModal from '../../utils/hooks/useModal';
+import { capitalizeWord } from '../../utils/format';
 
 const Container = styled.div`
   height: 100%;
@@ -139,21 +140,9 @@ function TopArtistCard({
 
   const artistHasEvents = eventData.length;
 
-  const promiseFetchEvents = (encodedArtist) => {
-    return new Promise((resolve, reject) => {
-      resolve(HttpClient.request(`/api/events/artist/${encodedArtist}`, token));
-    });
-  };
-
-  const promiseFetchTopTracks = (artistID) => {
-    return new Promise((resolve, reject) => {
-      resolve(HttpClient.request(`/api/library/top_tracks/${artistID}`, token));
-    });
-  };
-
   useEffect(() => {
     let isMounted = true;
-    const fetchData = async () => {
+    const fetchEventData = async () => {
       // GET EVENTS FOR ARTISTS -- ALWAYS FIRES
       if (!artist) return;
       const encodedArtist = encodeURIComponent(artist);
@@ -163,16 +152,27 @@ function TopArtistCard({
       );
       if (isMounted) setEventData(events);
       // ONLY FIRE IF TOP ARTIST. OTHERWISE DISPLAY SONG ANALYTICS
-      if (artistID) {
+      // else -- set analytics to sidebar data
+    };
+    const fetchSidebarData = async () => {
+      if (analytics) {
+        const formattedSidebarData = Object.entries(analytics).map((analytic) => {
+          analytic[0] = capitalizeWord(analytic[0]);
+          return analytic.join(' - ');
+        });
+        setSidebarData(formattedSidebarData);
+      } else {
         const { data: tracks = [] } = await HttpClient.request(
           `/api/library/top_tracks/${artistID}`,
           token
         );
         if (isMounted) setSidebarData(tracks.map((track) => track.name));
       }
-      // else -- set analytics to sidebar data
     };
-    fetchData();
+
+    fetchEventData();
+    fetchSidebarData();
+
     return () => (isMounted = false);
   }, [artist, img, index, text, token, artistID]);
 

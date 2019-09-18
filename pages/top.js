@@ -41,6 +41,7 @@ function TopPages({ data, token }) {
   const { filterBy } = router.query;
   const isTopArtists = filterBy === 'artists';
   const [currentData, setTopArtistHistory] = useChangeTopArtist(data);
+
   return (
     <SettingsConsumer>
       {({ state: { general, location } }) => {
@@ -53,7 +54,15 @@ function TopPages({ data, token }) {
             <Header>{filterBy.toUpperCase()}</Header>
             <MainDisplay>
               {currentData.map((item, i) => {
-                if (!isTopArtists) console.log(item);
+                const {
+                  song_id: songID,
+                  artist,
+                  title,
+                  album_img: albumImg,
+                  user_id,
+                  added_at,
+                  ...analytics
+                } = item;
                 return isTopArtists ? (
                   <ItemCard
                     key={item.id}
@@ -67,13 +76,13 @@ function TopPages({ data, token }) {
                   />
                 ) : (
                   <ItemCard
-                    key={item.song_id}
-                    artist={item.artist}
-                    text={item.title}
-                    img={item.album_img}
+                    key={songID}
+                    artist={artist}
+                    text={title}
+                    img={albumImg}
                     index={i}
                     token={token}
-                    analytics={item}
+                    analytics={analytics}
                     generalSettings={general}
                     locationSettings={location}
                   />
