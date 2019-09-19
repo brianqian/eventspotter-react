@@ -202,7 +202,7 @@ function TopArtistCard({
         eventData={eventData}
         sidebarData={sidebarData}
         type={analytics ? 'analytic' : 'artist'}
-        artist={artist}
+        artist={analytics ? `${artist} - ${text}` : artist}
         showModal={showModal}
         toggleModal={toggleModal}
       />

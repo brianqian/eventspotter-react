@@ -1,7 +1,9 @@
+import { useMemo } from 'react';
 import { format } from 'date-fns';
 import styled from 'styled-components';
 import Modal from '../../Modal/Modal';
 import ExpandCollapse from '../../Icons/ExpandCollapseIcon';
+import useToggleMap from '../../../utils/hooks/useToggleMap';
 
 const ModalBody = styled.section`
   display: flex;
@@ -23,6 +25,8 @@ const ModalSection = styled.div`
 const ModalEventRow = styled.div`
   display: flex;
   margin: 0.25rem 0;
+  font-size: 18px;
+  height: ${(props) => (props.isOpen ? '80px' : '')};
   > * {
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -47,6 +51,9 @@ const ModalEventRow = styled.div`
 
 function EventModal({ eventData, sidebarData, type, artist, showModal, toggleModal }) {
   const isArtistView = type === 'artist';
+  const memoEventData = useMemo(() => eventData.map(({ id }) => id), [eventData]);
+  const [toggleMap, toggleKey] = useToggleMap(memoEventData, false);
+
   return (
     <Modal isShowing={showModal} hide={toggleModal} height="70vh" width="80vw">
       <h1>{artist}</h1>
@@ -70,7 +77,7 @@ function EventModal({ eventData, sidebarData, type, artist, showModal, toggleMod
           </header>
           <section>
             {eventData.map(({ id, title, location, date, url }) => (
-              <ModalEventRow key={id}>
+              <ModalEventRow key={id} isOpen={toggleMap[id]}>
                 <a href={url} target="__blank" className="modal_icon">
                   $
                 </a>
@@ -79,7 +86,7 @@ function EventModal({ eventData, sidebarData, type, artist, showModal, toggleMod
                 <p className="modal_location">
                   {location.city},{location.state}
                 </p>
-                <p className="modal_icon">
+                <p className="modal_icon" onClick={() => toggleKey(id)}>
                   <ExpandCollapse color="#fff" height="15" />
                 </p>
               </ModalEventRow>
