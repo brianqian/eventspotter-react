@@ -4,7 +4,6 @@ const useToggleMap = (keys, defaultBool) => {
   const [toggleMap, setToggleMap] = useState({});
 
   useEffect(() => {
-    console.log('toglge map use effect firing');
     const initialMap = {};
     if (keys) keys.forEach((key) => (initialMap[key] = defaultBool));
     setToggleMap(initialMap);

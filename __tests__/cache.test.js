@@ -6,7 +6,7 @@ describe('Set and Get', () => {
     const result = cache.get('userID');
     expect(result).toEqual('1234');
   });
-  it('should do something', () => {
+  it('should do retrieve the user object', () => {
     const result = cache.get('userID');
     console.log(result);
   });
