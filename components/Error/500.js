@@ -4,7 +4,7 @@ function Error500() {
   return (
     <>
       <h1>Something went wrong, try again later.</h1>
-      <Link prefetch href="/">
+      <Link href="/">
         <a>
           <p>{'<- Go HOME'}</p>
         </a>

@@ -4,7 +4,7 @@ function Error404() {
   return (
     <>
       <h1>Page not found!</h1>
-      <Link prefetch href="/">
+      <Link href="/">
         <a>
           <p>{'<- Go HOME'}</p>
         </a>

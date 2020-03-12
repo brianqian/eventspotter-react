@@ -13,7 +13,7 @@ function Error401() {
         </Link>{' '}
         to try logging in again!
       </p>
-      <Link prefetch href="/">
+      <Link href="/">
         <a>
           <p>{'<- Go HOME'}</p>
         </a>

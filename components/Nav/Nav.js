@@ -94,28 +94,23 @@ const Nav = ({ theme }) => {
   return (
     <>
       <StyledNav loggedIn={user.spotifyID}>
-        <Link prefetch href="/">
+        <Link href="/">
           <label>
             <a>Home</a>
           </label>
         </Link>
-        <Link prefetch href="/libraryPage" as="/library">
+        <Link href="/libraryPage" as="/library">
           <label>
             <a>Library</a>
           </label>
         </Link>
         <Dropdown width="175px">
           <label>Quick Access </label>
-          <Link
-            prefetch
-            href={{ pathname: '/top', query: { filterBy: 'artists' } }}
-            as="/top/artists"
-          >
+          <Link href={{ pathname: '/top', query: { filterBy: 'artists' } }} as="/top/artists">
             <a>Top Artists</a>
           </Link>
           {Object.keys(audioAnalytics).map((item) => (
             <Link
-              prefetch
               href={{ pathname: '/top', query: { filterBy: item } }}
               as={`/top/${item}`}
               key={item}

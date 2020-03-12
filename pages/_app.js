@@ -1,4 +1,4 @@
-import App, { Container } from 'next/app';
+import App from 'next/app';
 import NProgress from 'nprogress';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
 import Router from 'next/router';
@@ -10,7 +10,9 @@ const GlobalStyle = createGlobalStyle`
 
 body, html{
   font-family: ${(props) => props.theme.textFont};
+  width: 100vw;
   max-width: 100vw;
+  overflow:hidden;
 }
 *{
   margin: 0;
@@ -45,15 +47,13 @@ export default class MyApp extends App {
   render() {
     const { Component, pageProps } = this.props;
     return (
-      <Container>
-        <ThemeProvider theme={theme}>
-          <SettingsProvider>
-            <GlobalStyle theme={theme} />
-            <Nav activePage={this.activePage} />
-            <Component {...pageProps} setActivePage={this.setActivePage} />
-          </SettingsProvider>
-        </ThemeProvider>
-      </Container>
+      <ThemeProvider theme={theme}>
+        <SettingsProvider>
+          <GlobalStyle theme={theme} />
+          <Nav activePage={this.activePage} />
+          <Component {...pageProps} setActivePage={this.setActivePage} />
+        </SettingsProvider>
+      </ThemeProvider>
     );
   }
 }
